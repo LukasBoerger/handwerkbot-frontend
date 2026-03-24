@@ -13,7 +13,7 @@ import { AppointmentService } from '../../services/appointment.service';
 @Component({
   selector: 'app-dashboard',
   imports: [
-    RouterLink, DatePipe,
+    RouterLink,
     MatCardModule, MatButtonModule, MatIconModule,
     MatTableModule, MatChipsModule, MatProgressSpinnerModule
   ],

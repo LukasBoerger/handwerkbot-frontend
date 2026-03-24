@@ -115,10 +115,14 @@
         <button mat-raised-button color="primary" type="submit"
                 [disabled]="form.invalid || saving">
           @if (saving) {
-            <mat-spinner diameter="20"></mat-spinner>
+            <ng-container>
+              <mat-spinner diameter="20"></mat-spinner>
+            </ng-container>
           } @else {
-            <mat-icon>save</mat-icon>
-            Einstellungen speichern
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              Einstellungen speichern
+            </ng-container>
           }
         </button>
       </div>
