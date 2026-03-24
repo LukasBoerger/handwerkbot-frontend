@@ -48,9 +48,23 @@
             </mat-form-field>
 
             <div class="step-actions">
-              <button mat-raised-button color="primary"
-                      matStepperNext [disabled]="accountForm.invalid">
-                Weiter
+              <button class="btn-next" matStepperNext
+                      [disabled]="accountForm.invalid">
+                Weiter →
+              </button>
+            </div>
+
+            <!-- Schritt 2 -->
+            <div class="step-actions">
+              <button class="btn-back" matStepperPrevious>Zurück</button>
+              <button class="submit-btn" style="flex:1"
+                      [disabled]="businessForm.invalid || loading"
+                      (click)="submit()">
+                @if (loading) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                  Konto erstellen →
+                }
               </button>
             </div>
           </form>

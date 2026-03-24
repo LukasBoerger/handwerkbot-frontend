@@ -1,28 +1,45 @@
 .settings-container {
-  padding: 32px 10%;
+  padding: 40px 8%;
   max-width: 900px;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
-    padding: 16px 4%;
-  }
+  @media (max-width: 768px) { padding: 24px 5%; }
 }
 
 .settings-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
   gap: 16px;
 
   h1 {
-    font-size: 28px;
-    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text);
     margin-bottom: 4px;
   }
 
-  p { color: #666; }
+  p { color: var(--text-muted); font-size: 14px; }
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &:hover { color: var(--text); border-color: var(--text-muted); }
 }
 
 .loading {
@@ -31,19 +48,34 @@
   padding: 64px;
 }
 
-mat-card {
-  margin-bottom: 24px;
+.section-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 20px;
+  padding: 0 !important;
 
   mat-card-header {
+    padding: 24px 24px 0 !important;
     margin-bottom: 20px;
-
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 18px !important;
-    }
   }
+
+  mat-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  mat-card-subtitle {
+    color: var(--text-muted) !important;
+    font-size: 13px !important;
+  }
+
+  mat-card-content { padding: 0 24px 24px !important; }
 }
 
 .form-grid {
@@ -51,53 +83,98 @@ mat-card {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
 
-  mat-form-field {
-    width: 100%;
-  }
+  mat-form-field { width: 100%; }
 }
 
-.full-width {
-  grid-column: 1 / -1;
-}
+.full-width { grid-column: 1 / -1; }
 
 .info-banner {
   display: flex;
   gap: 16px;
-  background: #e3f2fd;
-  border-radius: 8px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(245,197,24,0.2);
+  border-radius: var(--radius);
   padding: 16px;
   align-items: flex-start;
 
-  mat-icon { color: #1976d2; margin-top: 2px; }
+  .info-icon { font-size: 20px; flex-shrink: 0; }
+
+  strong { color: var(--accent); }
 
   ol {
     margin: 8px 0 0 16px;
-    li { margin-bottom: 4px; font-size: 14px; }
+    li { margin-bottom: 4px; font-size: 14px; color: var(--text-muted); }
   }
 }
 
 .whatsapp-card {
-  border-left: 4px solid #25D366;
-}
-
-mat-divider {
-  margin: 8px 0 24px;
+  border-left: 3px solid var(--green) !important;
 }
 
 .save-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
+}
 
-  button {
-    padding: 8px 32px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: var(--accent);
+  color: #000;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.85; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+// Form Field Fix
+.mat-mdc-form-field {
+  .mdc-text-field--outlined {
+    padding: 0 16px !important;
+  }
+
+  .mdc-notched-outline {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: var(--border) !important;
+    }
+  }
+
+  &:hover .mdc-notched-outline {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: var(--text-muted) !important;
+    }
+  }
+
+  &.mat-focused .mdc-notched-outline {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: var(--accent) !important;
+    }
+  }
+
+  .mat-mdc-form-field-hint {
+    color: var(--text-muted) !important;
+  }
+}
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined {
+  .mdc-text-field__input {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
   }
 }
