@@ -43,7 +43,7 @@ export class Login {
     this.auth.login(email, password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
-        this.error = err.error?.error || 'Login fehlgeschlagen';
+        this.error = err.error?.error || 'Ungültige Zugangsdaten';
         this.loading = false;
       }
     });
