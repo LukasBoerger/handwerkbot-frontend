@@ -1,0 +1,105 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>Willkommen, {{ user?.fullName }} 👋</h1>
+      <p>Hier ist eine Übersicht Ihrer gebuchten Termine</p>
+    </div>
+    <div class="header-actions">
+      <a mat-stroked-button routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        Einstellungen
+      </a>
+      <button mat-stroked-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Abmelden
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon color="primary">calendar_today</mat-icon>
+        <div class="stat-value">{{ appointments.length }}</div>
+        <div class="stat-label">Termine gesamt</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon color="accent">today</mat-icon>
+        <div class="stat-value">{{ todayCount }}</div>
+        <div class="stat-label">Heute gebucht</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon style="color: #25D366">whatsapp</mat-icon>
+        <div class="stat-value">✅</div>
+        <div class="stat-label">Bot aktiv</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Termine -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>event_note</mat-icon>
+        Gebuchte Termine
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (appointments.length === 0) {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>Noch keine Termine vorhanden</p>
+          <small>Termine erscheinen hier sobald Kunden über WhatsApp buchen</small>
+        </div>
+      } @else {
+        <table mat-table [dataSource]="appointments" class="full-width">
+
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef>Kunde</th>
+            <td mat-cell *matCellDef="let a">{{ a.customerName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="service">
+            <th mat-header-cell *matHeaderCellDef>Leistung</th>
+            <td mat-cell *matCellDef="let a">{{ a.service }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="datetime">
+            <th mat-header-cell *matHeaderCellDef>Termin</th>
+            <td mat-cell *matCellDef="let a">{{ a.datetime }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef>Adresse</th>
+            <td mat-cell *matCellDef="let a">{{ a.address }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let a">
+              <mat-chip color="primary" highlighted>✓ Bestätigt</mat-chip>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+</div>

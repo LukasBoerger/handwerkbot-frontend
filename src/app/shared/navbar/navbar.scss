@@ -1,0 +1,17 @@
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+  a, button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.active {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+}

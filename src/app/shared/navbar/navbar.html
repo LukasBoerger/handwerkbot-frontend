@@ -1,0 +1,52 @@
+<mat-toolbar color="primary">
+  <mat-icon>build</mat-icon>
+  <span routerLink="/" style="margin-left: 8px; font-weight: 700; cursor: pointer">
+    HandwerkBot
+  </span>
+
+  <span style="flex: 1"></span>
+
+  @if (auth.isLoggedIn()) {
+    <!-- Eingeloggt -->
+    <a mat-button routerLink="/dashboard" routerLinkActive="active">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </a>
+    <a mat-button routerLink="/settings" routerLinkActive="active">
+      <mat-icon>settings</mat-icon>
+      Einstellungen
+    </a>
+
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+      {{ auth.getUser()?.fullName }}
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        Einstellungen
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="auth.logout()">
+        <mat-icon>logout</mat-icon>
+        Abmelden
+      </button>
+    </mat-menu>
+
+  } @else {
+    <!-- Nicht eingeloggt -->
+    <a mat-button routerLink="/"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}">
+      Start
+    </a>
+    <span style="margin-left: 16px"></span>
+    <a mat-button routerLink="/login">Login</a>
+    <a mat-raised-button color="accent" routerLink="/register"
+       style="margin-left: 8px">
+      Kostenlos starten
+    </a>
+  }
+</mat-toolbar>

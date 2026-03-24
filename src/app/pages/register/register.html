@@ -1,0 +1,99 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <div class="auth-logo">🔧</div>
+      <mat-card-title>Konto erstellen</mat-card-title>
+      <mat-card-subtitle>30 Tage kostenlos testen</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (error) {
+        <div class="error-banner">
+          <mat-icon>error</mat-icon> {{ error }}
+        </div>
+      }
+
+      <mat-stepper orientation="vertical" #stepper>
+
+        <!-- Schritt 1: Account -->
+        <mat-step [stepControl]="accountForm" label="Ihr Konto">
+          <form [formGroup]="accountForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Vollständiger Name</mat-label>
+              <input matInput formControlName="fullName" placeholder="Max Müller">
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>E-Mail</mat-label>
+              <input matInput formControlName="email" type="email">
+              <mat-icon matPrefix>email</mat-icon>
+              @if (accountForm.get('email')?.hasError('email')) {
+                <mat-error>Ungültige E-Mail</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Passwort</mat-label>
+              <input matInput formControlName="password"
+                     [type]="hidePassword ? 'password' : 'text'">
+              <mat-icon matPrefix>lock</mat-icon>
+              <button mat-icon-button matSuffix type="button"
+                      (click)="hidePassword = !hidePassword">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (accountForm.get('password')?.hasError('minlength')) {
+                <mat-error>Mindestens 8 Zeichen</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary"
+                      matStepperNext [disabled]="accountForm.invalid">
+                Weiter
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Schritt 2: Betrieb -->
+        <mat-step [stepControl]="businessForm" label="Ihr Betrieb">
+          <form [formGroup]="businessForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Betriebsname</mat-label>
+              <input matInput formControlName="businessName" placeholder="Müller Elektro GmbH">
+              <mat-icon matPrefix>business</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefonnummer</mat-label>
+              <input matInput formControlName="businessPhone" placeholder="+49 2381 123456">
+              <mat-icon matPrefix>phone</mat-icon>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>Zurück</button>
+              <button mat-raised-button color="primary"
+                      [disabled]="businessForm.invalid || loading"
+                      (click)="submit()">
+                @if (loading) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                  Konto erstellen
+                }
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+      </mat-stepper>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <p class="auth-link">
+        Bereits registriert?
+        <a routerLink="/login">Jetzt anmelden</a>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</div>

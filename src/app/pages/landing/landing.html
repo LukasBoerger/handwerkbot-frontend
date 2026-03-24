@@ -1,0 +1,74 @@
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">🤖 KI-gestützt • WhatsApp • 24/7</div>
+    <h1>Mehr Zeit fürs <span class="highlight">Handwerk</span></h1>
+    <p class="subtitle">
+      HandwerkBot übernimmt Ihre WhatsApp-Kommunikation vollautomatisch.
+      Terminbuchungen, Kundenanfragen, Rückrufe – alles ohne Ihr Zutun.
+    </p>
+    <div class="hero-actions">
+      <a mat-raised-button color="primary" routerLink="/register">
+        <mat-icon>rocket_launch</mat-icon>
+        Kostenlos testen
+      </a>
+      <a mat-stroked-button routerLink="/login">
+        Bereits Kunde? Login
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>24/7</strong><span>Erreichbar</span></div>
+      <div class="stat"><strong>~3h</strong><span>täglich gespart</span></div>
+      <div class="stat"><strong>ab 29€</strong><span>pro Monat</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="chat-bubble customer">Hallo, ich brauche einen Elektriker 👋</div>
+      <div class="chat-bubble bot">Hallo! Gerne helfe ich Ihnen. Um welches Anliegen geht es?</div>
+      <div class="chat-bubble customer">Steckdose im Wohnzimmer defekt</div>
+      <div class="chat-bubble bot">Verstanden! Wann passt Ihnen ein Termin?</div>
+      <div class="chat-bubble customer">Dienstag 10 Uhr</div>
+      <div class="chat-bubble bot">✅ Termin bestätigt! Buchungs-Nr: APT-12345</div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <h2>Warum HandwerkBot?</h2>
+  <div class="features-grid">
+    @for (feature of features; track feature.title) {
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon color="primary">{{ feature.icon }}</mat-icon>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-it-works">
+  <h2>In 3 Schritten startklar</h2>
+  <div class="steps">
+    @for (step of steps; track step.number) {
+      <div class="step">
+        <div class="step-number">{{ step.number }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Bereit loszulegen?</h2>
+  <p>30 Tage kostenlos testen – keine Kreditkarte nötig.</p>
+  <a mat-raised-button color="accent" routerLink="/register">
+    Jetzt kostenlos starten
+  </a>
+</section>
