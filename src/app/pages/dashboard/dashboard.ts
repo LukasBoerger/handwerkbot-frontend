@@ -6,7 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
 
@@ -14,17 +16,26 @@ import { AppointmentService } from '../../services/appointment.service';
   selector: 'app-dashboard',
   imports: [
     RouterLink,
-    MatCardModule, MatButtonModule, MatIconModule,
-    MatTableModule, MatChipsModule, MatProgressSpinnerModule
+    DatePipe,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
   ],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
   user: any;
   appointments: any[] = [];
-  loading = true;
-  displayedColumns = ['customer', 'service', 'datetime', 'address', 'status'];
+  filtered: any[] = [];
+  loading = false;
+  statusFilter: 'all' | 'confirmed' | 'completed' | 'cancelled' = 'all';
+  displayedColumns = ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
 
   private auth = inject(AuthService);
   private appointmentService = inject(AppointmentService);
@@ -44,22 +55,50 @@ export class Dashboard implements OnInit {
     this.appointmentService.getMyAppointments().subscribe({
       next: (data) => {
         this.appointments = Array.isArray(data) ? data : [];
+        this.applyFilter();
         this.loading = false;
-        this.cdr.detectChanges(); // Angular manuell zum Neurendern zwingen
+        this.cdr.detectChanges();
       },
       error: () => {
         this.appointments = [];
         this.loading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
+  applyFilter() {
+    this.filtered =
+      this.statusFilter === 'all'
+        ? this.appointments
+        : this.appointments.filter((a) => a.status === this.statusFilter);
+    this.cdr.detectChanges();
+  }
+
+  setFilter(f: 'all' | 'confirmed' | 'completed' | 'cancelled') {
+    this.statusFilter = f;
+    this.applyFilter();
+  }
+
+  updateStatus(apt: any, status: string) {
+    this.appointmentService.updateStatus(apt.id, status).subscribe({
+      next: (updated) => {
+        apt.status = updated.status;
+        this.applyFilter();
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  get totalCount() {
+    return this.appointments.length;
+  }
   get todayCount() {
     const today = new Date().toDateString();
-    return this.appointments.filter(a =>
-      new Date(a.createdAt).toDateString() === today
-    ).length;
+    return this.appointments.filter((a) => new Date(a.createdAt).toDateString() === today).length;
+  }
+  get upcomingCount() {
+    return this.appointments.filter((a) => a.status === 'confirmed').length;
   }
 
   logout() {

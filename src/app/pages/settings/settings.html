@@ -12,10 +12,11 @@
   } @else {
     <form [formGroup]="form" (ngSubmit)="save()">
 
+      <!-- BETRIEBSDATEN -->
       <mat-card class="section-card">
         <mat-card-header>
           <mat-card-title>🏢 Betriebsdaten</mat-card-title>
-          <mat-card-subtitle>Diese Daten nutzt der Bot um Kunden zu antworten</mat-card-subtitle>
+          <mat-card-subtitle>Grundlegende Informationen zu Ihrem Betrieb</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
@@ -41,15 +42,127 @@
                      placeholder="z.B. Elektroinstallation, Reparaturen, Notdienst">
               <mat-hint>Kommagetrennt eingeben</mat-hint>
             </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- BOT-EINSTELLUNGEN -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title>🤖 Bot-Einstellungen</mat-card-title>
+          <mat-card-subtitle>So verhält sich Ihr KI-Assistent</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Bot-Name</mat-label>
+              <input matInput formControlName="botName" placeholder="z.B. HandwerkBot">
+              <mat-hint>So stellt sich der Bot vor</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Max. Vorlaufzeit (Tage)</mat-label>
+              <input matInput formControlName="maxDaysAhead" type="number" min="1" max="365">
+              <mat-hint>Wie weit im Voraus kann gebucht werden?</mat-hint>
+            </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Öffnungszeiten</mat-label>
-              <input matInput formControlName="businessHours"
-                     placeholder="z.B. Mo-Fr 7:00-18:00 Uhr">
+              <mat-label>Willkommensnachricht</mat-label>
+              <textarea matInput formControlName="welcomeMessage" rows="3"
+                        placeholder="z.B. Hallo! Wie kann ich Ihnen helfen?">
+              </textarea>
+              <mat-hint>Wird beim ersten Kontakt gesendet (leer = Standard)</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nachricht außerhalb der Öffnungszeiten</mat-label>
+              <textarea matInput formControlName="outOfHoursMsg" rows="3"
+                        placeholder="z.B. Wir sind gerade nicht erreichbar...">
+              </textarea>
+              <mat-hint>Wird gesendet wenn ein Termin außerhalb der Zeiten gewünscht wird</mat-hint>
             </mat-form-field>
           </div>
         </mat-card-content>
       </mat-card>
 
+      <!-- ÖFFNUNGSZEITEN -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title>🕐 Öffnungszeiten</mat-card-title>
+          <mat-card-subtitle>Aktivieren Sie die Tage an denen Sie erreichbar sind</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="hours-list">
+            @for (day of days; track day.key) {
+              <div class="hours-row" [class.hours-row--open]="form.get('open' + day.key)?.value">
+                <div class="hours-left">
+                  <button
+                    type="button"
+                    class="day-toggle"
+                    [class.day-toggle--on]="form.get('open' + day.key)?.value"
+                    (click)="form.get('open' + day.key)?.setValue(!form.get('open' + day.key)?.value)">
+                    <span class="day-toggle__thumb"></span>
+                  </button>
+                  <span class="day-label">{{ day.label }}</span>
+                </div>
+
+                @if (form.get('open' + day.key)?.value) {
+                  <div class="hours-times">
+                    <div class="time-field">
+                      <label>Von</label>
+                      <input type="time" [formControlName]="'from' + day.key" class="time-input">
+                    </div>
+                    <span class="time-separator">–</span>
+                    <div class="time-field">
+                      <label>Bis</label>
+                      <input type="time" [formControlName]="'to' + day.key" class="time-input">
+                    </div>
+                  </div>
+                } @else {
+                  <span class="closed-label">Geschlossen</span>
+                }
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- GOOGLE CALENDAR -->
+      <mat-card class="section-card google-card">
+        <mat-card-header>
+          <mat-card-title>📅 Google Calendar</mat-card-title>
+          <mat-card-subtitle>Termine automatisch in Ihren Kalender eintragen</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (googleConnected) {
+            <div class="google-status google-status--connected">
+              <div class="google-status__icon">✅</div>
+              <div class="google-status__text">
+                <strong>Verbunden</strong>
+                <span>Neue Termine werden automatisch in Ihren Google Calendar eingetragen</span>
+              </div>
+              <button class="btn-disconnect" type="button" (click)="disconnectGoogle()">
+                Trennen
+              </button>
+            </div>
+          } @else {
+            <div class="google-status google-status--disconnected">
+              <div class="google-status__icon">📅</div>
+              <div class="google-status__text">
+                <strong>Nicht verbunden</strong>
+                <span>Verbinden Sie Ihren Google Calendar um Termine automatisch zu synchronisieren</span>
+              </div>
+              <button class="btn-connect" type="button"
+                      (click)="connectGoogle()" [disabled]="googleLoading">
+                @if (googleLoading) {
+                  <mat-spinner diameter="16"></mat-spinner>
+                } @else {
+                  Mit Google verbinden
+                }
+              </button>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- WHATSAPP -->
       <mat-card class="section-card whatsapp-card">
         <mat-card-header>
           <mat-card-title>💬 WhatsApp Verbindung</mat-card-title>

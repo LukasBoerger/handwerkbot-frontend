@@ -90,6 +90,131 @@
 
 .full-width { grid-column: 1 / -1; }
 
+// Öffnungszeiten
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hours-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  gap: 16px;
+
+  &--open {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--border);
+  }
+}
+
+.hours-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 160px;
+}
+
+// Custom Toggle
+.day-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  padding: 0;
+
+  &--on {
+    background: var(--accent);
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+    display: block;
+
+    .day-toggle--on & {
+      transform: translateX(20px);
+    }
+  }
+}
+
+.day-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  width: 90px;
+}
+
+.hours-times {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.time-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+  padding: 6px 10px;
+  width: 110px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(0.6);
+    cursor: pointer;
+  }
+}
+
+.time-separator {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-top: 16px;
+}
+
+.closed-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+// WhatsApp Info
 .info-banner {
   display: flex;
   gap: 16px;
@@ -100,7 +225,6 @@
   align-items: flex-start;
 
   .info-icon { font-size: 20px; flex-shrink: 0; }
-
   strong { color: var(--accent); }
 
   ol {
@@ -137,7 +261,7 @@
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-// Form Field Fix
+// Material Form Field Fix
 .mat-mdc-form-field {
   .mdc-text-field--outlined {
     padding: 0 16px !important;
@@ -176,5 +300,79 @@
   .mdc-text-field__input {
     padding-left: 16px !important;
     padding-right: 16px !important;
+  }
+}
+
+// Google Calendar Card
+.google-card {
+  border-left: 3px solid #4285f4 !important;
+}
+
+.google-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  flex-wrap: wrap;
+
+  &--connected {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  &--disconnected {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+  }
+
+  &__icon { font-size: 24px; flex-shrink: 0; }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+
+    strong { color: var(--text); font-size: 15px; }
+    span   { color: var(--text-muted); font-size: 13px; }
+  }
+}
+
+.btn-connect {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  &:hover    { opacity: 0.85; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btn-disconnect {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    color: #f87171;
+    border-color: #f87171;
   }
 }

@@ -28,6 +28,7 @@
 .header-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .btn-outline {
@@ -42,10 +43,12 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none;
 
   &:hover { color: var(--text); border-color: var(--text-muted); }
 }
 
+// Stats
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -68,10 +71,7 @@
     gap: 4px;
   }
 
-  .stat-icon {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
+  .stat-icon { font-size: 20px; margin-bottom: 12px; }
 
   .stat-value {
     font-family: 'Syne', sans-serif;
@@ -81,16 +81,13 @@
     line-height: 1;
   }
 
-  .stat-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
+  .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
   &.accent-card .stat-value { color: var(--accent); }
-  &.green-card .stat-value { color: var(--green); }
+  &.green-card  .stat-value { color: var(--green);  }
 }
 
+// Tabelle
 .table-card {
   background: var(--bg-2) !important;
   border: 1px solid var(--border) !important;
@@ -99,6 +96,11 @@
   mat-card-header {
     padding: 24px 24px 0 !important;
     margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   mat-card-title {
@@ -106,12 +108,36 @@
     font-size: 18px !important;
     font-weight: 700 !important;
     color: var(--text) !important;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   mat-card-content { padding: 0 !important; }
+}
+
+// Filter Tabs
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { border-color: var(--text-muted); color: var(--text); }
+
+  &.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+  }
 }
 
 .full-width { width: 100%; }
@@ -129,12 +155,78 @@
 
   .empty-icon { font-size: 48px; margin-bottom: 16px; }
 
-  p {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
+  p { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
 
   small { font-size: 13px; }
+}
+
+// Status Badge
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.status-confirmed  { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  &.status-completed  { background: rgba(34,197,94,0.15);  color: #4ade80; }
+  &.status-cancelled  { background: rgba(239,68,68,0.15);  color: #f87171; }
+}
+
+// Action Buttons
+.action-menu {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &--complete:hover { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: #4ade80; }
+  &--cancel:hover   { background: rgba(239,68,68,0.15);  color: #f87171; border-color: #f87171; }
+  &--restore:hover  { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: #60a5fa; }
+}
+
+// Material Table Overrides
+.mat-mdc-table {
+  background: transparent !important;
+}
+
+.mat-mdc-header-row {
+  background: rgba(255,255,255,0.03) !important;
+}
+
+.mat-mdc-header-cell {
+  color: var(--text-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-mdc-cell {
+  color: var(--text) !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none !important;
+}
+
+.mat-mdc-row:hover {
+  background: rgba(255,255,255,0.02) !important;
 }
