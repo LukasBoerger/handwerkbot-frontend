@@ -5,10 +5,12 @@ import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private apiUrl = 'https://api.kommuvo.de/api/auth';
 
-  private apiUrl = 'https://handwerkbot-java-production.up.railway.app/api/auth';
-
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   register(data: {
     email: string;
@@ -17,15 +19,15 @@ export class AuthService {
     businessName: string;
     businessPhone: string;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, data).pipe(
-      tap((res: any) => this.saveSession(res))
-    );
+    return this.http
+      .post(`${this.apiUrl}/register`, data)
+      .pipe(tap((res: any) => this.saveSession(res)));
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap((res: any) => this.saveSession(res))
-    );
+    return this.http
+      .post(`${this.apiUrl}/login`, { email, password })
+      .pipe(tap((res: any) => this.saveSession(res)));
   }
 
   logout() {
