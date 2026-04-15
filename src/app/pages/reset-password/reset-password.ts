@@ -11,11 +11,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   selector: 'app-reset-password',
   imports: [
     ReactiveFormsModule,
-    MatFormFieldModule, MatInputModule,
-    MatIconModule, MatProgressSpinnerModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.scss'
+  styleUrl: './reset-password.scss',
 })
 export class ResetPassword implements OnInit {
   form: FormGroup;
@@ -30,12 +32,12 @@ export class ResetPassword implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  private apiUrl = 'https://handwerkbot-java-production.up.railway.app/api/auth';
+  private apiUrl = 'https://api.kommuvo.de/api/auth';
 
   constructor() {
     this.form = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
     });
   }
 
@@ -56,19 +58,21 @@ export class ResetPassword implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.http.post(`${this.apiUrl}/reset-password`, {
-      token: this.token,
-      password
-    }).subscribe({
-      next: () => {
-        this.success = true;
-        this.loading = false;
-        setTimeout(() => this.router.navigate(['/login']), 3000);
-      },
-      error: (err) => {
-        this.error = err.error?.error || 'Link ungültig oder abgelaufen';
-        this.loading = false;
-      }
-    });
+    this.http
+      .post(`${this.apiUrl}/reset-password`, {
+        token: this.token,
+        password,
+      })
+      .subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+          setTimeout(() => this.router.navigate(['/login']), 3000);
+        },
+        error: (err) => {
+          this.error = err.error?.error || 'Link ungültig oder abgelaufen';
+          this.loading = false;
+        },
+      });
   }
 }

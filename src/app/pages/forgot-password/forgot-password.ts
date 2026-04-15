@@ -10,12 +10,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-forgot-password',
   imports: [
-    ReactiveFormsModule, RouterLink,
-    MatFormFieldModule, MatInputModule,
-    MatIconModule, MatProgressSpinnerModule
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './forgot-password.html',
-  styleUrl: './forgot-password.scss'
+  styleUrl: './forgot-password.scss',
 })
 export class ForgotPassword {
   form: FormGroup;
@@ -25,11 +28,11 @@ export class ForgotPassword {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
 
-  private apiUrl = 'https://handwerkbot-java-production.up.railway.app/api/auth';
+  private apiUrl = 'https://api.kommuvo.de/api/auth';
 
   constructor() {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -45,7 +48,7 @@ export class ForgotPassword {
       error: () => {
         this.sent = true; // Immer success zeigen (Security)
         this.loading = false;
-      }
+      },
     });
   }
 }
