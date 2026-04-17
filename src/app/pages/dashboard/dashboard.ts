@@ -53,6 +53,7 @@ interface DonutSegment {
 })
 export class Dashboard implements OnInit {
   user: any;
+  isDemo = this.auth.getUser()?.email === 'demo@kommuvo.de';
   appointments: any[] = [];
   filtered: any[] = [];
   loading = false;

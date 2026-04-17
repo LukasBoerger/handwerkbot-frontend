@@ -53,20 +53,6 @@
                 Weiter →
               </button>
             </div>
-
-            <!-- Schritt 2 -->
-            <div class="step-actions">
-              <button class="btn-back" matStepperPrevious>Zurück</button>
-              <button class="submit-btn" style="flex:1"
-                      [disabled]="businessForm.invalid || loading"
-                      (click)="submit()">
-                @if (loading) {
-                  <mat-spinner diameter="20"></mat-spinner>
-                } @else {
-                  Konto erstellen →
-                }
-              </button>
-            </div>
           </form>
         </mat-step>
 
@@ -86,14 +72,14 @@
             </mat-form-field>
 
             <div class="step-actions">
-              <button mat-button matStepperPrevious>Zurück</button>
-              <button mat-raised-button color="primary"
+              <button class="btn-back" matStepperPrevious>Zurück</button>
+              <button class="submit-btn" style="flex:1"
                       [disabled]="businessForm.invalid || loading"
                       (click)="submit()">
                 @if (loading) {
                   <mat-spinner diameter="20"></mat-spinner>
                 } @else {
-                  Konto erstellen
+                  Konto erstellen →
                 }
               </button>
             </div>

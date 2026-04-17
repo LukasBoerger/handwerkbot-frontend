@@ -34,6 +34,11 @@ export class Login {
     });
   }
 
+  fillDemo() {
+    this.form.setValue({ email: 'demo@kommuvo.de', password: 'demo1234' });
+    this.submit();
+  }
+
   submit() {
     if (this.form.invalid) return;
     this.loading = true;
