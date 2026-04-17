@@ -3,8 +3,9 @@
     <div class="badge">⚡ KI-gestützt · WhatsApp · 24/7</div>
     <h1>Mehr Zeit fürs<br><span class="highlight">Handwerk.</span></h1>
     <p class="subtitle">
-      HandwerkBot übernimmt Ihre WhatsApp-Kommunikation vollautomatisch.
-      Terminbuchungen, Kundenanfragen, Rückrufe – alles ohne Ihr Zutun.
+      Kein verpasster Auftrag mehr. HandwerkBot antwortet Ihren
+      WhatsApp-Kunden automatisch – auch wenn Sie gerade auf der
+      Baustelle sind.
     </p>
     <div class="hero-actions">
       <a class="btn-hero" routerLink="/register">
@@ -17,7 +18,7 @@
     <div class="hero-stats">
       <div class="stat"><strong>24/7</strong><span>Erreichbar</span></div>
       <div class="stat"><strong>~3h</strong><span>täglich gespart</span></div>
-      <div class="stat"><strong>ab 29€</strong><span>pro Monat</span></div>
+      <div class="stat"><strong>ab 39€</strong><span>pro Monat</span></div>
     </div>
   </div>
 
@@ -38,7 +39,25 @@
         <div class="chat-bubble customer">Dienstag 10 Uhr</div>
         <div class="chat-bubble bot">✅ Termin bestätigt! Nr: APT-12345</div>
       </div>
+      <div class="trust-strip">
+        <span>✓ Kein Vertrag</span>
+        <span>✓ Setup in 15 Min</span>
+        <span>✓ Kündigung jederzeit</span>
+      </div>
     </div>
+  </div>
+</section>
+
+<section class="problems">
+  <div class="section-label">Das kennen Sie</div>
+  <h2>Kennen Sie das?</h2>
+  <div class="pain-grid">
+    @for (point of painPoints; track point.text) {
+      <div class="pain-card">
+        <div class="pain-icon">{{ point.emoji }}</div>
+        <p>{{ point.text }}</p>
+      </div>
+    }
   </div>
 </section>
 
@@ -51,6 +70,24 @@
         <div class="feature-icon">{{ feature.emoji }}</div>
         <h3>{{ feature.title }}</h3>
         <p>{{ feature.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="section-label">Kundenstimmen</div>
+  <h2>Was Handwerker sagen.</h2>
+  <p class="testimonials-note">* Platzhalter-Testimonials für MVP</p>
+  <div class="testimonials-grid">
+    @for (t of testimonials; track t.name) {
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">{{ t.quote }}</p>
+        <div class="testimonial-author">
+          <strong>{{ t.name }}</strong>
+          <span>{{ t.job }}</span>
+        </div>
       </div>
     }
   </div>
@@ -70,10 +107,35 @@
   </div>
 </section>
 
+<section class="pricing">
+  <div class="section-label">Preise</div>
+  <h2>Transparent.<br>Fair. Kündbar.</h2>
+  <div class="pricing-grid">
+    @for (plan of plans; track plan.name) {
+      <div class="pricing-card" [class.highlighted]="plan.highlight">
+        @if (plan.highlight) {
+          <div class="popular-badge">Beliebteste Wahl</div>
+        }
+        <div class="plan-name">{{ plan.name }}</div>
+        <div class="plan-price"><span class="price-amount">{{ plan.price }}€</span><span class="price-period">/Monat</span></div>
+        <ul class="plan-features">
+          @for (f of plan.features; track f) {
+            <li>✓ {{ f }}</li>
+          }
+        </ul>
+        <a class="btn-plan" [class.btn-plan-dark]="plan.highlight" routerLink="/register">
+          Jetzt starten →
+        </a>
+      </div>
+    }
+  </div>
+  <p class="pricing-note">Alle Pläne: 30 Tage kostenlos testen</p>
+</section>
+
 <div class="cta">
   <div>
-    <h2>Bereit loszulegen?</h2>
-    <p>30 Tage kostenlos testen – keine Kreditkarte nötig.</p>
+    <h2>Wie viele Aufträge verpassen Sie gerade?</h2>
+    <p>Jeder Tag ohne HandwerkBot kostet Sie potenzielle Kunden.</p>
   </div>
   <a class="btn-dark" routerLink="/register">Jetzt kostenlos starten →</a>
 </div>

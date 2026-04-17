@@ -6,6 +6,8 @@
   @media (max-width: 768px) { padding: 24px 5%; }
 }
 
+// ── Header ──────────────────────────────────────────────────────────────────
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -15,9 +17,10 @@
   gap: 16px;
 
   h1 {
-    font-family: 'Syne', sans-serif;
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 500;
+    font-stretch: normal;
+    letter-spacing: normal;
     color: var(--text);
     margin-bottom: 4px;
   }
@@ -48,46 +51,336 @@
   &:hover { color: var(--text); border-color: var(--text-muted); }
 }
 
-// Stats
+// ── Stat cards ───────────────────────────────────────────────────────────────
+
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 }
 
 .stat-card {
   background: var(--bg-2) !important;
   border: 1px solid var(--border) !important;
   border-radius: var(--radius) !important;
-  padding: 0 !important;
+  overflow: hidden;
 
   mat-card-content {
-    padding: 24px !important;
+    padding: 0 !important;
     display: flex;
     flex-direction: column;
-    gap: 4px;
   }
 
-  .stat-icon { font-size: 20px; margin-bottom: 12px; }
+  .stat-body {
+    padding: 20px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .stat-icon { font-size: 18px; margin-bottom: 10px; }
 
   .stat-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 40px;
+
+    font-size: 36px;
     font-weight: 800;
     color: var(--text);
     line-height: 1;
   }
 
-  .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
 
-  &.accent-card .stat-value { color: var(--accent); }
-  &.green-card  .stat-value { color: var(--green);  }
+  .stat-trend {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    opacity: 0.75;
+  }
+
+  .stat-bar {
+    height: 3px;
+    border-radius: 0;
+    background: var(--border);
+  }
+
+  &.stat-card--accent {
+    .stat-value { color: var(--accent); }
+    .stat-bar   { background: var(--accent); }
+  }
+  &.stat-card--orange {
+    .stat-value { color: #f59e0b; }
+    .stat-bar   { background: #f59e0b; }
+  }
+  &.stat-card--green {
+    .stat-value { color: var(--green); }
+    .stat-bar   { background: var(--green); }
+  }
+  &.stat-card--blue {
+    .stat-value { color: #60a5fa; }
+    .stat-bar   { background: #60a5fa; }
+  }
 }
 
-// Tabelle
+// ── Charts grid ──────────────────────────────────────────────────────────────
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: start;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.charts-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Weekly bar chart ─────────────────────────────────────────────────────────
+
+.chart-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+
+  mat-card-header {
+    padding: 20px 20px 0 !important;
+    margin-bottom: 4px;
+  }
+
+  mat-card-title {
+
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  mat-card-subtitle {
+    font-size: 12px !important;
+    color: var(--text-muted) !important;
+    margin-top: 2px !important;
+  }
+
+  mat-card-content { padding: 16px 20px 20px !important; }
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 160px;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+
+  &--current .bar-fill { background: var(--accent) !important; }
+  &--current .bar-label { color: var(--accent); font-weight: 600; }
+}
+
+.bar-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  min-height: 14px;
+}
+
+.bar-track {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  overflow: hidden;
+  min-height: 10px;
+}
+
+.bar-fill {
+  width: 100%;
+  background: rgba(124, 110, 255, 0.35);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+}
+
+.bar-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-align: center;
+}
+
+// ── Mini calendar ─────────────────────────────────────────────────────────────
+
+.calendar-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+
+  mat-card-header {
+    padding: 16px 16px 0 !important;
+    margin-bottom: 4px;
+  }
+
+  mat-card-title {
+
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  mat-card-content { padding: 8px 16px 16px !important; }
+}
+
+.calendar-dow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+
+  span {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 4px 0;
+  }
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-radius: 4px;
+  cursor: default;
+  transition: background 0.15s;
+
+  &--empty { pointer-events: none; }
+
+  &--today {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    border-radius: 50%;
+  }
+
+  &--has-apt:not(.cal-day--today) {
+    background: rgba(74, 222, 128, 0.18);
+    color: #4ade80;
+    font-weight: 600;
+  }
+}
+
+// ── Donut chart ───────────────────────────────────────────────────────────────
+
+.donut-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+
+  mat-card-header {
+    padding: 16px 16px 0 !important;
+    margin-bottom: 4px;
+  }
+
+  mat-card-title {
+
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  mat-card-content { padding: 8px 16px 16px !important; }
+}
+
+.donut-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.donut-svg {
+  width: 120px;
+  height: 120px;
+}
+
+.donut-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  fill: var(--text, #fff);
+}
+
+.donut-lbl {
+  font-size: 7px;
+  fill: var(--text-muted, #888);
+}
+
+.donut-legend {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.legend-pct {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+
 .table-card {
   background: var(--bg-2) !important;
   border: 1px solid var(--border) !important;
@@ -104,7 +397,7 @@
   }
 
   mat-card-title {
-    font-family: 'Syne', sans-serif;
+
     font-size: 18px !important;
     font-weight: 700 !important;
     color: var(--text) !important;
@@ -113,7 +406,8 @@
   mat-card-content { padding: 0 !important; }
 }
 
-// Filter Tabs
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+
 .filter-tabs {
   display: flex;
   gap: 4px;
@@ -140,6 +434,8 @@
   }
 }
 
+// ── Table utilities ───────────────────────────────────────────────────────────
+
 .full-width { width: 100%; }
 
 .loading {
@@ -154,13 +450,10 @@
   color: var(--text-muted);
 
   .empty-icon { font-size: 48px; margin-bottom: 16px; }
-
   p { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-
   small { font-size: 13px; }
 }
 
-// Status Badge
 .status-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -168,12 +461,11 @@
   font-size: 12px;
   font-weight: 600;
 
-  &.status-confirmed  { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  &.status-completed  { background: rgba(34,197,94,0.15);  color: #4ade80; }
-  &.status-cancelled  { background: rgba(239,68,68,0.15);  color: #f87171; }
+  &.status-confirmed { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+  &.status-completed { background: rgba(34, 197, 94, 0.15);  color: #4ade80; }
+  &.status-cancelled { background: rgba(239, 68, 68, 0.15);  color: #f87171; }
 }
 
-// Action Buttons
 .action-menu {
   display: flex;
   gap: 6px;
@@ -194,19 +486,16 @@
   align-items: center;
   justify-content: center;
 
-  &--complete:hover { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: #4ade80; }
-  &--cancel:hover   { background: rgba(239,68,68,0.15);  color: #f87171; border-color: #f87171; }
-  &--restore:hover  { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: #60a5fa; }
+  &--complete:hover { background: rgba(34, 197, 94, 0.15);  color: #4ade80; border-color: #4ade80; }
+  &--cancel:hover   { background: rgba(239, 68, 68, 0.15);  color: #f87171; border-color: #f87171; }
+  &--restore:hover  { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: #60a5fa; }
 }
 
-// Material Table Overrides
-.mat-mdc-table {
-  background: transparent !important;
-}
+// ── Material overrides ────────────────────────────────────────────────────────
 
-.mat-mdc-header-row {
-  background: rgba(255,255,255,0.03) !important;
-}
+.mat-mdc-table { background: transparent !important; }
+
+.mat-mdc-header-row { background: rgba(255, 255, 255, 0.03) !important; }
 
 .mat-mdc-header-cell {
   color: var(--text-muted) !important;
@@ -223,10 +512,6 @@
   border-bottom: 1px solid var(--border) !important;
 }
 
-.mat-mdc-row:last-child .mat-mdc-cell {
-  border-bottom: none !important;
-}
+.mat-mdc-row:last-child .mat-mdc-cell { border-bottom: none !important; }
 
-.mat-mdc-row:hover {
-  background: rgba(255,255,255,0.02) !important;
-}
+.mat-mdc-row:hover { background: rgba(255, 255, 255, 0.02) !important; }
