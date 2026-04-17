@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "handwerkbot-frontend": {
+    "kommuvo-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "handwerkbot-frontend:build:production"
+              "buildTarget": "kommuvo-frontend:build:production"
             },
             "development": {
-              "buildTarget": "handwerkbot-frontend:build:development"
+              "buildTarget": "kommuvo-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

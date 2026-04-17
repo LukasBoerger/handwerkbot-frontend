@@ -38,7 +38,7 @@ describe('Settings', () => {
   });
 
   it('sollte Formular mit Standardwerten initialisieren', () => {
-    expect(component.form.get('botName')?.value).toBe('HandwerkBot');
+    expect(component.form.get('botName')?.value).toBe('KommuvoBot');
     expect(component.form.get('maxDaysAhead')?.value).toBe(28);
   });
 

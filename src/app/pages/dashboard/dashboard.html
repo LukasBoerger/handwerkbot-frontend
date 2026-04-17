@@ -183,6 +183,7 @@
           <small>{{ statusFilter === 'all' ? 'Termine erscheinen hier sobald Kunden über WhatsApp buchen' : 'Kein Termin mit diesem Status' }}</small>
         </div>
       } @else {
+        <div class="table-scroll-wrapper">
         <table mat-table [dataSource]="filtered" class="full-width">
 
           <ng-container matColumnDef="customer">
@@ -240,6 +241,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+        </div>
       }
     </mat-card-content>
   </mat-card>

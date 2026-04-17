@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,7 +57,7 @@ export class Dashboard implements OnInit {
   filtered: any[] = [];
   loading = false;
   statusFilter: 'all' | 'confirmed' | 'completed' | 'cancelled' = 'all';
-  displayedColumns = ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
+  displayedColumns = this.getColumns();
 
   weeklyChartData: WeekBar[] = [];
   calendarCells: CalendarDay[] = [];
@@ -287,6 +287,18 @@ export class Dashboard implements OnInit {
 
   logout() {
     this.auth.logout();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.displayedColumns = this.getColumns();
+  }
+
+  private getColumns(): string[] {
+    if (typeof window !== 'undefined' && window.innerWidth < 600) {
+      return ['customer', 'datetime', 'status', 'actions'];
+    }
+    return ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────

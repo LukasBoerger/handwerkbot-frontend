@@ -6,6 +6,12 @@
   padding: 40px 24px;
   position: relative;
 
+  @media (max-width: 480px) {
+    padding: 24px 12px;
+    align-items: flex-start;
+    padding-top: 32px;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -27,6 +33,12 @@
   border-radius: var(--radius-lg) !important;
   padding: 40px !important;
   box-shadow: 0 32px 80px rgba(0,0,0,0.4) !important;
+
+  @media (max-width: 480px) {
+    padding: 24px 20px !important;
+    border-radius: var(--radius) !important;
+    box-shadow: none !important;
+  }
 }
 
 .auth-logo {

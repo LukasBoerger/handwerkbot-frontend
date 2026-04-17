@@ -26,7 +26,7 @@ export class Landing {
   ];
 
   testimonials = [
-    { quote: 'Seit HandwerkBot spare ich 2 Stunden täglich.', name: 'Klaus M.', job: 'Elektriker' },
+    { quote: 'Seit Kommuvo spare ich 2 Stunden täglich.', name: 'Klaus M.', job: 'Elektriker' },
     { quote: 'Meine Kunden sind begeistert wie schnell sie Antwort kriegen.', name: 'Sandra K.', job: 'Malerin' },
     { quote: 'Setup war in 10 Minuten erledigt.', name: 'Thomas B.', job: 'Klempner' },
   ];

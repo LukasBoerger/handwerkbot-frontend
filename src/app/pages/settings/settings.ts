@@ -64,7 +64,7 @@ export class Settings implements OnInit {
       businessPhone: ['', Validators.required],
       businessEmail: ['', [Validators.required, Validators.email]],
       businessServices: ['', Validators.required],
-      botName: ['HandwerkBot', Validators.required],
+      botName: ['KommuvoBot', Validators.required],
       welcomeMessage: [''],
       outOfHoursMsg: [''],
       maxDaysAhead: [28, [Validators.required, Validators.min(1), Validators.max(365)]],

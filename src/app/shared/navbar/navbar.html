@@ -1,31 +1,37 @@
 <nav class="navbar">
-  <div class="logo" routerLink="/">
+  <div class="logo" routerLink="/" (click)="closeMenu()">
     <div class="logo-icon">🔧</div>
-    HandwerkBot
+    Kommuvo
   </div>
 
-  <div class="nav-links">
+  <button class="hamburger" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Menü öffnen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-links" [class.mobile-open]="menuOpen">
     @if (auth.isLoggedIn()) {
-      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a class="nav-link" routerLink="/settings" routerLinkActive="active">Einstellungen</a>
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+      <a class="nav-link" routerLink="/settings" routerLinkActive="active" (click)="closeMenu()">Einstellungen</a>
       <div class="user-chip" [matMenuTriggerFor]="userMenu">
         <div class="avatar">{{ auth.getUser()?.fullName?.charAt(0) }}</div>
         {{ auth.getUser()?.fullName }}
         <mat-icon style="font-size:16px;width:16px;height:16px;color:var(--text-muted)">expand_more</mat-icon>
       </div>
       <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="/settings">
+        <button mat-menu-item routerLink="/settings" (click)="closeMenu()">
           <mat-icon>settings</mat-icon> Einstellungen
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="auth.logout()">
+        <button mat-menu-item (click)="auth.logout(); closeMenu()">
           <mat-icon>logout</mat-icon> Abmelden
         </button>
       </mat-menu>
     } @else {
-      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Start</a>
-      <a class="nav-link" routerLink="/login">Login</a>
-      <a class="btn-primary" routerLink="/register">Kostenlos starten</a>
+      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="closeMenu()">Start</a>
+      <a class="nav-link" routerLink="/login" (click)="closeMenu()">Login</a>
+      <a class="btn-primary" routerLink="/register" (click)="closeMenu()">Kostenlos starten</a>
     }
   </div>
 </nav>

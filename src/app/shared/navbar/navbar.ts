@@ -20,4 +20,13 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class Navbar {
   auth = inject(AuthService);
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
+  }
 }
