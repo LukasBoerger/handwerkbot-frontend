@@ -1,0 +1,10 @@
+@if (visible()) {
+  <div class="cookie-banner">
+    <p>
+      Wir nutzen technisch notwendige Cookies sowie die Anthropic Claude API
+      zur Nachrichtenverarbeitung. Mehr dazu in unserer
+      <a routerLink="/datenschutz">Datenschutzerklärung</a>.
+    </p>
+    <button (click)="accept()">Verstanden</button>
+  </div>
+}

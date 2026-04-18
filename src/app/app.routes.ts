@@ -7,6 +7,8 @@ import { Settings } from './pages/settings/settings';
 import { authGuard } from './guards/auth.guard';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { Impressum } from './pages/impressum/impressum';
+import { Datenschutz } from './pages/datenschutz/datenschutz';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -16,5 +18,7 @@ export const routes: Routes = [
   { path: 'settings', component: Settings, canActivate: [authGuard] },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'reset-password', component: ResetPassword },
+  { path: 'impressum', component: Impressum },
+  { path: 'datenschutz', component: Datenschutz },
   { path: '**', redirectTo: '' }
 ];

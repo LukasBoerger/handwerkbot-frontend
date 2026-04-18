@@ -7,7 +7,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
@@ -38,7 +37,6 @@ interface DonutSegment {
   selector: 'app-dashboard',
   imports: [
     RouterLink,
-    DatePipe,
     FormsModule,
     MatCardModule,
     MatButtonModule,
@@ -53,7 +51,9 @@ interface DonutSegment {
 })
 export class Dashboard implements OnInit {
   user: any;
-  isDemo = this.auth.getUser()?.email === 'demo@kommuvo.de';
+  get isDemo(): boolean {
+    return this.auth.getUser()?.email === 'demo@kommuvo.de';
+  }
   appointments: any[] = [];
   filtered: any[] = [];
   loading = false;

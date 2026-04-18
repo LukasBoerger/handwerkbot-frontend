@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +25,8 @@ export class Login {
   error = '';
   hidePassword = true;
 
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(private fb: FormBuilder,
               private auth: AuthService,
               private router: Router) {
@@ -36,6 +38,7 @@ export class Login {
 
   fillDemo() {
     this.form.setValue({ email: 'demo@kommuvo.de', password: 'demo1234' });
+    this.loading = true;
     this.submit();
   }
 
@@ -50,6 +53,7 @@ export class Login {
       error: (err) => {
         this.error = err.error?.error || 'Ungültige Zugangsdaten';
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
