@@ -9,7 +9,10 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+      ],
       providers: [AuthService],
     });
     service = TestBed.inject(AuthService);

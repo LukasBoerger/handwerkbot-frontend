@@ -14,6 +14,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
+
+interface BillingStatus {
+  plan: string;
+  status: string;
+}
+
 @Component({
   selector: 'app-settings',
   imports: [
@@ -33,11 +39,6 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
-interface BillingStatus {
-  plan: string;
-  status: string;
-}
-
 export class Settings implements OnInit {
   form: FormGroup;
   loading = false;
@@ -187,7 +188,9 @@ export class Settings implements OnInit {
   loadBillingStatus() {
     this.billingLoading = true;
     this.http
-      .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', { headers: this.getHeaders() })
+      .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', {
+        headers: this.getHeaders(),
+      })
       .subscribe({
         next: (res) => {
           this.billingStatus = res;
@@ -204,7 +207,9 @@ export class Settings implements OnInit {
   openPortal() {
     this.portalLoading = true;
     this.http
-      .post<{ url: string }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.getHeaders() })
+      .post<{
+        url: string;
+      }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.getHeaders() })
       .subscribe({
         next: (res) => {
           window.location.href = res.url;

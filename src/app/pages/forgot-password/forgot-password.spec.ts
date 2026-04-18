@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ForgotPassword } from './forgot-password';
 
 describe('ForgotPassword', () => {
@@ -8,7 +10,12 @@ describe('ForgotPassword', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ForgotPassword],
+      imports: [
+        ForgotPassword,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        HttpClientTestingModule,
+        NoopAnimationsModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ForgotPassword);

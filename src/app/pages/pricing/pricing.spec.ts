@@ -1,35 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Dashboard } from './dashboard';
+import { Pricing } from './pricing';
 import { AuthService } from '../../services/auth.service';
 
-describe('Dashboard', () => {
-  let component: Dashboard;
-  let fixture: ComponentFixture<Dashboard>;
+describe('Pricing', () => {
+  let component: Pricing;
+  let fixture: ComponentFixture<Pricing>;
 
   const authServiceMock = {
-    getToken: () => 'test-token',
-    getUser: () => ({ fullName: 'Test User', email: 'test@test.de' }),
-    isLoggedIn: () => true,
-    logout: () => {},
+    getToken: () => null,
+    isLoggedIn: () => false,
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        Dashboard,
+        Pricing,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         HttpClientTestingModule,
-        MatSnackBarModule,
         NoopAnimationsModule,
       ],
       providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Dashboard);
+    fixture = TestBed.createComponent(Pricing);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

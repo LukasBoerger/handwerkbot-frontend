@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,6 +14,7 @@ describe('Settings', () => {
   const authServiceMock = {
     getToken: () => 'test-token',
     getUser: () => ({ fullName: 'Test User' }),
+    isLoggedIn: () => true,
   };
 
   beforeEach(async () => {
@@ -23,7 +24,7 @@ describe('Settings', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         MatSnackBarModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         NoopAnimationsModule,
       ],
       providers: [{ provide: AuthService, useValue: authServiceMock }],
@@ -41,5 +42,4 @@ describe('Settings', () => {
     expect(component.form.get('botName')?.value).toBe('KommuvoBot');
     expect(component.form.get('maxDaysAhead')?.value).toBe(28);
   });
-
 });

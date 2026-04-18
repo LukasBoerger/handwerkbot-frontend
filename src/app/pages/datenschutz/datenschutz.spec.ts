@@ -1,24 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Login } from './login';
+import { Datenschutz } from './datenschutz';
 
-describe('Login', () => {
-  let component: Login;
-  let fixture: ComponentFixture<Login>;
+describe('Datenschutz', () => {
+  let component: Datenschutz;
+  let fixture: ComponentFixture<Datenschutz>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        Login,
+        Datenschutz,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        HttpClientTestingModule,
-        NoopAnimationsModule,
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Login);
+    fixture = TestBed.createComponent(Datenschutz);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
