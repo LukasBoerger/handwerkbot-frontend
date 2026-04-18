@@ -7,10 +7,16 @@
 
   <div class="pricing-grid">
     @for (plan of plans; track plan.id) {
-      <div class="pricing-card" [class.highlighted]="plan.highlight">
-        @if (plan.highlight) {
+      <div class="pricing-card"
+           [class.highlighted]="plan.highlight"
+           [class.active-plan]="isActivePlan(plan.id)">
+
+        @if (isActivePlan(plan.id)) {
+          <div class="current-plan-badge">Ihr aktueller Plan</div>
+        } @else if (plan.highlight && !isActivePlan(plan.id)) {
           <div class="popular-badge">Beliebteste Wahl</div>
         }
+
         <div class="plan-name">{{ plan.name }}</div>
         <div class="plan-price">
           <span class="price-amount">{{ plan.price }}€</span>
@@ -21,17 +27,43 @@
             <li>✓ {{ f }}</li>
           }
         </ul>
-        <button
-          class="btn-plan"
-          [class.btn-plan-dark]="plan.highlight"
-          [disabled]="loadingPlan() !== null"
-          (click)="checkout(plan.id)">
-          @if (loadingPlan() === plan.id) {
-            <mat-spinner diameter="16"></mat-spinner>
-          } @else {
-            Jetzt abonnieren →
-          }
-        </button>
+
+        @if (isActivePlan(plan.id)) {
+          <!-- Active plan: show manage button -->
+          <button class="btn-plan btn-plan-manage"
+                  [disabled]="portalLoading()"
+                  (click)="openPortal()">
+            @if (portalLoading()) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Verwalten →
+            }
+          </button>
+        } @else if (billingStatus()?.status === 'active') {
+          <!-- Different plan while subscription active: switch plan -->
+          <button class="btn-plan"
+                  [class.btn-plan-dark]="plan.highlight"
+                  [disabled]="loadingPlan() !== null"
+                  (click)="checkout(plan.id)">
+            @if (loadingPlan() === plan.id) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Wechseln →
+            }
+          </button>
+        } @else {
+          <!-- No active sub (guest or trial): subscribe -->
+          <button class="btn-plan"
+                  [class.btn-plan-dark]="plan.highlight"
+                  [disabled]="loadingPlan() !== null"
+                  (click)="checkout(plan.id)">
+            @if (loadingPlan() === plan.id) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Jetzt abonnieren →
+            }
+          </button>
+        }
       </div>
     }
   </div>

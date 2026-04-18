@@ -13,6 +13,7 @@
   <div class="nav-links" [class.mobile-open]="menuOpen">
     @if (auth.isLoggedIn()) {
       <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+      <a class="nav-link" routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()">Preise</a>
       <a class="nav-link" routerLink="/settings" routerLinkActive="active" (click)="closeMenu()">Einstellungen</a>
       <div class="user-chip" [matMenuTriggerFor]="userMenu">
         <div class="avatar">{{ auth.getUser()?.fullName?.charAt(0) }}</div>

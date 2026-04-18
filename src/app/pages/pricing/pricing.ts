@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
@@ -12,17 +12,25 @@ interface Plan {
   features: string[];
 }
 
+interface BillingStatus {
+  plan: string;
+  status: 'trial' | 'active' | 'cancelled';
+}
+
 @Component({
   selector: 'app-pricing',
   imports: [RouterLink, MatProgressSpinnerModule],
   templateUrl: './pricing.html',
   styleUrl: './pricing.scss',
 })
-export class Pricing {
+export class Pricing implements OnInit {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
+  private router = inject(Router);
 
   loadingPlan = signal<string | null>(null);
+  portalLoading = signal(false);
+  billingStatus = signal<BillingStatus | null>(null);
 
   plans: Plan[] = [
     {
@@ -48,20 +56,46 @@ export class Pricing {
     },
   ];
 
-  checkout(planId: string) {
-    this.loadingPlan.set(planId);
-    const token = this.auth.getToken();
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
+  ngOnInit() {
+    if (this.auth.isLoggedIn()) {
+      this.http
+        .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', { headers: this.authHeaders() })
+        .subscribe({ next: (res) => this.billingStatus.set(res), error: () => {} });
+    }
+  }
 
+  isActivePlan(planId: string): boolean {
+    const s = this.billingStatus();
+    return s?.status === 'active' && s.plan === planId;
+  }
+
+  checkout(planId: string) {
+    if (!this.auth.isLoggedIn()) {
+      localStorage.setItem('selectedPlan', planId);
+      this.router.navigate(['/register'], { queryParams: { plan: planId } });
+      return;
+    }
+
+    this.loadingPlan.set(planId);
     this.http
-      .post<{ checkoutUrl: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers })
+      .post<{ checkoutUrl: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers: this.authHeaders() })
       .subscribe({
-        next: (res) => {
-          window.location.href = res.checkoutUrl;
-        },
-        error: () => {
-          this.loadingPlan.set(null);
-        },
+        next: (res) => { window.location.href = res.checkoutUrl; },
+        error: () => { this.loadingPlan.set(null); },
       });
+  }
+
+  openPortal() {
+    this.portalLoading.set(true);
+    this.http
+      .post<{ url: string }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.authHeaders() })
+      .subscribe({
+        next: (res) => { window.location.href = res.url; },
+        error: () => { this.portalLoading.set(false); },
+      });
+  }
+
+  private authHeaders(): HttpHeaders {
+    return new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
   }
 }

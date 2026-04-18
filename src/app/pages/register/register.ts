@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,16 +22,21 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './register.html',
   styleUrl: './register.scss'
 })
-export class Register {
+export class Register implements OnInit {
   accountForm: FormGroup;
   businessForm: FormGroup;
   loading = false;
   error = '';
   hidePassword = true;
+  selectedPlan: string | null = null;
 
-  constructor(private fb: FormBuilder,
-              private auth: AuthService,
-              private router: Router) {
+  private fb = inject(FormBuilder);
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
+
+  constructor() {
     this.accountForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -43,6 +49,14 @@ export class Register {
     });
   }
 
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['plan']) {
+        this.selectedPlan = params['plan'];
+      }
+    });
+  }
+
   submit() {
     if (this.accountForm.invalid || this.businessForm.invalid) return;
     this.loading = true;
@@ -52,11 +66,32 @@ export class Register {
       ...this.accountForm.value,
       ...this.businessForm.value
     }).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        if (this.selectedPlan) {
+          this.startCheckout(this.selectedPlan);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
       error: (err) => {
         this.error = err.error?.error || 'Registrierung fehlgeschlagen';
         this.loading = false;
       }
     });
+  }
+
+  private startCheckout(planId: string) {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
+    this.http
+      .post<{ checkoutUrl: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers })
+      .subscribe({
+        next: (res) => {
+          localStorage.removeItem('selectedPlan');
+          window.location.href = res.checkoutUrl;
+        },
+        error: () => {
+          this.router.navigate(['/dashboard']);
+        }
+      });
   }
 }
