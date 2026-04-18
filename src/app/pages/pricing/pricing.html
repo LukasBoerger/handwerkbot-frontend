@@ -1,0 +1,40 @@
+<div class="pricing-page">
+  <div class="pricing-header">
+    <div class="section-label">Preise</div>
+    <h1>Transparent.<br>Fair. Kündbar.</h1>
+    <p class="pricing-sub">30 Tage kostenlos testen – kein Vertrag, jederzeit kündbar.</p>
+  </div>
+
+  <div class="pricing-grid">
+    @for (plan of plans; track plan.id) {
+      <div class="pricing-card" [class.highlighted]="plan.highlight">
+        @if (plan.highlight) {
+          <div class="popular-badge">Beliebteste Wahl</div>
+        }
+        <div class="plan-name">{{ plan.name }}</div>
+        <div class="plan-price">
+          <span class="price-amount">{{ plan.price }}€</span>
+          <span class="price-period">/Monat</span>
+        </div>
+        <ul class="plan-features">
+          @for (f of plan.features; track f) {
+            <li>✓ {{ f }}</li>
+          }
+        </ul>
+        <button
+          class="btn-plan"
+          [class.btn-plan-dark]="plan.highlight"
+          [disabled]="loadingPlan() !== null"
+          (click)="checkout(plan.id)">
+          @if (loadingPlan() === plan.id) {
+            <mat-spinner diameter="16"></mat-spinner>
+          } @else {
+            Jetzt abonnieren →
+          }
+        </button>
+      </div>
+    }
+  </div>
+
+  <p class="pricing-note">Alle Pläne: 30 Tage kostenlos testen · Keine Kreditkarte erforderlich</p>
+</div>

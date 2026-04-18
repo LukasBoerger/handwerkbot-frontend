@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
@@ -45,6 +46,7 @@ interface DonutSegment {
     MatChipsModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatSnackBarModule,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -69,6 +71,8 @@ export class Dashboard implements OnInit {
   private auth = inject(AuthService);
   private appointmentService = inject(AppointmentService);
   private cdr = inject(ChangeDetectorRef);
+  private route = inject(ActivatedRoute);
+  private snackBar = inject(MatSnackBar);
 
   constructor() {
     this.user = this.auth.getUser();
@@ -76,6 +80,11 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.loadAppointments();
+    this.route.queryParams.subscribe((params) => {
+      if (params['payment'] === 'success') {
+        this.snackBar.open('Zahlung erfolgreich! Ihr Abonnement ist jetzt aktiv.', 'OK', { duration: 5000 });
+      }
+    });
   }
 
   loadAppointments() {

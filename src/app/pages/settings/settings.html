@@ -7,6 +7,51 @@
     <a class="btn-outline" routerLink="/dashboard">← Dashboard</a>
   </div>
 
+  <!-- ABONNEMENT -->
+  <mat-card class="section-card billing-card">
+    <mat-card-header>
+      <mat-card-title>💳 Abonnement</mat-card-title>
+      <mat-card-subtitle>Ihr aktueller Plan und Abrechnungsstatus</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      @if (billingLoading) {
+        <div class="billing-loading"><mat-spinner diameter="24"></mat-spinner></div>
+      } @else if (billingStatus) {
+        @if (billingStatus.status === 'trial') {
+          <div class="billing-trial-banner">
+            <div class="billing-trial-icon">⏳</div>
+            <div class="billing-trial-text">
+              <strong>Sie befinden sich im Testzeitraum</strong>
+              <span>Schließen Sie jetzt ein Abonnement ab um alle Funktionen zu behalten.</span>
+            </div>
+            <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
+          </div>
+        }
+        <div class="billing-status-row">
+          <div class="billing-info">
+            <span class="billing-plan">{{ billingStatus.plan | titlecase }}</span>
+            <span class="billing-badge" [class.billing-badge--active]="billingStatus.status === 'active'"
+                  [class.billing-badge--trial]="billingStatus.status === 'trial'">
+              {{ billingStatus.status === 'active' ? 'Aktiv' : billingStatus.status === 'trial' ? 'Testzeitraum' : billingStatus.status }}
+            </span>
+          </div>
+          <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
+            @if (portalLoading) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Abonnement verwalten →
+            }
+          </button>
+        </div>
+      } @else {
+        <div class="billing-status-row">
+          <span class="billing-info-empty">Kein aktives Abonnement</span>
+          <a class="btn-subscribe" routerLink="/pricing">Plan auswählen →</a>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
   @if (loading) {
     <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
   } @else {

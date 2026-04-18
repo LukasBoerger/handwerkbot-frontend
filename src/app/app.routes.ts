@@ -9,6 +9,7 @@ import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { Impressum } from './pages/impressum/impressum';
 import { Datenschutz } from './pages/datenschutz/datenschutz';
+import { Pricing } from './pages/pricing/pricing';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPassword },
   { path: 'impressum', component: Impressum },
   { path: 'datenschutz', component: Datenschutz },
+  { path: 'pricing', component: Pricing },
   { path: '**', redirectTo: '' }
 ];

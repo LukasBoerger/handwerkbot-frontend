@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +18,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-settings',
   imports: [
     ReactiveFormsModule,
+    TitleCasePipe,
     RouterLink,
     MatCardModule,
     MatFormFieldModule,
@@ -31,12 +33,20 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
+interface BillingStatus {
+  plan: string;
+  status: string;
+}
+
 export class Settings implements OnInit {
   form: FormGroup;
   loading = false;
   saving = false;
   googleConnected = false;
   googleLoading = false;
+  billingStatus: BillingStatus | null = null;
+  billingLoading = false;
+  portalLoading = false;
 
   private auth = inject(AuthService);
   private http = inject(HttpClient);
@@ -96,6 +106,7 @@ export class Settings implements OnInit {
   ngOnInit() {
     this.loadSettings();
     this.loadGoogleStatus();
+    this.loadBillingStatus();
 
     // Nach OAuth-Redirect Feedback anzeigen
     this.route.queryParams.subscribe((params) => {
@@ -171,6 +182,39 @@ export class Settings implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  loadBillingStatus() {
+    this.billingLoading = true;
+    this.http
+      .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', { headers: this.getHeaders() })
+      .subscribe({
+        next: (res) => {
+          this.billingStatus = res;
+          this.billingLoading = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.billingLoading = false;
+          this.cdr.detectChanges();
+        },
+      });
+  }
+
+  openPortal() {
+    this.portalLoading = true;
+    this.http
+      .post<{ url: string }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.getHeaders() })
+      .subscribe({
+        next: (res) => {
+          window.location.href = res.url;
+        },
+        error: () => {
+          this.portalLoading = false;
+          this.snackBar.open('❌ Portal konnte nicht geöffnet werden', 'OK', { duration: 3000 });
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   loadGoogleStatus() {
