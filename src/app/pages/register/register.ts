@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
     ReactiveFormsModule, RouterLink,
     MatCardModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule, MatSnackBarModule,
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss'
@@ -35,6 +36,7 @@ export class Register implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
+  private snackBar = inject(MatSnackBar);
 
   constructor() {
     this.accountForm = this.fb.group({
@@ -83,14 +85,20 @@ export class Register implements OnInit {
   private startCheckout(planId: string) {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
     this.http
-      .post<{ checkoutUrl: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers })
+      .post<{ url: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers })
       .subscribe({
         next: (res) => {
           localStorage.removeItem('selectedPlan');
-          window.location.href = res.checkoutUrl;
+          window.location.href = res.url;
         },
         error: () => {
-          this.router.navigate(['/dashboard']);
+          this.loading = false;
+          this.snackBar.open(
+            'Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.',
+            'OK',
+            { duration: 4000 }
+          );
+          this.router.navigate(['/pricing']);
         }
       });
   }

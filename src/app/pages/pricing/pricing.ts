@@ -78,9 +78,9 @@ export class Pricing implements OnInit {
 
     this.loadingPlan.set(planId);
     this.http
-      .post<{ checkoutUrl: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers: this.authHeaders() })
+      .post<{ url: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers: this.authHeaders() })
       .subscribe({
-        next: (res) => { window.location.href = res.checkoutUrl; },
+        next: (res) => { window.location.href = res.url; },
         error: () => { this.loadingPlan.set(null); },
       });
   }
