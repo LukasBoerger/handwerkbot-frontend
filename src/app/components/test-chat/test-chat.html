@@ -1,0 +1,57 @@
+<div class="chat-widget">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header__avatar">🤖</div>
+    <div class="chat-header__info">
+      <span class="chat-header__name">Ihr KI-Assistent</span>
+      <span class="chat-header__status">● Online</span>
+    </div>
+    <span class="chat-header__hint">Testnachrichten werden nicht gespeichert</span>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages">
+    @for (msg of messages; track $index) {
+      <div class="bubble-row" [class.bubble-row--user]="msg.role === 'user'">
+        <div class="bubble" [class.bubble--user]="msg.role === 'user'" [class.bubble--bot]="msg.role === 'bot'">
+          <span class="bubble__text">{{ msg.text }}</span>
+          <span class="bubble__time">{{ msg.time }}</span>
+        </div>
+      </div>
+    }
+
+    @if (typing) {
+      <div class="bubble-row">
+        <div class="bubble bubble--bot bubble--typing">
+          <span class="typing-dots">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="bubble__time">Bot tippt...</span>
+        </div>
+      </div>
+    }
+
+    <div #messagesEnd></div>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input">
+    <input
+      class="chat-input__field"
+      type="text"
+      placeholder="Nachricht schreiben..."
+      [(ngModel)]="inputText"
+      (keydown)="onKeydown($event)"
+      [disabled]="typing"
+      autocomplete="off">
+    <button
+      class="chat-input__send"
+      (click)="send()"
+      [disabled]="!inputText.trim() || typing"
+      title="Senden">
+      ➤
+    </button>
+  </div>
+
+</div>

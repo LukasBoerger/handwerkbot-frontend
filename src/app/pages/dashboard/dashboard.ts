@@ -11,6 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
+import { TestChat } from '../../components/test-chat/test-chat';
 
 interface WeekBar {
   label: string;
@@ -39,6 +40,7 @@ interface DonutSegment {
   imports: [
     RouterLink,
     FormsModule,
+    TestChat,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -56,9 +58,14 @@ export class Dashboard implements OnInit {
   get isDemo(): boolean {
     return this.auth.getUser()?.email === 'demo@kommuvo.de';
   }
+
+  get isNewUser(): boolean {
+    return this.appointments.length === 0;
+  }
   appointments: any[] = [];
   filtered: any[] = [];
   loading = false;
+  chatOpen = false;
   statusFilter: 'all' | 'confirmed' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
 

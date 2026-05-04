@@ -16,10 +16,34 @@
       <button class="btn-outline" (click)="loadAppointments()" title="Aktualisieren">
         🔄 Aktualisieren
       </button>
+      @if (!isDemo) {
+        <button class="btn-outline" [class.btn-outline--active]="chatOpen" (click)="chatOpen = !chatOpen">
+          🧪 Bot testen
+        </button>
+      }
       <a class="btn-outline" routerLink="/settings">⚙️ Einstellungen</a>
       <button class="btn-outline" (click)="logout()">→ Abmelden</button>
     </div>
   </div>
+
+  <!-- CHAT PANEL -->
+  @if (chatOpen && !isDemo) {
+    <div class="chat-panel">
+      <app-test-chat></app-test-chat>
+    </div>
+  }
+
+  <!-- SETUP BANNER -->
+  @if (isNewUser && !loading) {
+    <div class="setup-banner">
+      <div class="setup-banner__icon">🚀</div>
+      <div class="setup-banner__text">
+        <strong>Willkommen bei Kommuvo!</strong>
+        <span>Richten Sie jetzt Ihren Bot ein – es dauert nur wenige Minuten.</span>
+      </div>
+      <a routerLink="/setup" class="btn-setup">Setup starten →</a>
+    </div>
+  }
 
   <!-- STATS -->
   <div class="stats-grid">

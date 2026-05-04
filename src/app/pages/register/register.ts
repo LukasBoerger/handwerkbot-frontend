@@ -72,7 +72,7 @@ export class Register implements OnInit {
         if (this.selectedPlan) {
           this.startCheckout(this.selectedPlan);
         } else {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/setup']);
         }
       },
       error: (err) => {

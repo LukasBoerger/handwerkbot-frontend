@@ -10,6 +10,7 @@ import { ResetPassword } from './pages/reset-password/reset-password';
 import { Impressum } from './pages/impressum/impressum';
 import { Datenschutz } from './pages/datenschutz/datenschutz';
 import { Pricing } from './pages/pricing/pricing';
+import { SetupWizard } from './pages/setup-wizard/setup-wizard';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'settings', component: Settings, canActivate: [authGuard] },
+  { path: 'setup', component: SetupWizard, canActivate: [authGuard] },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'reset-password', component: ResetPassword },
   { path: 'impressum', component: Impressum },

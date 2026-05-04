@@ -1,0 +1,183 @@
+<div class="wizard-container">
+  <div class="wizard-header">
+    <h1>🚀 Einrichtungsassistent</h1>
+    <p>Richten Sie Ihren Bot in wenigen Minuten ein</p>
+  </div>
+
+  <mat-stepper [linear]="true" #stepper class="wizard-stepper">
+
+    <!-- SCHRITT 1: Betriebsdaten -->
+    <mat-step [stepControl]="step1" label="Betriebsdaten">
+      <form [formGroup]="step1">
+        <mat-card class="step-card">
+          <mat-card-header>
+            <mat-card-title>🏢 Betriebsdaten</mat-card-title>
+            <mat-card-subtitle>Grundlegende Informationen zu Ihrem Betrieb</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Inhaber</mat-label>
+                <input matInput formControlName="businessOwner">
+                <mat-error>Pflichtfeld</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>E-Mail</mat-label>
+                <input matInput formControlName="businessEmail" type="email">
+                <mat-error>Gültige E-Mail-Adresse eingeben</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Leistungen</mat-label>
+                <input matInput formControlName="businessServices"
+                       placeholder="z.B. Elektroinstallation, Reparaturen, Notdienst">
+                <mat-hint>Kommagetrennt eingeben</mat-hint>
+                <mat-error>Pflichtfeld</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Bot-Name</mat-label>
+                <input matInput formControlName="botName" placeholder="z.B. KommuvoBot">
+                <mat-hint>So stellt sich Ihr Bot bei Kunden vor</mat-hint>
+                <mat-error>Pflichtfeld</mat-error>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="step-actions">
+          <button class="btn-next" type="button" (click)="onNextStep1(stepper)">
+            Weiter →
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- SCHRITT 2: Öffnungszeiten -->
+    <mat-step [stepControl]="step2" label="Öffnungszeiten">
+      <form [formGroup]="step2">
+        <mat-card class="step-card">
+          <mat-card-header>
+            <mat-card-title>🕐 Öffnungszeiten</mat-card-title>
+            <mat-card-subtitle>Aktivieren Sie die Tage an denen Sie erreichbar sind</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="hours-list">
+              @for (day of days; track day.key) {
+                <div class="hours-row" [class.hours-row--open]="step2.get('open' + day.key)?.value">
+                  <div class="hours-left">
+                    <button
+                      type="button"
+                      class="day-toggle"
+                      [class.day-toggle--on]="step2.get('open' + day.key)?.value"
+                      (click)="step2.get('open' + day.key)?.setValue(!step2.get('open' + day.key)?.value)">
+                      <span class="day-toggle__thumb"></span>
+                    </button>
+                    <span class="day-label">{{ day.label }}</span>
+                  </div>
+
+                  @if (step2.get('open' + day.key)?.value) {
+                    <div class="hours-times">
+                      <div class="time-field">
+                        <label>Von</label>
+                        <input type="time" [formControlName]="'from' + day.key" class="time-input">
+                      </div>
+                      <span class="time-separator">–</span>
+                      <div class="time-field">
+                        <label>Bis</label>
+                        <input type="time" [formControlName]="'to' + day.key" class="time-input">
+                      </div>
+                    </div>
+                  } @else {
+                    <span class="closed-label">Geschlossen</span>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (step2.hasError('noDaySelected') && step2.touched) {
+              <p class="error-hint">Mindestens ein Tag muss aktiviert sein.</p>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <div class="step-actions">
+          <button class="btn-back" type="button" (click)="stepper.previous()">← Zurück</button>
+          <button class="btn-next" type="button" (click)="onNextStep2(stepper)">
+            Weiter →
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- SCHRITT 3: WhatsApp -->
+    <mat-step label="WhatsApp">
+      <mat-card class="step-card whatsapp-card">
+        <mat-card-header>
+          <mat-card-title>💬 WhatsApp einrichten</mat-card-title>
+          <mat-card-subtitle>So verbinden Sie Ihre WhatsApp Business Nummer</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-banner">
+            <div class="info-icon">💡</div>
+            <div>
+              <strong>Schritt-für-Schritt-Anleitung</strong>
+              <ol>
+                <li>Gehe zu <strong>developers.facebook.com</strong></li>
+                <li>Erstelle eine WhatsApp Business App</li>
+                <li>Kopiere deinen Access Token und die Phone Number ID</li>
+                <li>
+                  Kontaktiere uns – wir richten es für dich ein<br>
+                  <a href="mailto:setup@kommuvo.de" class="setup-link">setup@kommuvo.de</a>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="step-actions">
+        <button class="btn-back" type="button" (click)="stepper.previous()">← Zurück</button>
+        <button class="btn-confirmed" type="button" (click)="stepper.next()">
+          ✅ Ich habe die Anleitung gelesen
+        </button>
+      </div>
+    </mat-step>
+
+    <!-- SCHRITT 4: Fertig -->
+    <mat-step label="Fertig">
+      <mat-card class="step-card success-card">
+        <mat-card-content>
+          <div class="success-content">
+            <div class="success-icon">🎉</div>
+            <h2>Einrichtung abgeschlossen!</h2>
+            <p>Ihr Bot ist bereit. Hier eine Zusammenfassung Ihrer Eingaben:</p>
+
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">Inhaber</span>
+                <span class="summary-value">{{ step1.value.businessOwner || '–' }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Bot-Name</span>
+                <span class="summary-value">{{ step1.value.botName || '–' }}</span>
+              </div>
+              <div class="summary-item full-width">
+                <span class="summary-label">Aktive Tage</span>
+                <span class="summary-value">
+                  {{ activeDays.length > 0 ? activeDays.join(', ') : '–' }}
+                </span>
+              </div>
+            </div>
+
+            <button class="btn-dashboard" type="button" (click)="goToDashboard()">
+              Zum Dashboard →
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-step>
+
+  </mat-stepper>
+</div>
