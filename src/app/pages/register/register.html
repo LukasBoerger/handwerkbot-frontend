@@ -71,11 +71,17 @@
               <mat-icon matPrefix>phone</mat-icon>
             </mat-form-field>
 
+            @if (error) {
+              <div class="error-banner">
+                <mat-icon>error</mat-icon> {{ error }}
+              </div>
+            }
+
             <div class="step-actions">
               <button class="btn-back" matStepperPrevious>Zurück</button>
               <button class="submit-btn" style="flex:1"
                       [disabled]="businessForm.invalid || loading"
-                      (click)="submit()">
+                      (click)="submit(stepper)">
                 @if (loading) {
                   <mat-spinner diameter="20"></mat-spinner>
                 } @else {

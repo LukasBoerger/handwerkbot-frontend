@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
@@ -60,7 +60,7 @@ export class Register implements OnInit {
     });
   }
 
-  submit() {
+  submit(stepper: MatStepper) {
     if (this.accountForm.invalid || this.businessForm.invalid) return;
     this.loading = true;
     this.error = '';
@@ -77,8 +77,13 @@ export class Register implements OnInit {
         }
       },
       error: (err) => {
-        this.error = err.error?.error || 'Registrierung fehlgeschlagen';
+        const msg = err.error?.error || 'Registrierung fehlgeschlagen';
+        this.error = msg;
         this.loading = false;
+        if (msg.toLowerCase().includes('e-mail') ||
+            msg.toLowerCase().includes('mail')) {
+          stepper.selectedIndex = 0;
+        }
       }
     });
   }
