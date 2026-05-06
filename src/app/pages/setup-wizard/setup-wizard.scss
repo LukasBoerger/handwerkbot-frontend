@@ -379,6 +379,44 @@
   &:hover { opacity: 0.85; }
 }
 
+// ── Service Chips ─────────────────────────────────────────────────────────────
+
+.services-section {
+  grid-column: 1 / -1;
+}
+
+.services-label {
+  display: block;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 8px;
+}
+
+.services-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.service-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+
+  &--selected {
+    background: var(--primary, #f5a623);
+    border-color: var(--primary, #f5a623);
+    color: #000;
+    font-weight: 500;
+  }
+}
+
 // ── Material Form Field overrides ─────────────────────────────────────────────
 
 .mat-mdc-form-field {

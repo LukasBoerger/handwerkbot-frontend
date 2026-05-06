@@ -1,9 +1,15 @@
 <div class="auth-container">
   <mat-card class="auth-card">
     <mat-card-header>
-      <div class="auth-logo">🔧</div>
+      <div class="register-logo">
+        <img src="assets/logo.svg" alt="Kommuvo" height="36">
+      </div>
       <mat-card-title>Konto erstellen</mat-card-title>
-      <mat-card-subtitle>30 Tage kostenlos testen</mat-card-subtitle>
+      <div class="register-benefits">
+        <span>✓ 30 Tage kostenlos</span>
+        <span>✓ Keine Kreditkarte</span>
+        <span>✓ In 5 Min. eingerichtet</span>
+      </div>
     </mat-card-header>
 
     <mat-card-content>
@@ -79,8 +85,8 @@
 
             <div class="step-actions">
               <button class="btn-back" matStepperPrevious>Zurück</button>
-              <button class="submit-btn" style="flex:1"
-                      [disabled]="businessForm.invalid || loading"
+              <button class="btn-submit" type="button"
+                      [disabled]="loading"
                       (click)="submit(stepper)">
                 @if (loading) {
                   <mat-spinner diameter="20"></mat-spinner>
@@ -89,17 +95,15 @@
                 }
               </button>
             </div>
+
+            <p class="login-hint">
+              Bereits registriert?
+              <a routerLink="/login">Jetzt anmelden</a>
+            </p>
           </form>
         </mat-step>
 
       </mat-stepper>
     </mat-card-content>
-
-    <mat-card-actions>
-      <p class="auth-link">
-        Bereits registriert?
-        <a routerLink="/login">Jetzt anmelden</a>
-      </p>
-    </mat-card-actions>
   </mat-card>
 </div>

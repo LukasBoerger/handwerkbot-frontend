@@ -45,6 +45,16 @@ export class SetupWizard {
 
   private apiUrl = environment.apiUrl + '/api/tenants';
 
+  readonly serviceOptions = [
+    'Elektroinstallation', 'Reparaturen', 'Notdienst',
+    'Beleuchtung', 'Sicherheitstechnik', 'Smarthome',
+    'Sanitär', 'Heizung', 'Klimaanlage', 'Rohrreinigung',
+    'Malerarbeiten', 'Tapezieren', 'Fassade',
+    'Fliesenlegen', 'Trockenbau', 'Bodenbelag'
+  ];
+
+  selectedServices: string[] = [];
+
   readonly days = [
     { key: 'Mon', label: 'Montag' },
     { key: 'Tue', label: 'Dienstag' },
@@ -77,6 +87,21 @@ export class SetupWizard {
     return this.days
       .filter(d => this.step2.get(`open${d.key}`)?.value)
       .map(d => d.label);
+  }
+
+  toggleService(service: string): void {
+    const idx = this.selectedServices.indexOf(service);
+    if (idx > -1) {
+      this.selectedServices.splice(idx, 1);
+    } else {
+      this.selectedServices.push(service);
+    }
+    this.step1.get('businessServices')
+      ?.setValue(this.selectedServices.join(', '));
+  }
+
+  isSelected(service: string): boolean {
+    return this.selectedServices.includes(service);
   }
 
   onNextStep1(stepper: MatStepper): void {

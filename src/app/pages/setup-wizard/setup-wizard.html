@@ -35,13 +35,23 @@
                 <mat-error>Gültige E-Mail-Adresse eingeben</mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Leistungen</mat-label>
-                <input matInput formControlName="businessServices"
-                       placeholder="z.B. Elektroinstallation, Reparaturen, Notdienst">
-                <mat-hint>Kommagetrennt eingeben</mat-hint>
-                <mat-error>Pflichtfeld</mat-error>
-              </mat-form-field>
+              <div class="services-section">
+                <label class="services-label">Leistungen auswählen</label>
+                <div class="services-chips">
+                  @for (s of serviceOptions; track s) {
+                    <button type="button"
+                      class="service-chip"
+                      [class.service-chip--selected]="isSelected(s)"
+                      (click)="toggleService(s)">
+                      {{ s }}
+                    </button>
+                  }
+                </div>
+                @if (step1.get('businessServices')?.invalid
+                  && step1.get('businessServices')?.touched) {
+                  <mat-error>Mindestens eine Leistung auswählen</mat-error>
+                }
+              </div>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Bot-Name</mat-label>
