@@ -17,7 +17,7 @@
         🔄 Aktualisieren
       </button>
       @if (!isDemo) {
-        <button class="btn-outline" [class.btn-outline--active]="chatOpen" (click)="chatOpen = !chatOpen">
+        <button class="btn-outline" (click)="openChat()">
           🧪 Bot testen
         </button>
       }
@@ -25,13 +25,6 @@
       <button class="btn-outline" (click)="logout()">→ Abmelden</button>
     </div>
   </div>
-
-  <!-- CHAT PANEL -->
-  @if (chatOpen && !isDemo) {
-    <div class="chat-panel">
-      <app-test-chat></app-test-chat>
-    </div>
-  }
 
   <!-- SETUP BANNER -->
   @if (isNewUser && !loading) {

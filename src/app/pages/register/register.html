@@ -1,14 +1,17 @@
 <div class="auth-container">
   <mat-card class="auth-card">
     <mat-card-header>
-      <div class="register-logo">
-        <img src="assets/logo.svg" alt="Kommuvo" height="36">
-      </div>
-      <mat-card-title>Konto erstellen</mat-card-title>
-      <div class="register-benefits">
-        <span>✓ 30 Tage kostenlos</span>
-        <span>✓ Keine Kreditkarte</span>
-        <span>✓ In 5 Min. eingerichtet</span>
+      <div class="register-header">
+        <div class="register-logo">
+          <span class="logo-text">Kommuvo</span>
+          <span class="logo-icon">🔧</span>
+        </div>
+        <mat-card-title>Konto erstellen</mat-card-title>
+        <div class="register-benefits">
+          <span>✓ 30 Tage kostenlos</span>
+          <span>✓ Keine Kreditkarte</span>
+          <span>✓ In 5 Min. eingerichtet</span>
+        </div>
       </div>
     </mat-card-header>
 
@@ -65,7 +68,7 @@
         <!-- Schritt 2: Betrieb -->
         <mat-step [stepControl]="businessForm" label="Ihr Betrieb">
           <form [formGroup]="businessForm">
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Betriebsname</mat-label>
               <input matInput formControlName="businessName" placeholder="Müller Elektro GmbH">
               <mat-icon matPrefix>business</mat-icon>

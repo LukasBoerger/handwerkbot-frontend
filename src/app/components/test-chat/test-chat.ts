@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -12,7 +13,7 @@ interface Message {
 
 @Component({
   selector: 'app-test-chat',
-  imports: [FormsModule],
+  imports: [FormsModule, MatSnackBarModule],
   templateUrl: './test-chat.html',
   styleUrl: './test-chat.scss',
 })
@@ -26,6 +27,7 @@ export class TestChat implements OnInit {
   private auth = inject(AuthService);
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
 
   private readonly apiBase = environment.apiUrl;
   private readonly fallback = 'Vielen Dank für Ihre Nachricht! Wann würden Sie einen Termin wünschen?';
@@ -58,7 +60,7 @@ export class TestChat implements OnInit {
       return;
     }
     this.http
-      .post<{ reply: string }>(
+      .post<{ reply: string; appointmentSaved?: boolean }>(
         `${this.apiBase}/api/chat/simulate`,
         { tenantId, message: text, conversationHistory: history },
         { headers: this.headers() },
@@ -67,6 +69,9 @@ export class TestChat implements OnInit {
         next: (res) => {
           this.typing = false;
           this.pushBot(res.reply);
+          if (res.appointmentSaved) {
+            this.snackBar.open('✅ Termin wurde gespeichert!', 'OK', { duration: 4000 });
+          }
         },
         error: () => {
           setTimeout(() => {
