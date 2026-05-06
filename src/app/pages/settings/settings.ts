@@ -13,6 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 
 interface BillingStatus {
@@ -56,7 +57,7 @@ export class Settings implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
 
-  private apiUrl = 'https://api.kommuvo.de/api/tenants';
+  private apiUrl = environment.apiUrl + '/api/tenants';
 
   readonly days = [
     { key: 'Mon', label: 'Montag' },
@@ -188,7 +189,7 @@ export class Settings implements OnInit {
   loadBillingStatus() {
     this.billingLoading = true;
     this.http
-      .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', {
+      .get<BillingStatus>(environment.apiUrl + '/api/billing/status', {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -209,7 +210,7 @@ export class Settings implements OnInit {
     this.http
       .post<{
         url: string;
-      }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.getHeaders() })
+      }>(environment.apiUrl + '/api/billing/portal', {}, { headers: this.getHeaders() })
       .subscribe({
         next: (res) => {
           window.location.href = res.url;
@@ -224,7 +225,7 @@ export class Settings implements OnInit {
 
   loadGoogleStatus() {
     this.http
-      .get<any>('https://api.kommuvo.de/auth/google/status', {
+      .get<any>(environment.apiUrl + '/auth/google/status', {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -239,7 +240,7 @@ export class Settings implements OnInit {
   connectGoogle() {
     this.googleLoading = true;
     this.http
-      .get<any>('https://api.kommuvo.de/auth/google/url', {
+      .get<any>(environment.apiUrl + '/auth/google/url', {
         headers: this.getHeaders(),
       })
       .subscribe({
@@ -256,7 +257,7 @@ export class Settings implements OnInit {
 
   disconnectGoogle() {
     this.http
-      .delete('https://api.kommuvo.de/auth/google/disconnect', {
+      .delete(environment.apiUrl + '/auth/google/disconnect', {
         headers: this.getHeaders(),
       })
       .subscribe({

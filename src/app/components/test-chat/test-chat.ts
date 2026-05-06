@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } f
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 interface Message {
   role: 'user' | 'bot';
@@ -26,7 +27,7 @@ export class TestChat implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
 
-  private readonly apiBase = 'https://api.kommuvo.de';
+  private readonly apiBase = environment.apiUrl;
   private readonly fallback = 'Vielen Dank für Ihre Nachricht! Wann würden Sie einen Termin wünschen?';
 
   ngOnInit(): void {

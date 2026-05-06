@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -28,7 +29,7 @@ export class ForgotPassword {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
 
-  private apiUrl = 'https://api.kommuvo.de/api/auth';
+  private apiUrl = environment.apiUrl + '/api/auth';
 
   constructor() {
     this.form = this.fb.group({

@@ -60,7 +60,7 @@ export class Dashboard implements OnInit {
   }
 
   get isNewUser(): boolean {
-    return this.appointments.length === 0;
+    return !localStorage.getItem('setupDone');
   }
   appointments: any[] = [];
   filtered: any[] = [];

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -85,7 +86,7 @@ export class Register implements OnInit {
   private startCheckout(planId: string) {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
     this.http
-      .post<{ url: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers })
+      .post<{ url: string }>(environment.apiUrl + '/api/billing/checkout', { plan: planId }, { headers })
       .subscribe({
         next: (res) => {
           localStorage.removeItem('selectedPlan');

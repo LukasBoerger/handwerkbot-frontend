@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -42,7 +43,7 @@ export class SetupWizard {
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
-  private apiUrl = 'https://api.kommuvo.de/api/tenants';
+  private apiUrl = environment.apiUrl + '/api/tenants';
 
   readonly days = [
     { key: 'Mon', label: 'Montag' },
@@ -55,6 +56,7 @@ export class SetupWizard {
   ];
 
   step1 = this.fb.group({
+    businessName: ['', Validators.required],
     businessOwner: ['', Validators.required],
     businessEmail: ['', [Validators.required, Validators.email]],
     businessServices: ['', Validators.required],
@@ -92,6 +94,7 @@ export class SetupWizard {
   }
 
   goToDashboard(): void {
+    localStorage.setItem('setupDone', 'true');
     this.router.navigate(['/dashboard']);
   }
 

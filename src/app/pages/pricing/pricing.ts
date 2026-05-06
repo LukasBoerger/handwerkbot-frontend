@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 interface Plan {
   id: string;
@@ -59,7 +60,7 @@ export class Pricing implements OnInit {
   ngOnInit() {
     if (this.auth.isLoggedIn()) {
       this.http
-        .get<BillingStatus>('https://api.kommuvo.de/api/billing/status', { headers: this.authHeaders() })
+        .get<BillingStatus>(environment.apiUrl + '/api/billing/status', { headers: this.authHeaders() })
         .subscribe({ next: (res) => this.billingStatus.set(res), error: () => {} });
     }
   }
@@ -78,7 +79,7 @@ export class Pricing implements OnInit {
 
     this.loadingPlan.set(planId);
     this.http
-      .post<{ url: string }>('https://api.kommuvo.de/api/billing/checkout', { plan: planId }, { headers: this.authHeaders() })
+      .post<{ url: string }>(environment.apiUrl + '/api/billing/checkout', { plan: planId }, { headers: this.authHeaders() })
       .subscribe({
         next: (res) => { window.location.href = res.url; },
         error: () => { this.loadingPlan.set(null); },
@@ -88,7 +89,7 @@ export class Pricing implements OnInit {
   openPortal() {
     this.portalLoading.set(true);
     this.http
-      .post<{ url: string }>('https://api.kommuvo.de/api/billing/portal', {}, { headers: this.authHeaders() })
+      .post<{ url: string }>(environment.apiUrl + '/api/billing/portal', {}, { headers: this.authHeaders() })
       .subscribe({
         next: (res) => { window.location.href = res.url; },
         error: () => { this.portalLoading.set(false); },

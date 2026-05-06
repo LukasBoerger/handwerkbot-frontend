@@ -16,6 +16,13 @@
           </mat-card-header>
           <mat-card-content>
             <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Betriebsname</mat-label>
+                <input matInput formControlName="businessName"
+                       placeholder="z.B. Müller Elektro GmbH">
+                <mat-error>Pflichtfeld</mat-error>
+              </mat-form-field>
+
               <mat-form-field appearance="outline">
                 <mat-label>Inhaber</mat-label>
                 <input matInput formControlName="businessOwner">
