@@ -32,7 +32,7 @@
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>E-Mail</mat-label>
-              <input matInput formControlName="email" type="email">
+              <input matInput formControlName="email" type="email" autocomplete="email">
               <mat-icon matPrefix>email</mat-icon>
               @if (accountForm.get('email')?.hasError('email')) {
                 <mat-error>Ungültige E-Mail</mat-error>
@@ -42,7 +42,7 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Passwort</mat-label>
               <input matInput formControlName="password"
-                     [type]="hidePassword ? 'password' : 'text'">
+                     [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password">
               <mat-icon matPrefix>lock</mat-icon>
               <button mat-icon-button matSuffix type="button"
                       (click)="hidePassword = !hidePassword">
@@ -78,7 +78,7 @@
             </mat-form-field>
 
             @if (error) {
-              <div class="error-banner" style="margin-bottom: 12px;">
+              <div class="error-banner">
                 <mat-icon>error</mat-icon> {{ error }}
               </div>
             }
@@ -86,7 +86,7 @@
             <div class="step-actions">
               <button class="btn-back" matStepperPrevious>Zurück</button>
               <button class="btn-submit" type="button"
-                      [disabled]="loading"
+                      [disabled]="businessForm.invalid || loading"
                       (click)="submit(stepper)">
                 @if (loading) {
                   <mat-spinner diameter="20"></mat-spinner>

@@ -32,6 +32,7 @@ export class TestChat implements OnInit {
 
   ngOnInit(): void {
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) { this.pushBot('Hallo! Wie kann ich Ihnen helfen?'); return; }
     this.http
       .get<any>(`${this.apiBase}/api/tenants/${tenantId}`, { headers: this.headers() })
       .subscribe({
@@ -51,6 +52,11 @@ export class TestChat implements OnInit {
     this.scroll();
 
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) {
+      this.typing = false;
+      this.pushBot(this.fallback);
+      return;
+    }
     this.http
       .post<{ reply: string }>(
         `${this.apiBase}/api/chat/simulate`,

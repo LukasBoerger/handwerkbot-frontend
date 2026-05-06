@@ -181,7 +181,7 @@
               </div>
             </div>
           } @else {
-            <div class="empty-state" style="padding: 32px 24px">
+            <div class="empty-state empty-state--padded">
               <div class="empty-icon">📭</div>
               <p>Keine Daten</p>
             </div>
@@ -229,7 +229,7 @@
 
           <ng-container matColumnDef="datetime">
             <th mat-header-cell *matHeaderCellDef>Termin</th>
-            <td mat-cell *matCellDef="let a">{{ a.datetime }}</td>
+            <td mat-cell *matCellDef="let a">{{ a.datetime | date:'dd.MM.yyyy HH:mm' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="address">
@@ -255,14 +255,17 @@
               <div class="action-menu">
                 @if (a.status !== 'completed') {
                   <button class="action-btn action-btn--complete"
+                          [disabled]="updatingId === a.id"
                           (click)="updateStatus(a, 'completed')" title="Als abgeschlossen markieren">✔</button>
                 }
                 @if (a.status !== 'cancelled') {
                   <button class="action-btn action-btn--cancel"
+                          [disabled]="updatingId === a.id"
                           (click)="updateStatus(a, 'cancelled')" title="Absagen">✕</button>
                 }
                 @if (a.status === 'cancelled') {
                   <button class="action-btn action-btn--restore"
+                          [disabled]="updatingId === a.id"
                           (click)="updateStatus(a, 'confirmed')" title="Wiederherstellen">↩</button>
                 }
               </div>

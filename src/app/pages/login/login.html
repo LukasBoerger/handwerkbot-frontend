@@ -14,14 +14,14 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>E-Mail</mat-label>
-        <input matInput formControlName="email" type="email">
+        <input matInput formControlName="email" type="email" autocomplete="email">
         <mat-icon matPrefix>email</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Passwort</mat-label>
         <input matInput formControlName="password"
-               [type]="hidePassword ? 'password' : 'text'">
+               [type]="hidePassword ? 'password' : 'text'" autocomplete="current-password">
         <mat-icon matPrefix>lock</mat-icon>
         <button mat-icon-button matSuffix type="button"
                 (click)="hidePassword = !hidePassword">

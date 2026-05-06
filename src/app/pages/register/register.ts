@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -38,6 +39,7 @@ export class Register implements OnInit {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.accountForm = this.fb.group({
@@ -53,7 +55,7 @@ export class Register implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       if (params['plan']) {
         this.selectedPlan = params['plan'];
       }

@@ -107,15 +107,13 @@ export class SetupWizard {
   onNextStep1(stepper: MatStepper): void {
     this.step1.markAllAsTouched();
     if (this.step1.invalid) return;
-    this.saveStep1();
-    stepper.next();
+    this.saveStep1(stepper);
   }
 
   onNextStep2(stepper: MatStepper): void {
     this.step2.markAllAsTouched();
     if (this.step2.invalid) return;
-    this.saveStep2();
-    stepper.next();
+    this.saveStep2(stepper);
   }
 
   goToDashboard(): void {
@@ -123,17 +121,20 @@ export class SetupWizard {
     this.router.navigate(['/dashboard']);
   }
 
-  private saveStep1(): void {
+  private saveStep1(stepper: MatStepper): void {
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) { stepper.next(); return; }
     this.http
       .put(`${this.apiUrl}/${tenantId}`, this.step1.value, { headers: this.getHeaders() })
       .subscribe({
+        next: () => stepper.next(),
         error: () => this.snackBar.open('❌ Fehler beim Speichern', 'OK', { duration: 3000 }),
       });
   }
 
-  private saveStep2(): void {
+  private saveStep2(stepper: MatStepper): void {
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) { stepper.next(); return; }
     const payload: Record<string, string | null> = {};
     for (const day of this.days) {
       const open = this.step2.get(`open${day.key}`)?.value;
@@ -144,6 +145,7 @@ export class SetupWizard {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() })
       .subscribe({
+        next: () => stepper.next(),
         error: () => this.snackBar.open('❌ Fehler beim Speichern', 'OK', { duration: 3000 }),
       });
   }

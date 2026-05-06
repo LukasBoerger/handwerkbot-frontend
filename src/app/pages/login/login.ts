@@ -38,7 +38,6 @@ export class Login {
 
   fillDemo() {
     this.form.setValue({ email: 'demo@kommuvo.de', password: 'demo1234' });
-    this.loading = true;
     this.submit();
   }
 

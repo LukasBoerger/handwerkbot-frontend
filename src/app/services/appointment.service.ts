@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 
@@ -15,6 +15,7 @@ export class AppointmentService {
 
   getMyAppointments(): Observable<any[]> {
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) return EMPTY;
     return this.http.get<any[]>(`${this.apiUrl}/${tenantId}/appointments`, {
       headers: this.getHeaders(),
     });
@@ -22,6 +23,7 @@ export class AppointmentService {
 
   updateStatus(appointmentId: string, status: string): Observable<any> {
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) return EMPTY;
     return this.http.patch(
       `${this.apiUrl}/${tenantId}/appointments/${appointmentId}/status`,
       { status },

@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -56,6 +57,7 @@ export class Settings implements OnInit {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   private apiUrl = environment.apiUrl + '/api/tenants';
 
@@ -111,7 +113,7 @@ export class Settings implements OnInit {
     this.loadBillingStatus();
 
     // Nach OAuth-Redirect Feedback anzeigen
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['google'] === 'success') {
         this.googleConnected = true;
         this.snackBar.open('✅ Google Calendar erfolgreich verbunden!', 'OK', { duration: 4000 });
@@ -126,6 +128,7 @@ export class Settings implements OnInit {
   loadSettings() {
     this.loading = true;
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) { this.loading = false; return; }
 
     this.http.get<any>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
       next: (tenant) => {
@@ -158,6 +161,7 @@ export class Settings implements OnInit {
     if (this.form.invalid) return;
     this.saving = true;
     const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) { this.saving = false; return; }
 
     // Von/Bis wieder zu "07:00-18:00" zusammenbauen
     const payload: any = { ...this.form.value };

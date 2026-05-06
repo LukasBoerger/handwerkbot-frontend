@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, HostListener, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +51,7 @@ interface DonutSegment {
     MatProgressSpinnerModule,
     MatMenuModule,
     MatSnackBarModule,
+    DatePipe,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -75,11 +78,14 @@ export class Dashboard implements OnInit {
   donutSegments: DonutSegment[] = [];
   donutTotal = 0;
 
+  updatingId: string | null = null;
+
   private auth = inject(AuthService);
   private appointmentService = inject(AppointmentService);
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.user = this.auth.getUser();
@@ -87,7 +93,7 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.loadAppointments();
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['payment'] === 'success') {
         this.snackBar.open('Zahlung erfolgreich! Ihr Abonnement ist jetzt aktiv.', 'OK', { duration: 5000 });
       }
@@ -129,11 +135,18 @@ export class Dashboard implements OnInit {
   }
 
   updateStatus(apt: any, status: string) {
+    this.updatingId = apt.id;
     this.appointmentService.updateStatus(apt.id, status).subscribe({
       next: (updated) => {
         apt.status = updated.status;
+        this.updatingId = null;
         this.applyFilter();
         this.computeChartData();
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.updatingId = null;
+        this.snackBar.open('❌ Fehler beim Aktualisieren', 'OK', { duration: 3000 });
         this.cdr.detectChanges();
       },
     });
