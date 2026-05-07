@@ -1,0 +1,113 @@
+.service-category {
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.category-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover { background: rgba(255, 255, 255, 0.08); }
+}
+
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+}
+
+.service-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+
+  &--selected {
+    background: var(--primary, #f5a623);
+    border-color: var(--primary, #f5a623);
+    color: #000;
+    font-weight: 500;
+  }
+}
+
+.selected-services {
+  margin-top: 12px;
+
+  .selected-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 6px;
+  }
+
+  .selected-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .selected-chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(245, 166, 35, 0.15);
+    border: 1px solid rgba(245, 166, 35, 0.4);
+    border-radius: 20px;
+    font-size: 13px;
+    color: #f5a623;
+
+    button {
+      background: none;
+      border: none;
+      color: #f5a623;
+      cursor: pointer;
+      padding: 0;
+      font-size: 11px;
+    }
+  }
+}
+
+.custom-service {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+
+  .custom-input {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+
+    &::placeholder { color: rgba(255, 255, 255, 0.3); }
+    &:focus { outline: none; border-color: rgba(245, 166, 35, 0.5); }
+  }
+
+  .btn-add {
+    padding: 8px 14px;
+    background: rgba(245, 166, 35, 0.15);
+    border: 1px solid rgba(245, 166, 35, 0.4);
+    border-radius: 6px;
+    color: #f5a623;
+    cursor: pointer;
+    font-size: 13px;
+
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+  }
+}

@@ -1,0 +1,54 @@
+@for (cat of serviceCategories; track cat.name) {
+  <div class="service-category">
+    <button type="button"
+            class="category-header"
+            (click)="toggleCategory(cat.name)"
+            [attr.aria-expanded]="isCategoryExpanded(cat.name)">
+      <span>{{ cat.icon }} {{ cat.name }}</span>
+      <span>{{ isCategoryExpanded(cat.name) ? '▲' : '▼' }}</span>
+    </button>
+
+    @if (isCategoryExpanded(cat.name)) {
+      <div class="category-chips">
+        @for (s of cat.services; track s) {
+          <button type="button"
+                  class="service-chip"
+                  [class.service-chip--selected]="isSelected(s)"
+                  (click)="toggleService(s)">
+            {{ s }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (selectedServices.length > 0) {
+  <div class="selected-services">
+    <p class="selected-label">Ausgewählt:</p>
+    <div class="selected-chips">
+      @for (s of selectedServices; track s) {
+        <span class="selected-chip">
+          {{ s }}
+          <button type="button" (click)="toggleService(s)" aria-label="Entfernen">✕</button>
+        </span>
+      }
+    </div>
+  </div>
+}
+
+<div class="custom-service">
+  <input
+    [(ngModel)]="customServiceInput"
+    name="customServiceInput"
+    placeholder="Eigene Leistung eingeben..."
+    (keydown.enter)="addCustomService(); $event.preventDefault()"
+    class="custom-input"
+    aria-label="Eigene Leistung">
+  <button type="button"
+          class="btn-add"
+          (click)="addCustomService()"
+          [disabled]="!customServiceInput.trim()">
+    + Hinzufügen
+  </button>
+</div>

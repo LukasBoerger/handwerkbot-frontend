@@ -1,6 +1,7 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ServiceSelector } from '../../components/service-selector/service-selector';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,6 +24,7 @@ function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   selector: 'app-setup-wizard',
   imports: [
     ReactiveFormsModule,
+    ServiceSelector,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -44,14 +46,6 @@ export class SetupWizard {
   private router = inject(Router);
 
   private apiUrl = environment.apiUrl + '/api/tenants';
-
-  readonly serviceOptions = [
-    'Elektroinstallation', 'Reparaturen', 'Notdienst',
-    'Beleuchtung', 'Sicherheitstechnik', 'Smarthome',
-    'Sanitär', 'Heizung', 'Klimaanlage', 'Rohrreinigung',
-    'Malerarbeiten', 'Tapezieren', 'Fassade',
-    'Fliesenlegen', 'Trockenbau', 'Bodenbelag'
-  ];
 
   selectedServices: string[] = [];
 
@@ -89,19 +83,9 @@ export class SetupWizard {
       .map(d => d.label);
   }
 
-  toggleService(service: string): void {
-    const idx = this.selectedServices.indexOf(service);
-    if (idx > -1) {
-      this.selectedServices.splice(idx, 1);
-    } else {
-      this.selectedServices.push(service);
-    }
-    this.step1.get('businessServices')
-      ?.setValue(this.selectedServices.join(', '));
-  }
-
-  isSelected(service: string): boolean {
-    return this.selectedServices.includes(service);
+  onServicesChanged(services: string[]): void {
+    this.selectedServices = services;
+    this.step1.get('businessServices')?.setValue(services.join(', '));
   }
 
   onNextStep1(stepper: MatStepper): void {

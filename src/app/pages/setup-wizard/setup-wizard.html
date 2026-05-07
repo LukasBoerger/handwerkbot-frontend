@@ -37,16 +37,10 @@
 
               <div class="services-section">
                 <label class="services-label">Leistungen auswählen</label>
-                <div class="services-chips">
-                  @for (s of serviceOptions; track s) {
-                    <button type="button"
-                      class="service-chip"
-                      [class.service-chip--selected]="isSelected(s)"
-                      (click)="toggleService(s)">
-                      {{ s }}
-                    </button>
-                  }
-                </div>
+                <app-service-selector
+                  [selectedServices]="selectedServices"
+                  (servicesChanged)="onServicesChanged($event)">
+                </app-service-selector>
                 @if (step1.get('businessServices')?.invalid
                   && step1.get('businessServices')?.touched) {
                   <p class="error-hint">Mindestens eine Leistung auswählen</p>

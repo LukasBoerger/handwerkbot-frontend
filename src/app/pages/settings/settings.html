@@ -81,12 +81,13 @@
               <mat-label>E-Mail</mat-label>
               <input matInput formControlName="businessEmail" type="email">
             </mat-form-field>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Leistungen</mat-label>
-              <input matInput formControlName="businessServices"
-                     placeholder="z.B. Elektroinstallation, Reparaturen, Notdienst">
-              <mat-hint>Kommagetrennt eingeben</mat-hint>
-            </mat-form-field>
+            <div class="full-width services-section">
+              <label class="services-label">Leistungen auswählen</label>
+              <app-service-selector
+                [selectedServices]="selectedServices"
+                (servicesChanged)="onServicesChanged($event)">
+              </app-service-selector>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>

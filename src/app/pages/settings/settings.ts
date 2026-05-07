@@ -15,6 +15,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { ServiceSelector } from '../../components/service-selector/service-selector';
 
 
 interface BillingStatus {
@@ -26,6 +27,7 @@ interface BillingStatus {
   selector: 'app-settings',
   imports: [
     ReactiveFormsModule,
+    ServiceSelector,
     TitleCasePipe,
     RouterLink,
     MatCardModule,
@@ -43,6 +45,7 @@ interface BillingStatus {
 })
 export class Settings implements OnInit {
   form: FormGroup;
+  selectedServices: string[] = [];
   loading = false;
   saving = false;
   googleConnected = false;
@@ -133,6 +136,10 @@ export class Settings implements OnInit {
     this.http.get<any>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
       next: (tenant) => {
         this.form.patchValue(tenant);
+        this.selectedServices = (tenant.businessServices || '')
+          .split(',')
+          .map((s: string) => s.trim())
+          .filter((s: string) => s.length > 0);
         // Strukturierte Öffnungszeiten aus "07:00-18:00" String aufdröseln
         for (const day of this.days) {
           const raw: string = tenant[`hours${day.key}`];
@@ -155,6 +162,11 @@ export class Settings implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  onServicesChanged(services: string[]): void {
+    this.selectedServices = services;
+    this.form.get('businessServices')?.setValue(services.join(', '));
   }
 
   save() {
