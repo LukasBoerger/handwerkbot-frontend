@@ -12,7 +12,7 @@ export class ServiceSelector {
   @Output() servicesChanged = new EventEmitter<string[]>();
 
   customServiceInput = '';
-  expandedCategories: Set<string> = new Set();
+  expandedCategories = new Set<string>();
 
   readonly serviceCategories = [
     {

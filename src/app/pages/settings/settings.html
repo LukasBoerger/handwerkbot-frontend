@@ -82,7 +82,7 @@
               <input matInput formControlName="businessEmail" type="email">
             </mat-form-field>
             <div class="full-width services-section">
-              <label class="services-label">Leistungen auswählen</label>
+              <span class="services-label">Leistungen auswählen</span>
               <app-service-selector
                 [selectedServices]="selectedServices"
                 (servicesChanged)="onServicesChanged($event)">
@@ -152,13 +152,13 @@
                 @if (form.get('open' + day.key)?.value) {
                   <div class="hours-times">
                     <div class="time-field">
-                      <label>Von</label>
-                      <input type="time" [formControlName]="'from' + day.key" class="time-input">
+                      <span>Von</span>
+                      <input type="time" [formControlName]="'from' + day.key" class="time-input" [attr.aria-label]="'Von ' + day.label">
                     </div>
                     <span class="time-separator">–</span>
                     <div class="time-field">
-                      <label>Bis</label>
-                      <input type="time" [formControlName]="'to' + day.key" class="time-input">
+                      <span>Bis</span>
+                      <input type="time" [formControlName]="'to' + day.key" class="time-input" [attr.aria-label]="'Bis ' + day.label">
                     </div>
                   </div>
                 } @else {

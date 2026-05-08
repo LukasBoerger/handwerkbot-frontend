@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
@@ -20,7 +20,7 @@ interface BillingStatus {
 
 @Component({
   selector: 'app-pricing',
-  imports: [RouterLink, MatProgressSpinnerModule],
+  imports: [MatProgressSpinnerModule],
   templateUrl: './pricing.html',
   styleUrl: './pricing.scss',
 })

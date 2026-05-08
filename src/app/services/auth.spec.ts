@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -9,11 +11,12 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+      providers: [
+        AuthService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([{ path: '**', redirectTo: '' }]),
       ],
-      providers: [AuthService],
     });
     service = TestBed.inject(AuthService);
     http = TestBed.inject(HttpTestingController);
@@ -31,7 +34,7 @@ describe('AuthService', () => {
   it('sollte nach Login Token speichern', () => {
     service.login('test@test.de', 'passwort123').subscribe();
 
-    const req = http.expectOne('https://api.kommuvo.de/api/auth/login');
+    const req = http.expectOne(`${environment.apiUrl}/api/auth/login`);
     expect(req.request.method).toBe('POST');
     req.flush({ token: 'abc123', tenantId: 1, user: { fullName: 'Max' } });
 
