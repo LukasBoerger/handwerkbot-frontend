@@ -18,20 +18,20 @@
             <div class="form-grid">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Betriebsname</mat-label>
-                <input matInput formControlName="businessName"
+                <input matInput formControlName="businessName" data-cy="input-setup-business-name"
                        placeholder="z.B. Müller Elektro GmbH">
                 <mat-error>Pflichtfeld</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Inhaber</mat-label>
-                <input matInput formControlName="businessOwner">
+                <input matInput formControlName="businessOwner" data-cy="input-setup-owner">
                 <mat-error>Pflichtfeld</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>E-Mail</mat-label>
-                <input matInput formControlName="businessEmail" type="email">
+                <input matInput formControlName="businessEmail" type="email" data-cy="input-setup-email">
                 <mat-error>Gültige E-Mail-Adresse eingeben</mat-error>
               </mat-form-field>
 
@@ -49,7 +49,7 @@
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Bot-Name</mat-label>
-                <input matInput formControlName="botName" placeholder="z.B. KommuvoBot">
+                <input matInput formControlName="botName" placeholder="z.B. KommuvoBot" data-cy="input-setup-bot-name">
                 <mat-hint>So stellt sich Ihr Bot bei Kunden vor</mat-hint>
                 <mat-error>Pflichtfeld</mat-error>
               </mat-form-field>
@@ -58,7 +58,7 @@
         </mat-card>
 
         <div class="step-actions">
-          <button class="btn-next" type="button" (click)="onNextStep1(stepper)">
+          <button class="btn-next" type="button" data-cy="btn-setup-next-step1" (click)="onNextStep1(stepper)">
             Weiter →
           </button>
         </div>
@@ -81,6 +81,7 @@
                     <button
                       type="button"
                       class="day-toggle"
+                      [attr.data-cy]="'toggle-' + day.key"
                       [class.day-toggle--on]="step2.get('open' + day.key)?.value"
                       (click)="step2.get('open' + day.key)?.setValue(!step2.get('open' + day.key)?.value)">
                       <span class="day-toggle__thumb"></span>
@@ -115,7 +116,7 @@
 
         <div class="step-actions">
           <button class="btn-back" type="button" (click)="stepper.previous()">← Zurück</button>
-          <button class="btn-next" type="button" (click)="onNextStep2(stepper)">
+          <button class="btn-next" type="button" data-cy="btn-setup-next-step2" (click)="onNextStep2(stepper)">
             Weiter →
           </button>
         </div>
@@ -150,7 +151,7 @@
 
       <div class="step-actions">
         <button class="btn-back" type="button" (click)="stepper.previous()">← Zurück</button>
-        <button class="btn-confirmed" type="button" (click)="stepper.next()">
+        <button class="btn-confirmed" type="button" data-cy="btn-setup-whatsapp-confirm" (click)="stepper.next()">
           ✅ Ich habe die Anleitung gelesen
         </button>
       </div>
@@ -182,7 +183,7 @@
               </div>
             </div>
 
-            <button class="btn-dashboard" type="button" (click)="goToDashboard()">
+            <button class="btn-dashboard" type="button" data-cy="btn-setup-to-dashboard" (click)="goToDashboard()">
               Zum Dashboard →
             </button>
           </div>

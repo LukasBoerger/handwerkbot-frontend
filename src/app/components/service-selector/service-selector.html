@@ -2,6 +2,7 @@
   <div class="service-category">
     <button type="button"
             class="category-header"
+            [attr.data-cy]="'category-' + cat.name"
             (click)="toggleCategory(cat.name)"
             [attr.aria-expanded]="isCategoryExpanded(cat.name)">
       <span>{{ cat.icon }} {{ cat.name }}</span>
@@ -13,6 +14,7 @@
         @for (s of cat.services; track s) {
           <button type="button"
                   class="service-chip"
+                  [attr.data-cy]="'service-' + s"
                   [class.service-chip--selected]="isSelected(s)"
                   (click)="toggleService(s)">
             {{ s }}

@@ -11,7 +11,7 @@
   </div>
 
   <!-- Messages -->
-  <div class="chat-messages">
+  <div class="chat-messages" data-cy="chat-messages">
     @for (msg of messages; track $index) {
       <div class="bubble-row" [class.bubble-row--user]="msg.role === 'user'">
         <div class="bubble" [class.bubble--user]="msg.role === 'user'" [class.bubble--bot]="msg.role === 'bot'">
@@ -39,6 +39,7 @@
   <div class="chat-input">
     <input
       class="chat-input__field"
+      data-cy="chat-input"
       type="text"
       placeholder="Nachricht schreiben..."
       [(ngModel)]="inputText"
@@ -47,6 +48,7 @@
       autocomplete="off">
     <button
       class="chat-input__send"
+      data-cy="chat-send"
       (click)="send()"
       [disabled]="!inputText.trim() || typing"
       title="Senden">

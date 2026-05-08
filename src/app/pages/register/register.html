@@ -29,13 +29,13 @@
           <form [formGroup]="accountForm">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Vollständiger Name</mat-label>
-              <input matInput formControlName="fullName" placeholder="Max Müller">
+              <input matInput formControlName="fullName" placeholder="Max Müller" data-cy="input-fullname">
               <mat-icon matPrefix>person</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>E-Mail</mat-label>
-              <input matInput formControlName="email" type="email" autocomplete="email">
+              <input matInput formControlName="email" type="email" autocomplete="email" data-cy="input-email">
               <mat-icon matPrefix>email</mat-icon>
               @if (accountForm.get('email')?.hasError('email')) {
                 <mat-error>Ungültige E-Mail</mat-error>
@@ -44,7 +44,7 @@
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Passwort</mat-label>
-              <input matInput formControlName="password"
+              <input matInput formControlName="password" data-cy="input-password"
                      [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password">
               <mat-icon matPrefix>lock</mat-icon>
               <button mat-icon-button matSuffix type="button"
@@ -57,7 +57,7 @@
             </mat-form-field>
 
             <div class="step-actions">
-              <button class="btn-next" matStepperNext
+              <button class="btn-next" matStepperNext data-cy="btn-next-account"
                       [disabled]="accountForm.invalid">
                 Weiter →
               </button>
@@ -70,13 +70,13 @@
           <form [formGroup]="businessForm">
             <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Betriebsname</mat-label>
-              <input matInput formControlName="businessName" placeholder="Müller Elektro GmbH">
+              <input matInput formControlName="businessName" placeholder="Müller Elektro GmbH" data-cy="input-business-name">
               <mat-icon matPrefix>business</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Telefonnummer</mat-label>
-              <input matInput formControlName="businessPhone" placeholder="+49 2381 123456">
+              <input matInput formControlName="businessPhone" placeholder="+49 2381 123456" data-cy="input-business-phone">
               <mat-icon matPrefix>phone</mat-icon>
             </mat-form-field>
 
@@ -88,7 +88,7 @@
 
             <div class="step-actions">
               <button class="btn-back" matStepperPrevious>Zurück</button>
-              <button class="btn-submit" type="button"
+              <button class="btn-submit" type="button" data-cy="btn-submit-register"
                       [disabled]="businessForm.invalid || loading"
                       (click)="submit(stepper)">
                 @if (loading) {

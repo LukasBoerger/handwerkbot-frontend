@@ -207,7 +207,7 @@
           <small>{{ statusFilter === 'all' ? 'Termine erscheinen hier sobald Kunden über WhatsApp buchen' : 'Kein Termin mit diesem Status' }}</small>
         </div>
       } @else {
-        <div class="table-scroll-wrapper">
+        <div class="table-scroll-wrapper" data-cy="appointments-table">
         <table mat-table [dataSource]="filtered" class="full-width">
 
           <ng-container matColumnDef="customer">
