@@ -1,107 +1,126 @@
 # HandwerkBot Frontend – Claude Code Arbeitskontext
 
-## 🎯 Rolle von Claude
-
-Du bist der Haupt-Orchestrator für dieses Angular-Frontend.
+## Rolle von Claude
 
 Arbeitsweise:
 1. Lies zuerst den Task aus `ai/tasks/`.
 2. Analysiere bestehende Komponenten und Services.
 3. Erstelle einen klaren, minimalen Umsetzungsplan.
 4. Setze nur den aktuellen Task um (kein Scope-Creep).
-5. Gib eine kurze, strukturierte Zusammenfassung zurück.
+5. Gib eine kurze Zusammenfassung zurück.
 
 ---
 
-## 🧠 Projektverständnis
+## Projektverständnis
 
-### Was ist HandwerkBot Frontend?
-
-Angular 19 SPA für die Kommuvo-Plattform. Handwerksbetriebe
-verwalten hier ihren KI-WhatsApp-Bot (Termine, Einstellungen, Onboarding).
+Angular 19 SPA für die Kommuvo-Plattform. Handwerksbetriebe verwalten hier ihren KI-WhatsApp-Bot (Termine, Einstellungen, Onboarding, Billing).
 
 ---
 
-## 🏗️ Architektur
+## Architektur
 
-- Framework: Angular 19, Angular Material, Reactive Forms
+- Angular 19, Angular Material, Reactive Forms
 - Hosting: Vercel
-- Backend: Spring Boot API auf Railway (api.kommuvo.de)
-- Auth: JWT (gespeichert in localStorage)
+- Backend-API: Railway (api.kommuvo.de)
+- Auth: JWT (localStorage)
 
 ---
 
-## 📁 Struktur
+## Seitenstruktur (`src/app/pages/`)
 
-src/app/
-pages/          → Seiten (dashboard, settings, register, login, setup-wizard)
-components/     → Wiederverwendbare Komponenten (test-chat)
-services/       → API-Services (auth, appointment)
-guards/         → Auth-Guard
-environments/   → environment.ts (local) / environment.prod.ts (prod)
+| Seite             | Route              | Auth-Guard |
+|-------------------|--------------------|------------|
+| `landing`         | `/`                | nein       |
+| `login`           | `/login`           | nein       |
+| `register`        | `/register`        | nein       |
+| `forgot-password` | `/forgot-password` | nein       |
+| `reset-password`  | `/reset-password`  | nein       |
+| `pricing`         | `/pricing`         | nein       |
+| `impressum`       | `/impressum`       | nein       |
+| `datenschutz`     | `/datenschutz`     | nein       |
+| `dashboard`       | `/dashboard`       | ja         |
+| `settings`        | `/settings`        | ja         |
+| `setup-wizard`    | `/setup`           | ja         |
+| `chat`            | `/chat`            | ja         |
 
 ---
 
-## 🔑 Auth-Konventionen
+## Komponenten (`src/app/components/`)
 
-- Token: localStorage.getItem('token')
-- TenantId: localStorage.getItem('tenantId')
-- Setup abgeschlossen: localStorage.getItem('setupDone')
-- API-URL immer aus environment.apiUrl
+- `test-chat` → Chatbot-Testoberfläche im Dashboard
+- `service-selector` → Auswahl von Dienstleistungen (Onboarding/Settings)
+
+## Shared (`src/app/shared/`)
+
+- `navbar` → Hauptnavigation
+- `cookie-banner` → DSGVO Cookie-Hinweis
 
 ---
 
-## 🎨 UI-Konventionen
+## Services (`src/app/services/`)
+
+- `auth.service.ts` → Login, Register, Passwort-Reset, Token-Verwaltung
+- `tenant.ts` → Tenant-Einstellungen lesen/schreiben
+- `appointment.service.ts` → Termine laden, Status ändern
+
+---
+
+## Auth-Konventionen
+
+- Token: `localStorage.getItem('token')`
+- TenantId: `localStorage.getItem('tenantId')`
+- Setup abgeschlossen: `localStorage.getItem('setupDone')`
+- API-URL immer aus `environment.apiUrl`
+
+---
+
+## UI-Konventionen
 
 - Angular Material durchgehend
 - Reactive Forms (KEINE Template-driven Forms)
 - KEINE Angular Signals
-- async pipe bevorzugen
-- Kleine, fokussierte Komponenten
+- `async` pipe bevorzugen
 - Dark Theme (bestehendes CSS respektieren)
 - Deutsche UI-Texte
+- Barrierefreiheit: `aria-label` bei Icon-Buttons
 
 ---
 
-## ⚙️ Code-Konventionen
+## Code-Konventionen
 
 - Kommentare: Deutsch
 - Code: Englisch
 - Keine neuen Libraries ohne Begründung
 - Bestehende Patterns einhalten
 - Keine unnötigen Refactorings
+- Kein Inline-Style – CSS in `.scss`-Datei
 
 ---
 
-## ⚡ Arbeitsregeln
+## Arbeitsregeln
 
-Du darfst NICHT:
+Nicht erlaubt:
 - Komplette Komponenten umbauen
-- Neue Libraries einführen ohne Rückfrage
+- Neue Libraries ohne Rückfrage
 - Angular Signals verwenden
-- Inline-Styles (CSS in scss-Datei)
+- Hardcodierte API-URLs (immer `environment.apiUrl`)
 
-Du SOLLST:
-- Minimal-invasive Änderungen machen
+Erwünscht:
+- Minimal-invasive Änderungen
 - Bestehenden Stil einhalten
-- environment.apiUrl statt hardcodierter URLs
-- Barrierefreiheit beachten (aria-labels)
+- Kleine, fokussierte Komponenten
 
 ---
 
-## 🧠 Entscheidungsprinzip
+## Entscheidungsprinzip
 
-1. Bevorzuge einfache Lösung
-2. Bevorzuge bestehende Patterns im Projekt
-3. Frage nach, wenn Risiko hoch ist
+1. Einfache Lösung bevorzugen
+2. Bestehende Patterns bevorzugen
+3. Nachfragen, wenn Risiko hoch ist
 
 ---
 
-## 📥 Tasks
-
-Tasks kommen aus: ai/tasks/*.md
-
-## 📤 Ausgabeformat
+## Ausgabeformat
 
 Am Ende immer:
 - Was wurde geändert?
