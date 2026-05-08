@@ -20,12 +20,12 @@
         {{ auth.getUser()?.fullName }}
         <mat-icon style="font-size:16px;width:16px;height:16px;color:var(--text-muted)">expand_more</mat-icon>
       </div>
-      <mat-menu #userMenu="matMenu">
+      <mat-menu #userMenu="matMenu" panelClass="profile-menu">
         <button mat-menu-item routerLink="/settings" (click)="closeMenu()">
           <mat-icon>settings</mat-icon> Einstellungen
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="auth.logout(); closeMenu()">
+        <button mat-menu-item class="logout-item" (click)="auth.logout(); closeMenu()">
           <mat-icon>logout</mat-icon> Abmelden
         </button>
       </mat-menu>
