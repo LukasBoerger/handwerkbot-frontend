@@ -95,6 +95,17 @@ describe('Dashboard', () => {
     it('gibt Anzahl der bestätigten Termine zurück', () => {
       expect(component.upcomingCount).toBe(1);
     });
+
+    it('zählt auch pending- und rescheduled-Termine', () => {
+      component.appointments = [
+        makeApt('1', 'confirmed'),
+        makeApt('2', 'pending'),
+        makeApt('3', 'rescheduled'),
+        makeApt('4', 'cancelled'),
+        makeApt('5', 'completed'),
+      ];
+      expect(component.upcomingCount).toBe(3);
+    });
   });
 
   describe('todayCount', () => {
@@ -177,6 +188,27 @@ describe('Dashboard', () => {
       expect(component.filtered.every((a) => a.status === 'cancelled')).toBe(true);
     });
 
+    it('filtert nach "pending"', () => {
+      component.appointments = [
+        makeApt('p1', 'pending'),
+        makeApt('c1', 'confirmed'),
+        makeApt('x1', 'cancelled'),
+      ];
+      component.setFilter('pending');
+      expect(component.filtered.length).toBe(1);
+      expect(component.filtered[0].status).toBe('pending');
+    });
+
+    it('filtert nach "rescheduled"', () => {
+      component.appointments = [
+        makeApt('r1', 'rescheduled'),
+        makeApt('r2', 'rescheduled'),
+        makeApt('c1', 'confirmed'),
+      ];
+      component.setFilter('rescheduled');
+      expect(component.filtered.every((a) => a.status === 'rescheduled')).toBe(true);
+    });
+
     it('zeigt alle Termine bei "all"', () => {
       component.setFilter('all');
       expect(component.filtered.length).toBe(3);
@@ -188,6 +220,29 @@ describe('Dashboard', () => {
       );
       component.setFilter('all');
       expect(component.filtered.length).toBe(5);
+    });
+
+    it('sortiert zukünftige Termine vor vergangenen', () => {
+      const future = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      const past = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      component.appointments = [
+        { ...makeApt('past1', 'confirmed'), datetime: past },
+        { ...makeApt('future1', 'confirmed'), datetime: future },
+      ];
+      component.setFilter('all');
+      expect(component.filtered[0].id).toBe('future1');
+      expect(component.filtered[1].id).toBe('past1');
+    });
+
+    it('platziert Termine ohne Datum nach zukünftigen Terminen', () => {
+      const future = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      component.appointments = [
+        { ...makeApt('nodate', 'confirmed'), datetime: null },
+        { ...makeApt('future1', 'confirmed'), datetime: future },
+      ];
+      component.setFilter('all');
+      expect(component.filtered[0].id).toBe('future1');
+      expect(component.filtered[1].id).toBe('nodate');
     });
   });
 

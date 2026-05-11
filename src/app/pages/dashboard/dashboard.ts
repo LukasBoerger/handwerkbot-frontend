@@ -66,7 +66,7 @@ export class Dashboard implements OnInit {
   appointments: any[] = [];
   filtered: any[] = [];
   loading = false;
-  statusFilter: 'all' | 'confirmed' | 'completed' | 'cancelled' = 'all';
+  statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
 
   weeklyChartData: WeekBar[] = [];
@@ -120,13 +120,28 @@ export class Dashboard implements OnInit {
       this.statusFilter === 'all'
         ? this.appointments
         : this.appointments.filter((a) => a.status === this.statusFilter);
-    this.filtered = [...base]
-      .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
-      .slice(0, 5);
+
+    const now = Date.now();
+
+    // Zukünftige Termine (oder ohne Datum): aufsteigend sortiert
+    const upcoming = base
+      .filter((a) => !a.datetime || new Date(a.datetime).getTime() >= now)
+      .sort((a, b) => {
+        if (!a.datetime) return 1;
+        if (!b.datetime) return -1;
+        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
+      });
+
+    // Vergangene Termine: neueste zuerst
+    const past = base
+      .filter((a) => a.datetime && new Date(a.datetime).getTime() < now)
+      .sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+
+    this.filtered = [...upcoming, ...past].slice(0, 5);
     this.cdr.detectChanges();
   }
 
-  setFilter(f: 'all' | 'confirmed' | 'completed' | 'cancelled') {
+  setFilter(f: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled') {
     this.statusFilter = f;
     this.applyFilter();
   }
@@ -163,7 +178,9 @@ export class Dashboard implements OnInit {
   }
 
   get upcomingCount() {
-    return this.appointments.filter((a) => a.status === 'confirmed').length;
+    return this.appointments.filter((a) =>
+      ['confirmed', 'pending', 'rescheduled'].includes(a.status),
+    ).length;
   }
 
   get thisWeekCount() {
