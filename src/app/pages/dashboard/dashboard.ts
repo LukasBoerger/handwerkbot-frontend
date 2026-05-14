@@ -79,6 +79,7 @@ export class Dashboard implements OnInit {
 
   trialExpired = false;
   trialDaysLeft = 0;
+  publicToken: string | null = null;
 
   updatingId: string | null = null;
 
@@ -115,6 +116,7 @@ export class Dashboard implements OnInit {
       next: (data) => {
         this.trialExpired = data.trialExpired ?? false;
         this.trialDaysLeft = data.trialDaysLeft ?? 0;
+        this.publicToken = data.publicToken ?? null;
         this.cdr.detectChanges();
       },
       error: () => {},
@@ -355,6 +357,17 @@ export class Dashboard implements OnInit {
 
   openChat(): void {
     window.open('/chat', '_blank');
+  }
+
+  copyPublicLink(): void {
+    if (!this.publicToken) {
+      this.snackBar.open('Link nicht verfügbar – bitte Seite neu laden.', 'OK', { duration: 3000 });
+      return;
+    }
+    const link = `${window.location.origin}/public/chat/${this.publicToken}`;
+    navigator.clipboard.writeText(link).then(() => {
+      this.snackBar.open('Link kopiert! ✓', 'OK', { duration: 3000 });
+    });
   }
 
   logout() {
