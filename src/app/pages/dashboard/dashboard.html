@@ -38,6 +38,19 @@
     </div>
   }
 
+  <!-- TRIAL BANNERS -->
+  @if (trialExpired) {
+    <div class="trial-expired-banner">
+      ⚠️ Ihr Testzeitraum ist abgelaufen.
+      <a routerLink="/pricing">Jetzt abonnieren →</a>
+    </div>
+  } @else if (trialDaysLeft <= 7 && trialDaysLeft > 0) {
+    <div class="trial-warning-banner">
+      ⏳ Ihr Testzeitraum endet in {{ trialDaysLeft }} Tagen.
+      <a routerLink="/pricing">Jetzt abonnieren →</a>
+    </div>
+  }
+
   <!-- STATS -->
   <div class="stats-grid">
 

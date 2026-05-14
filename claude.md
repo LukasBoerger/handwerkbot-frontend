@@ -19,10 +19,12 @@ Angular 19 SPA für die Kommuvo-Plattform. Handwerksbetriebe verwalten hier ihre
 
 ## Architektur
 
-- Angular 19, Angular Material, Reactive Forms
+- Angular 21.2.x, Angular Material 21.2.2, Reactive Forms
 - Hosting: Vercel
 - Backend-API: Railway (api.kommuvo.de)
 - Auth: JWT (localStorage)
+- Testing: Vitest 4.x (Unit), Cypress 15.x (E2E)
+- Linting: ESLint + angular-eslint, Prettier 3.x
 
 ---
 
@@ -60,8 +62,13 @@ Angular 19 SPA für die Kommuvo-Plattform. Handwerksbetriebe verwalten hier ihre
 ## Services (`src/app/services/`)
 
 - `auth.service.ts` → Login, Register, Passwort-Reset, Token-Verwaltung
-- `tenant.ts` → Tenant-Einstellungen lesen/schreiben
 - `appointment.service.ts` → Termine laden, Status ändern
+- `tenant.ts` → Placeholder (Injectable, noch leer)
+- `auth.ts` → Placeholder (Injectable, noch leer)
+
+## Guards (`src/app/guards/`)
+
+- `auth.guard.ts` → Schützt alle Auth-Routen
 
 ---
 

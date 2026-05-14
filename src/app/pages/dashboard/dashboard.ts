@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
+import { environment } from '../../../environments/environment';
 
 interface WeekBar {
   label: string;
@@ -75,10 +77,14 @@ export class Dashboard implements OnInit {
   donutSegments: DonutSegment[] = [];
   donutTotal = 0;
 
+  trialExpired = false;
+  trialDaysLeft = 0;
+
   updatingId: string | null = null;
 
   private auth = inject(AuthService);
   private appointmentService = inject(AppointmentService);
+  private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
@@ -90,10 +96,28 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.loadAppointments();
+    this.loadTenantInfo();
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['payment'] === 'success') {
         this.snackBar.open('Zahlung erfolgreich! Ihr Abonnement ist jetzt aktiv.', 'OK', { duration: 5000 });
       }
+    });
+  }
+
+  private loadTenantInfo() {
+    const tenantId = localStorage.getItem('tenantId');
+    const token = localStorage.getItem('token');
+    if (!tenantId || !token) return;
+
+    this.http.get<any>(`${environment.apiUrl}/api/tenants/${tenantId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).subscribe({
+      next: (data) => {
+        this.trialExpired = data.trialExpired ?? false;
+        this.trialDaysLeft = data.trialDaysLeft ?? 0;
+        this.cdr.detectChanges();
+      },
+      error: () => {},
     });
   }
 

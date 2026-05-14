@@ -139,6 +139,34 @@
   &:hover { opacity: 0.85; }
 }
 
+// ── Trial banners ─────────────────────────────────────────────────────────────
+
+.trial-expired-banner {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  color: #f87171;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a { color: #f87171; font-weight: 600; }
+}
+
+.trial-warning-banner {
+  background: rgba(245, 166, 35, 0.12);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  color: #f5a623;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a { color: #f5a623; font-weight: 600; }
+}
+
 // ── Stat cards ───────────────────────────────────────────────────────────────
 
 .stats-grid {
