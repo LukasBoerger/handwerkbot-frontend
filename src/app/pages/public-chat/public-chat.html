@@ -1,0 +1,65 @@
+@if (notFound) {
+  <div class="not-found">
+    <p class="not-found__icon">🔍</p>
+    <h2>Link ungültig</h2>
+    <p>Dieser Chat-Link existiert nicht oder wurde deaktiviert.</p>
+  </div>
+} @else {
+  <div class="page-wrapper">
+
+    <header class="page-header">
+      <div class="page-header__avatar">🤖</div>
+      <div class="page-header__info">
+        <span class="page-header__bot">{{ botName }}</span>
+        @if (businessName) {
+          <span class="page-header__business">{{ businessName }}</span>
+        }
+      </div>
+      <span class="page-header__status">● Online</span>
+    </header>
+
+    <div class="chat-messages" data-cy="chat-messages">
+      @for (msg of messages; track $index) {
+        <div class="bubble-row" [class.bubble-row--user]="msg.role === 'user'">
+          <div class="bubble" [class.bubble--user]="msg.role === 'user'" [class.bubble--bot]="msg.role === 'bot'">
+            <span class="bubble__text">{{ msg.text }}</span>
+            <span class="bubble__time">{{ msg.time }}</span>
+          </div>
+        </div>
+      }
+
+      @if (typing) {
+        <div class="bubble-row">
+          <div class="bubble bubble--bot bubble--typing">
+            <span class="typing-dots">
+              <span></span><span></span><span></span>
+            </span>
+          </div>
+        </div>
+      }
+
+      <div #messagesEnd></div>
+    </div>
+
+    <div class="chat-input">
+      <input
+        class="chat-input__field"
+        data-cy="chat-input"
+        type="text"
+        placeholder="Nachricht schreiben..."
+        [(ngModel)]="inputText"
+        (keydown)="onKeydown($event)"
+        [disabled]="typing"
+        autocomplete="off">
+      <button
+        class="chat-input__send"
+        data-cy="chat-send"
+        (click)="send()"
+        [disabled]="!inputText.trim() || typing"
+        title="Senden">
+        ➤
+      </button>
+    </div>
+
+  </div>
+}

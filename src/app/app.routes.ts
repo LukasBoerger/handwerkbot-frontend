@@ -12,6 +12,7 @@ import { Datenschutz } from './pages/datenschutz/datenschutz';
 import { Pricing } from './pages/pricing/pricing';
 import { SetupWizard } from './pages/setup-wizard/setup-wizard';
 import { ChatPage } from './pages/chat/chat';
+import { PublicChatPage } from './pages/public-chat/public-chat';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -26,5 +27,6 @@ export const routes: Routes = [
   { path: 'impressum', component: Impressum },
   { path: 'datenschutz', component: Datenschutz },
   { path: 'pricing', component: Pricing },
+  { path: 'public/chat/:token', component: PublicChatPage },
   { path: '**', redirectTo: '' }
 ];
