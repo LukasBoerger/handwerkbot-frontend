@@ -29,7 +29,7 @@
           <form [formGroup]="accountForm">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Vollständiger Name</mat-label>
-              <input matInput formControlName="fullName" placeholder="Max Müller" data-cy="input-fullname">
+              <input matInput formControlName="fullName" data-cy="input-fullname">
               <mat-icon matPrefix>person</mat-icon>
             </mat-form-field>
 
@@ -68,15 +68,15 @@
         <!-- Schritt 2: Betrieb -->
         <mat-step [stepControl]="businessForm" label="Ihr Betrieb">
           <form [formGroup]="businessForm">
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+            <mat-form-field appearance="outline" class="full-width">
               <mat-label>Betriebsname</mat-label>
-              <input matInput formControlName="businessName" placeholder="Müller Elektro GmbH" data-cy="input-business-name">
+              <input matInput formControlName="businessName" data-cy="input-business-name">
               <mat-icon matPrefix>business</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Telefonnummer</mat-label>
-              <input matInput formControlName="businessPhone" placeholder="+49 2381 123456" data-cy="input-business-phone">
+              <input matInput formControlName="businessPhone" data-cy="input-business-phone">
               <mat-icon matPrefix>phone</mat-icon>
             </mat-form-field>
 
