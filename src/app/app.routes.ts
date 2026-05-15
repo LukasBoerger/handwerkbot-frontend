@@ -13,6 +13,7 @@ import { Pricing } from './pages/pricing/pricing';
 import { SetupWizard } from './pages/setup-wizard/setup-wizard';
 import { ChatPage } from './pages/chat/chat';
 import { PublicChatPage } from './pages/public-chat/public-chat';
+import { AppointmentsPage } from './pages/appointments/appointments';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'settings', component: Settings, canActivate: [authGuard] },
+  { path: 'appointments', component: AppointmentsPage, canActivate: [authGuard] },
   { path: 'setup', component: SetupWizard, canActivate: [authGuard] },
   { path: 'chat', component: ChatPage, canActivate: [authGuard] },
   { path: 'forgot-password', component: ForgotPassword },

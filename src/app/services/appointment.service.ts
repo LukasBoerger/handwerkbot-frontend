@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
@@ -13,11 +13,16 @@ export class AppointmentService {
     private auth: AuthService,
   ) {}
 
-  getMyAppointments(): Observable<any[]> {
+  getMyAppointments(limit?: number): Observable<any[]> {
     const tenantId = localStorage.getItem('tenantId');
     if (!tenantId) return EMPTY;
+    let params = new HttpParams();
+    if (limit != null) {
+      params = params.set('limit', limit.toString());
+    }
     return this.http.get<any[]>(`${this.apiUrl}/${tenantId}/appointments`, {
       headers: this.getHeaders(),
+      params,
     });
   }
 

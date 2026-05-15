@@ -1,0 +1,223 @@
+.appointments-container {
+  padding: 40px 8%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) { padding: 24px 5%; }
+}
+
+.appointments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  p { color: var(--text-muted); font-size: 14px; }
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &:hover { color: var(--text); border-color: var(--text-muted); }
+}
+
+// ── Table card ────────────────────────────────────────────────────────────────
+
+.table-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+
+  mat-card-header {
+    padding: 24px 24px 0 !important;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  mat-card-title {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  mat-card-content { padding: 0 !important; }
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { border-color: var(--text-muted); color: var(--text); }
+
+  &.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+  }
+}
+
+// ── Table utilities ───────────────────────────────────────────────────────────
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.full-width { width: 100%; }
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--text-muted);
+
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  p { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  small { font-size: 13px; }
+}
+
+// ── Status badges ─────────────────────────────────────────────────────────────
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.status-confirmed   { background: rgba(59, 130, 246, 0.15);  color: #60a5fa; }
+  &.status-pending     { background: rgba(245, 158, 11, 0.15);   color: #fbbf24; }
+  &.status-rescheduled { background: rgba(139, 92, 246, 0.15);   color: #a78bfa; }
+  &.status-completed   { background: rgba(34, 197, 94, 0.15);    color: #4ade80; }
+  &.status-cancelled   { background: rgba(239, 68, 68, 0.15);    color: #f87171; }
+}
+
+// ── Action buttons ────────────────────────────────────────────────────────────
+
+.action-menu {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &--complete:hover   { background: rgba(34, 197, 94, 0.15);  color: #4ade80; border-color: #4ade80; }
+  &--reschedule:hover { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border-color: #a78bfa; }
+  &--cancel:hover     { background: rgba(239, 68, 68, 0.15);  color: #f87171; border-color: #f87171; }
+  &--restore:hover    { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: #60a5fa; }
+}
+
+// ── Customer cell ─────────────────────────────────────────────────────────────
+
+.customer-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customer-name {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.customer-phone {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.origin-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  align-self: flex-start;
+}
+
+// ── Material overrides ────────────────────────────────────────────────────────
+
+.mat-mdc-table { background: transparent !important; }
+
+.mat-mdc-header-row { background: rgba(255, 255, 255, 0.03) !important; }
+
+.mat-mdc-header-cell {
+  color: var(--text-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-mdc-cell {
+  color: var(--text) !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-mdc-row:last-child .mat-mdc-cell { border-bottom: none !important; }
+
+.mat-mdc-row:hover { background: rgba(255, 255, 255, 0.02) !important; }

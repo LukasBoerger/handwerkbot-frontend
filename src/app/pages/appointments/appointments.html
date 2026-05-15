@@ -1,0 +1,134 @@
+<div class="appointments-container">
+
+  <div class="appointments-header">
+    <div>
+      <h1>📋 Alle Termine</h1>
+      <p>Vollständige Übersicht Ihrer gebuchten Termine</p>
+    </div>
+    <a class="btn-outline" routerLink="/dashboard">← Dashboard</a>
+  </div>
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Termine ({{ appointments.length }})</mat-card-title>
+      <div class="filter-tabs">
+        <button class="filter-tab" [class.active]="statusFilter === 'all'"          (click)="setFilter('all')">Alle</button>
+        <button class="filter-tab" [class.active]="statusFilter === 'confirmed'"    (click)="setFilter('confirmed')">Bestätigt</button>
+        <button class="filter-tab" [class.active]="statusFilter === 'pending'"      (click)="setFilter('pending')">Ausstehend</button>
+        <button class="filter-tab" [class.active]="statusFilter === 'rescheduled'"  (click)="setFilter('rescheduled')">Umgebucht</button>
+        <button class="filter-tab" [class.active]="statusFilter === 'completed'"    (click)="setFilter('completed')">Abgeschlossen</button>
+        <button class="filter-tab" [class.active]="statusFilter === 'cancelled'"    (click)="setFilter('cancelled')">Abgesagt</button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (loading) {
+        <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else if (filtered.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>Keine Termine gefunden</p>
+          <small>
+            @if (statusFilter === 'all') {
+              Termine erscheinen hier, sobald Kunden über WhatsApp buchen.
+            } @else {
+              Keine Termine mit diesem Status vorhanden.
+            }
+          </small>
+        </div>
+      } @else {
+        <div class="table-scroll-wrapper">
+          <table mat-table [dataSource]="filtered" class="full-width">
+
+            <ng-container matColumnDef="customer">
+              <th mat-header-cell *matHeaderCellDef>Kunde</th>
+              <td mat-cell *matCellDef="let a">
+                <div class="customer-cell">
+                  <span class="customer-name">{{ a.customerName }}</span>
+                  @if (a.phoneNumber) {
+                    <span class="customer-phone">{{ a.phoneNumber }}</span>
+                  }
+                  @if (a.origin && a.origin !== 'whatsapp') {
+                    <span class="origin-badge">{{ a.origin }}</span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="service">
+              <th mat-header-cell *matHeaderCellDef>Leistung</th>
+              <td mat-cell *matCellDef="let a">{{ a.service }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="datetime">
+              <th mat-header-cell *matHeaderCellDef>Termin</th>
+              <td mat-cell *matCellDef="let a">{{ a.datetime | date:'dd.MM.yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef>Adresse</th>
+              <td mat-cell *matCellDef="let a">{{ a.address }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let a">
+                <span class="status-badge" [class]="'status-' + a.status">
+                  {{ a.status === 'confirmed'   ? '✓ Bestätigt'
+                   : a.status === 'pending'     ? '⏳ Ausstehend'
+                   : a.status === 'rescheduled' ? '↺ Umgebucht'
+                   : a.status === 'completed'   ? '✔ Abgeschlossen'
+                   : a.status === 'cancelled'   ? '✕ Abgesagt'
+                   : a.status }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let a">
+                <div class="action-menu">
+                  @if (a.status === 'confirmed' || a.status === 'pending') {
+                    <button class="action-btn action-btn--complete"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'completed')"
+                            title="Als abgeschlossen markieren" aria-label="Abschließen">✔</button>
+                  }
+                  @if (a.status === 'confirmed' || a.status === 'pending') {
+                    <button class="action-btn action-btn--reschedule"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'rescheduled')"
+                            title="Umbuchen" aria-label="Umbuchen">↺</button>
+                  }
+                  @if (a.status === 'rescheduled') {
+                    <button class="action-btn action-btn--restore"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'confirmed')"
+                            title="Termin bestätigen" aria-label="Bestätigen">✓</button>
+                  }
+                  @if (a.status !== 'cancelled' && a.status !== 'completed') {
+                    <button class="action-btn action-btn--cancel"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'cancelled')"
+                            title="Absagen" aria-label="Absagen">✕</button>
+                  }
+                  @if (a.status === 'cancelled') {
+                    <button class="action-btn action-btn--restore"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'confirmed')"
+                            title="Wiederherstellen" aria-label="Wiederherstellen">↩</button>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                [attr.data-cy]="'apt-row-' + row.id"></tr>
+          </table>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+</div>

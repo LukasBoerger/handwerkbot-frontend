@@ -1,72 +1,60 @@
 <div class="pricing-page">
+
   <div class="pricing-header">
     <div class="section-label">Preise</div>
-    <h1>Transparent.<br>Fair. Kündbar.</h1>
-    <p class="pricing-sub">30 Tage kostenlos testen – kein Vertrag, jederzeit kündbar.</p>
+    <h1>Einfach. Fair.<br>Ohne Überraschungen.</h1>
+    <p class="pricing-sub">Starten Sie heute – keine versteckten Kosten, jederzeit kündbar.</p>
   </div>
 
-  <div class="pricing-grid">
-    @for (plan of plans; track plan.id) {
-      <div class="pricing-card"
-           [class.highlighted]="plan.highlight"
-           [class.active-plan]="isActivePlan(plan.id)">
+  <div class="plan-wrapper">
+    <div class="plan-card">
 
-        @if (isActivePlan(plan.id)) {
-          <div class="current-plan-badge">Ihr aktueller Plan</div>
-        } @else if (plan.highlight && !isActivePlan(plan.id)) {
-          <div class="popular-badge">Beliebteste Wahl</div>
+      <div class="trial-badge">✨ 14 Tage kostenlos testen</div>
+
+      <div class="plan-name">Kommuvo</div>
+
+      <div class="plan-price">
+        <span class="price-amount">39</span>
+        <span class="price-currency">€</span>
+        <span class="price-period">/ Monat</span>
+      </div>
+
+      <ul class="plan-features">
+        @for (f of features; track f) {
+          <li>
+            <span class="feature-check">✓</span>
+            <span>{{ f }}</span>
+          </li>
         }
+      </ul>
 
-        <div class="plan-name">{{ plan.name }}</div>
-        <div class="plan-price">
-          <span class="price-amount">{{ plan.price }}€</span>
-          <span class="price-period">/Monat</span>
-        </div>
-        <ul class="plan-features">
-          @for (f of plan.features; track f) {
-            <li>✓ {{ f }}</li>
-          }
-        </ul>
-
-        @if (isActivePlan(plan.id)) {
-          <!-- Active plan: show manage button -->
-          <button class="btn-plan btn-plan-manage"
-                  [disabled]="portalLoading()"
+      <div class="plan-actions">
+        @if (isActive) {
+          <button class="btn-cta btn-cta--manage"
+                  [disabled]="portalLoading"
                   (click)="openPortal()">
-            @if (portalLoading()) {
-              <mat-spinner diameter="16"></mat-spinner>
+            @if (portalLoading) {
+              <mat-spinner diameter="18"></mat-spinner>
             } @else {
-              Verwalten →
+              Abonnement verwalten →
             }
           </button>
-        } @else if (billingStatus()?.status === 'active') {
-          <!-- Different plan while subscription active: switch plan -->
-          <button class="btn-plan"
-                  [class.btn-plan-dark]="plan.highlight"
-                  [disabled]="loadingPlan() !== null"
-                  (click)="checkout(plan.id)">
-            @if (loadingPlan() === plan.id) {
-              <mat-spinner diameter="16"></mat-spinner>
-            } @else {
-              Wechseln →
-            }
-          </button>
+          <p class="cta-note">Sie haben bereits ein aktives Abonnement.</p>
         } @else {
-          <!-- No active sub (guest or trial): subscribe -->
-          <button class="btn-plan"
-                  [class.btn-plan-dark]="plan.highlight"
-                  [disabled]="loadingPlan() !== null"
-                  (click)="checkout(plan.id)">
-            @if (loadingPlan() === plan.id) {
-              <mat-spinner diameter="16"></mat-spinner>
+          <button class="btn-cta"
+                  [disabled]="loading"
+                  (click)="checkout()">
+            @if (loading) {
+              <mat-spinner diameter="18"></mat-spinner>
             } @else {
-              Jetzt abonnieren →
+              14 Tage kostenlos testen →
             }
           </button>
+          <p class="cta-note">Danach 39 € / Monat &nbsp;·&nbsp; Jederzeit kündbar</p>
         }
       </div>
-    }
+
+    </div>
   </div>
 
-  <p class="pricing-note">Alle Pläne: 30 Tage kostenlos testen · Keine Kreditkarte erforderlich</p>
 </div>

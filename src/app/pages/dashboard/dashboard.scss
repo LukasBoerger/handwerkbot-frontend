@@ -674,3 +674,23 @@
 .mat-mdc-row:last-child .mat-mdc-cell { border-bottom: none !important; }
 
 .mat-mdc-row:hover { background: rgba(255, 255, 255, 0.02) !important; }
+
+// ── "Alle Termine" footer ─────────────────────────────────────────────────────
+
+.table-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px !important;
+  border-top: 1px solid var(--border);
+  margin: 0 !important;
+}
+
+.link-all-appointments {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.7; text-decoration: underline; }
+}
