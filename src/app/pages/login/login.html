@@ -5,14 +5,14 @@
     <h1 class="auth-title">Willkommen zurück</h1>
     <p class="auth-subtitle">Melden Sie sich in Ihrem Konto an</p>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      @if (error) {
-        <div class="error-banner">
-          <mat-icon>error</mat-icon>
-          {{ error }}
-        </div>
-      }
+    @if (error) {
+      <div class="error-banner">
+        <mat-icon>error</mat-icon>
+        {{ error }}
+      </div>
+    }
 
+    <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="field">
         <label class="field-label" for="login-email">E-Mail</label>
         <input
