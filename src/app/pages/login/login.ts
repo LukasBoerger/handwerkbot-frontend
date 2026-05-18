@@ -1,10 +1,6 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
@@ -12,12 +8,13 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   imports: [
-    ReactiveFormsModule, RouterLink,
-    MatCardModule, MatFormFieldModule, MatInputModule,
-    MatButtonModule, MatIconModule, MatProgressSpinnerModule
+    ReactiveFormsModule,
+    RouterLink,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
 })
 export class Login {
   form: FormGroup;
@@ -27,12 +24,14 @@ export class Login {
 
   private cdr = inject(ChangeDetectorRef);
 
-  constructor(private fb: FormBuilder,
-              private auth: AuthService,
-              private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -53,7 +52,7 @@ export class Login {
         this.error = err.error?.error || 'Ungültige Zugangsdaten';
         this.loading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 }

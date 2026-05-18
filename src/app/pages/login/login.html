@@ -1,37 +1,64 @@
-<div class="auth-container">
+<div class="auth-page">
   <div class="auth-card">
-    <div class="auth-logo">🔧</div>
+    <div class="auth-brand">Kommuvo</div>
+    <div class="auth-brand-line"></div>
     <h1 class="auth-title">Willkommen zurück</h1>
     <p class="auth-subtitle">Melden Sie sich in Ihrem Konto an</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
       @if (error) {
         <div class="error-banner">
-          <mat-icon style="font-size:18px;width:18px;height:18px">error</mat-icon>
+          <mat-icon>error</mat-icon>
           {{ error }}
         </div>
       }
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>E-Mail</mat-label>
-        <input matInput formControlName="email" type="email" autocomplete="email" data-cy="input-email">
-        <mat-icon matPrefix>email</mat-icon>
-      </mat-form-field>
+      <div class="field">
+        <label class="field-label" for="login-email">E-Mail</label>
+        <input
+          id="login-email"
+          class="field-input"
+          formControlName="email"
+          type="email"
+          autocomplete="email"
+          placeholder="name@betrieb.de"
+          data-cy="input-email"
+        >
+      </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Passwort</mat-label>
-        <input matInput formControlName="password"
-               [type]="hidePassword ? 'password' : 'text'" autocomplete="current-password"
-               data-cy="input-password">
-        <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix type="button"
-                (click)="hidePassword = !hidePassword">
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-      </mat-form-field>
+      <div class="field">
+        <label class="field-label" for="login-password">Passwort</label>
+        <div class="field-input-wrap">
+          <input
+            id="login-password"
+            class="field-input"
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            data-cy="input-password"
+          >
+          <button
+            type="button"
+            class="field-toggle"
+            (click)="hidePassword = !hidePassword"
+            aria-label="Passwort anzeigen umschalten"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+      </div>
 
-      <button class="submit-btn" type="submit" data-cy="btn-login"
-              [disabled]="form.invalid || loading">
+      <p class="forgot-link">
+        <a routerLink="/forgot-password">Passwort vergessen?</a>
+      </p>
+
+      <button
+        class="btn-primary"
+        type="submit"
+        data-cy="btn-login"
+        [disabled]="form.invalid || loading"
+      >
         @if (loading) {
           <mat-spinner diameter="20"></mat-spinner>
         } @else {
@@ -43,14 +70,10 @@
         Oder testen Sie ohne Registrierung:
         <button type="button" data-cy="btn-demo" (click)="fillDemo()">Demo ausprobieren →</button>
       </div>
-
     </form>
 
-    <p class="forgot-link">
-      <a routerLink="/forgot-password">Passwort vergessen?</a>
-    </p>
     <hr class="divider">
-    <p class="auth-link">
+    <p class="auth-footer">
       Noch kein Konto? <a routerLink="/register">Jetzt registrieren</a>
     </p>
   </div>
