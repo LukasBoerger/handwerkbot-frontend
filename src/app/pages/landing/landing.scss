@@ -182,6 +182,7 @@
     font-size: 16px; flex-shrink: 0;
   }
 
+  .chat-info { display: flex; flex-direction: column; gap: 1px; }
   .chat-name { font-weight: 600; font-size: 13px; }
   .chat-status { font-size: 10px; color: var(--green); }
 }
