@@ -1,200 +1,244 @@
-<div class="wizard-container">
-  <div class="wizard-header">
-    <h1>Einrichtungsassistent</h1>
-    <p>Richten Sie Ihren Bot in wenigen Minuten ein</p>
-  </div>
+<div class="auth-page">
+  <div class="auth-card auth-card--wide">
+    <div class="auth-brand">Kommuvo</div>
+    <div class="auth-brand-line"></div>
+    <h1 class="auth-title">Einrichtungsassistent</h1>
+    <p class="auth-subtitle">Richten Sie Ihren Bot in wenigen Minuten ein</p>
 
-  <!-- SCHRITT 1: Betriebsdaten -->
-  @if (currentStep === 1) {
-    <form [formGroup]="step1">
-      <div class="step-card">
-        <div class="step-card-header">
-          <h2>Betriebsdaten</h2>
-          <p>Grundlegende Informationen zu Ihrem Betrieb</p>
+    <!-- 4-Schritt-Indikator -->
+    <div class="step-indicator">
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 1"
+             [class.step-circle--done]="currentStep > 1"
+             [class.step-circle--pending]="currentStep < 1">
+          {{ currentStep > 1 ? '✓' : '1' }}
         </div>
-        <div class="step-card-content">
-          <div class="form-grid">
-            <div class="form-field full-width">
-              <label for="businessName">Betriebsname</label>
-              <input id="businessName" formControlName="businessName" data-cy="input-setup-business-name"
-                     placeholder="z.B. Müller Elektro GmbH">
-              @if (step1.get('businessName')?.invalid && step1.get('businessName')?.touched) {
-                <p class="error-hint">Pflichtfeld</p>
-              }
-            </div>
-
-            <div class="form-field">
-              <label for="businessOwner">Inhaber</label>
-              <input id="businessOwner" formControlName="businessOwner" data-cy="input-setup-owner">
-              @if (step1.get('businessOwner')?.invalid && step1.get('businessOwner')?.touched) {
-                <p class="error-hint">Pflichtfeld</p>
-              }
-            </div>
-
-            <div class="form-field">
-              <label for="businessEmail">E-Mail</label>
-              <input id="businessEmail" formControlName="businessEmail" type="email" data-cy="input-setup-email">
-              @if (step1.get('businessEmail')?.invalid && step1.get('businessEmail')?.touched) {
-                <p class="error-hint">Gültige E-Mail-Adresse eingeben</p>
-              }
-            </div>
-
-            <div class="services-section">
-              <span class="services-label">Leistungen auswählen</span>
-              <app-service-selector
-                [selectedServices]="selectedServices"
-                (servicesChanged)="onServicesChanged($event)">
-              </app-service-selector>
-              @if (step1.get('businessServices')?.invalid
-                && step1.get('businessServices')?.touched) {
-                <p class="error-hint">Mindestens eine Leistung auswählen</p>
-              }
-            </div>
-
-            <div class="form-field full-width">
-              <label for="botName">Bot-Name</label>
-              <input id="botName" formControlName="botName" placeholder="z.B. KommuvoBot" data-cy="input-setup-bot-name">
-              <span class="field-hint">So stellt sich Ihr Bot bei Kunden vor</span>
-              @if (step1.get('botName')?.invalid && step1.get('botName')?.touched) {
-                <p class="error-hint">Pflichtfeld</p>
-              }
-            </div>
-          </div>
-        </div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 1"
+              [class.step-label--done]="currentStep > 1"
+              [class.step-label--pending]="currentStep < 1">Betrieb</span>
       </div>
-
-      <div class="step-actions">
-        <button class="btn-next" type="button" data-cy="btn-setup-next-step1" (click)="onNextStep1()">
-          Weiter →
-        </button>
-      </div>
-    </form>
-  }
-
-  <!-- SCHRITT 2: Öffnungszeiten -->
-  @if (currentStep === 2) {
-    <form [formGroup]="step2">
-      <div class="step-card">
-        <div class="step-card-header">
-          <h2>Öffnungszeiten</h2>
-          <p>Aktivieren Sie die Tage an denen Sie erreichbar sind</p>
+      <div class="step-line"
+           [class.step-line--done]="currentStep > 1"
+           [class.step-line--active]="currentStep === 1"
+           [class.step-line--pending]="currentStep < 1"></div>
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 2"
+             [class.step-circle--done]="currentStep > 2"
+             [class.step-circle--pending]="currentStep < 2">
+          {{ currentStep > 2 ? '✓' : '2' }}
         </div>
-        <div class="step-card-content">
-          <div class="hours-list">
-            @for (day of days; track day.key) {
-              <div class="hours-row" [class.hours-row--open]="step2.get('open' + day.key)?.value">
-                <div class="hours-left">
-                  <button
-                    type="button"
-                    class="day-toggle"
-                    [attr.data-cy]="'toggle-' + day.key"
-                    [class.day-toggle--on]="step2.get('open' + day.key)?.value"
-                    (click)="step2.get('open' + day.key)?.setValue(!step2.get('open' + day.key)?.value)">
-                    <span class="day-toggle__thumb"></span>
-                  </button>
-                  <span class="day-label">{{ day.label }}</span>
-                </div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 2"
+              [class.step-label--done]="currentStep > 2"
+              [class.step-label--pending]="currentStep < 2">Zeiten</span>
+      </div>
+      <div class="step-line"
+           [class.step-line--done]="currentStep > 2"
+           [class.step-line--active]="currentStep === 2"
+           [class.step-line--pending]="currentStep < 2"></div>
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 3"
+             [class.step-circle--done]="currentStep > 3"
+             [class.step-circle--pending]="currentStep < 3">
+          {{ currentStep > 3 ? '✓' : '3' }}
+        </div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 3"
+              [class.step-label--done]="currentStep > 3"
+              [class.step-label--pending]="currentStep < 3">WhatsApp</span>
+      </div>
+      <div class="step-line"
+           [class.step-line--done]="currentStep > 3"
+           [class.step-line--active]="currentStep === 3"
+           [class.step-line--pending]="currentStep < 3"></div>
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 4"
+             [class.step-circle--done]="currentStep > 4"
+             [class.step-circle--pending]="currentStep < 4">4</div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 4"
+              [class.step-label--done]="currentStep > 4"
+              [class.step-label--pending]="currentStep < 4">Fertig</span>
+      </div>
+    </div>
 
-                @if (step2.get('open' + day.key)?.value) {
-                  <div class="hours-times">
-                    <div class="time-field">
-                      <span>Von</span>
-                      <input type="time" [formControlName]="'from' + day.key" class="time-input" [attr.aria-label]="'Von ' + day.label">
-                    </div>
-                    <span class="time-separator">–</span>
-                    <div class="time-field">
-                      <span>Bis</span>
-                      <input type="time" [formControlName]="'to' + day.key" class="time-input" [attr.aria-label]="'Bis ' + day.label">
-                    </div>
-                  </div>
-                } @else {
-                  <span class="closed-label">Geschlossen</span>
-                }
-              </div>
+    <!-- Schritt 1: Betriebsdaten -->
+    @if (currentStep === 1) {
+      <form [formGroup]="step1">
+        <p class="auth-step-title">Betriebsdaten</p>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="setup-business-name">Betriebsname</label>
+            <input id="setup-business-name" class="field-input"
+                   formControlName="businessName"
+                   placeholder="z.B. Müller Elektro GmbH"
+                   data-cy="input-setup-business-name">
+            @if (step1.get('businessName')?.invalid && step1.get('businessName')?.touched) {
+              <span class="field-error">Pflichtfeld</span>
             }
           </div>
+          <div class="field">
+            <label class="field-label" for="setup-owner">Inhaber</label>
+            <input id="setup-owner" class="field-input"
+                   formControlName="businessOwner"
+                   placeholder="Vor- und Nachname"
+                   data-cy="input-setup-owner">
+            @if (step1.get('businessOwner')?.invalid && step1.get('businessOwner')?.touched) {
+              <span class="field-error">Pflichtfeld</span>
+            }
+          </div>
+          <div class="field">
+            <label class="field-label" for="setup-email">E-Mail</label>
+            <input id="setup-email" class="field-input"
+                   formControlName="businessEmail"
+                   type="email"
+                   placeholder="kontakt@betrieb.de"
+                   data-cy="input-setup-email">
+            @if (step1.get('businessEmail')?.hasError('email') && step1.get('businessEmail')?.touched) {
+              <span class="field-error">Gültige E-Mail eingeben</span>
+            }
+          </div>
+          <div class="field">
+            <label class="field-label" for="setup-bot-name">Bot-Name</label>
+            <input id="setup-bot-name" class="field-input"
+                   formControlName="botName"
+                   placeholder="KommuvoBot"
+                   data-cy="input-setup-bot-name">
+            <span class="field-hint">So stellt sich Ihr Bot bei Kunden vor</span>
+          </div>
+        </div>
 
-          @if (step2.hasError('noDaySelected') && step2.touched) {
-            <p class="error-hint">Mindestens ein Tag muss aktiviert sein.</p>
+        <div class="services-section">
+          <span class="field-label">Leistungen auswählen</span>
+          <app-service-selector
+            [selectedServices]="selectedServices"
+            (servicesChanged)="onServicesChanged($event)">
+          </app-service-selector>
+          @if (step1.get('businessServices')?.invalid && step1.get('businessServices')?.touched) {
+            <span class="field-error">Mindestens eine Leistung auswählen</span>
           }
         </div>
-      </div>
 
-      <div class="step-actions">
-        <button class="btn-back" type="button" (click)="prevStep()">← Zurück</button>
-        <button class="btn-next" type="button" data-cy="btn-setup-next-step2" (click)="onNextStep2()">
-          Weiter →
-        </button>
-      </div>
-    </form>
-  }
-
-  <!-- SCHRITT 3: WhatsApp -->
-  @if (currentStep === 3) {
-    <div class="step-card whatsapp-card">
-      <div class="step-card-header">
-        <h2>WhatsApp einrichten</h2>
-        <p>So verbinden Sie Ihre WhatsApp Business Nummer</p>
-      </div>
-      <div class="step-card-content">
-        <div class="info-banner">
-          <div class="info-icon">💡</div>
-          <div>
-            <strong>Schritt-für-Schritt-Anleitung</strong>
-            <ol>
-              <li>Gehe zu <strong>developers.facebook.com</strong></li>
-              <li>Erstelle eine WhatsApp Business App</li>
-              <li>Kopiere deinen Access Token und die Phone Number ID</li>
-              <li>
-                Kontaktiere uns – wir richten es für dich ein<br>
-                <a href="mailto:setup@kommuvo.de" class="setup-link">setup@kommuvo.de</a>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="step-actions">
-      <button class="btn-back" type="button" (click)="prevStep()">← Zurück</button>
-      <button class="btn-confirmed" type="button" data-cy="btn-setup-whatsapp-confirm" (click)="confirmWhatsApp()">
-        Ich habe die Anleitung gelesen
-      </button>
-    </div>
-  }
-
-  <!-- SCHRITT 4: Fertig -->
-  @if (currentStep === 4) {
-    <div class="step-card success-card">
-      <div class="step-card-content">
-        <div class="success-content">
-          <div class="success-icon">🎉</div>
-          <h2>Einrichtung abgeschlossen!</h2>
-          <p>Ihr Bot ist bereit. Hier eine Zusammenfassung Ihrer Eingaben:</p>
-
-          <div class="summary-grid">
-            <div class="summary-item">
-              <span class="summary-label">Inhaber</span>
-              <span class="summary-value">{{ step1.value.businessOwner || '–' }}</span>
-            </div>
-            <div class="summary-item">
-              <span class="summary-label">Bot-Name</span>
-              <span class="summary-value">{{ step1.value.botName || '–' }}</span>
-            </div>
-            <div class="summary-item full-width">
-              <span class="summary-label">Aktive Tage</span>
-              <span class="summary-value">
-                {{ activeDays.length > 0 ? activeDays.join(', ') : '–' }}
-              </span>
-            </div>
-          </div>
-
-          <button class="btn-dashboard" type="button" data-cy="btn-setup-to-dashboard" (click)="goToDashboard()">
-            Zum Dashboard →
+        <div class="step-actions">
+          <button type="button" class="btn-primary" data-cy="btn-setup-next-step1"
+                  [disabled]="savingStep" (click)="onNextStep1()">
+            @if (savingStep) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Weiter →
+            }
           </button>
         </div>
-      </div>
-    </div>
-  }
+      </form>
+    }
 
+    <!-- Schritt 2: Öffnungszeiten -->
+    @if (currentStep === 2) {
+      <form [formGroup]="step2">
+        <p class="auth-step-title">Öffnungszeiten</p>
+        <div class="hours-list">
+          @for (day of days; track day.key) {
+            <div class="hours-row" [class.hours-row--open]="step2.get('open' + day.key)?.value">
+              <div class="hours-left">
+                <button type="button" class="day-toggle"
+                        [attr.data-cy]="'toggle-' + day.key"
+                        [class.day-toggle--on]="step2.get('open' + day.key)?.value"
+                        (click)="step2.get('open' + day.key)?.setValue(!step2.get('open' + day.key)?.value)">
+                  <span class="day-toggle__thumb"></span>
+                </button>
+                <span class="day-label">{{ day.label }}</span>
+              </div>
+              @if (step2.get('open' + day.key)?.value) {
+                <div class="hours-times">
+                  <div class="time-field">
+                    <span>Von</span>
+                    <input type="time" [formControlName]="'from' + day.key"
+                           class="time-input" [attr.aria-label]="'Von ' + day.label">
+                  </div>
+                  <span class="time-separator">–</span>
+                  <div class="time-field">
+                    <span>Bis</span>
+                    <input type="time" [formControlName]="'to' + day.key"
+                           class="time-input" [attr.aria-label]="'Bis ' + day.label">
+                  </div>
+                </div>
+              } @else {
+                <span class="closed-label">Geschlossen</span>
+              }
+            </div>
+          }
+        </div>
+        @if (step2.hasError('noDaySelected') && step2.touched) {
+          <span class="field-error">Mindestens ein Tag muss aktiviert sein.</span>
+        }
+        <div class="step-actions">
+          <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
+          <button type="button" class="btn-primary" data-cy="btn-setup-next-step2"
+                  [disabled]="savingStep" (click)="onNextStep2()">
+            @if (savingStep) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Weiter →
+            }
+          </button>
+        </div>
+      </form>
+    }
+
+    <!-- Schritt 3: WhatsApp -->
+    @if (currentStep === 3) {
+      <p class="auth-step-title">WhatsApp einrichten</p>
+      <div class="info-card">
+        <p class="info-card-title">Schritt-für-Schritt-Anleitung</p>
+        <ol class="info-card-steps">
+          <li>Gehe zu <strong>developers.facebook.com</strong></li>
+          <li>Erstelle eine WhatsApp Business App</li>
+          <li>Kopiere deinen Access Token und die Phone Number ID</li>
+          <li>
+            Kontaktiere uns — wir richten es für dich ein:<br>
+            <a href="mailto:setup@kommuvo.de" class="setup-link">setup@kommuvo.de</a>
+          </li>
+        </ol>
+      </div>
+      <div class="step-actions">
+        <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
+        <button type="button" class="btn-primary" data-cy="btn-setup-whatsapp-confirm"
+                (click)="confirmWhatsApp()">
+          Anleitung gelesen →
+        </button>
+      </div>
+    }
+
+    <!-- Schritt 4: Fertig -->
+    @if (currentStep === 4) {
+      <div class="success-content">
+        <div class="success-check">✓</div>
+        <h2>Einrichtung abgeschlossen!</h2>
+        <p>Ihr Bot ist bereit. Zusammenfassung Ihrer Eingaben:</p>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Inhaber</span>
+            <span class="summary-value">{{ step1.value.businessOwner || '–' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Bot-Name</span>
+            <span class="summary-value">{{ step1.value.botName || '–' }}</span>
+          </div>
+          <div class="summary-item summary-item--wide">
+            <span class="summary-label">Aktive Tage</span>
+            <span class="summary-value">{{ activeDays.length > 0 ? activeDays.join(', ') : '–' }}</span>
+          </div>
+        </div>
+        <button type="button" class="btn-primary" data-cy="btn-setup-to-dashboard"
+                (click)="goToDashboard()">
+          Zum Dashboard →
+        </button>
+      </div>
+    }
+  </div>
 </div>
