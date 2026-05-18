@@ -1,15 +1,9 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
@@ -25,14 +19,8 @@ function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   imports: [
     ReactiveFormsModule,
     ServiceSelector,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatStepperModule,
   ],
   templateUrl: './setup-wizard.html',
   styleUrl: './setup-wizard.scss',
@@ -42,11 +30,12 @@ export class SetupWizard {
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
   private apiUrl = environment.apiUrl + '/api/tenants';
 
+  currentStep = 1;
+  savingStep = false;
   selectedServices: string[] = [];
 
   readonly days = [
@@ -88,16 +77,24 @@ export class SetupWizard {
     this.step1.get('businessServices')?.setValue(services.join(', '));
   }
 
-  onNextStep1(stepper: MatStepper): void {
+  onNextStep1(): void {
     this.step1.markAllAsTouched();
     if (this.step1.invalid) return;
-    this.saveStep1(stepper);
+    this.saveStep1();
   }
 
-  onNextStep2(stepper: MatStepper): void {
+  onNextStep2(): void {
     this.step2.markAllAsTouched();
     if (this.step2.invalid) return;
-    this.saveStep2(stepper);
+    this.saveStep2();
+  }
+
+  prevStep(): void {
+    this.currentStep--;
+  }
+
+  confirmWhatsApp(): void {
+    this.currentStep = 4;
   }
 
   goToDashboard(): void {
@@ -105,20 +102,25 @@ export class SetupWizard {
     this.router.navigate(['/dashboard']);
   }
 
-  private saveStep1(stepper: MatStepper): void {
+  private saveStep1(): void {
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { stepper.next(); return; }
+    if (!tenantId) { this.currentStep = 2; return; }
+    this.savingStep = true;
     this.http
       .put(`${this.apiUrl}/${tenantId}`, this.step1.value, { headers: this.getHeaders() })
       .subscribe({
-        next: () => stepper.next(),
-        error: () => this.snackBar.open('❌ Fehler beim Speichern', 'OK', { duration: 3000 }),
+        next: () => { this.savingStep = false; this.currentStep = 2; },
+        error: () => {
+          this.savingStep = false;
+          this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
+        },
       });
   }
 
-  private saveStep2(stepper: MatStepper): void {
+  private saveStep2(): void {
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { stepper.next(); return; }
+    if (!tenantId) { this.currentStep = 3; return; }
+    this.savingStep = true;
     const payload: Record<string, string | null> = {};
     for (const day of this.days) {
       const open = this.step2.get(`open${day.key}`)?.value;
@@ -129,8 +131,11 @@ export class SetupWizard {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() })
       .subscribe({
-        next: () => stepper.next(),
-        error: () => this.snackBar.open('❌ Fehler beim Speichern', 'OK', { duration: 3000 }),
+        next: () => { this.savingStep = false; this.currentStep = 3; },
+        error: () => {
+          this.savingStep = false;
+          this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
+        },
       });
   }
 
