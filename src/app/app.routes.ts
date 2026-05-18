@@ -14,6 +14,7 @@ import { SetupWizard } from './pages/setup-wizard/setup-wizard';
 import { ChatPage } from './pages/chat/chat';
 import { PublicChatPage } from './pages/public-chat/public-chat';
 import { AppointmentsPage } from './pages/appointments/appointments';
+import { OAuthCallbackPage } from './pages/oauth-callback/oauth-callback';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -30,5 +31,6 @@ export const routes: Routes = [
   { path: 'datenschutz', component: Datenschutz },
   { path: 'pricing', component: Pricing },
   { path: 'public/chat/:token', component: PublicChatPage },
+  { path: 'oauth2/callback', component: OAuthCallbackPage },
   { path: '**', redirectTo: '' }
 ];

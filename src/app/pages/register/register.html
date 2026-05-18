@@ -27,13 +27,13 @@
         <!-- Schritt 1: Account -->
         <mat-step [stepControl]="accountForm" label="Ihr Konto">
           <form [formGroup]="accountForm">
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Vollständiger Name</mat-label>
               <input matInput formControlName="fullName" data-cy="input-fullname">
               <mat-icon matPrefix>person</mat-icon>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>E-Mail</mat-label>
               <input matInput formControlName="email" type="email" autocomplete="email" data-cy="input-email">
               <mat-icon matPrefix>email</mat-icon>
@@ -42,19 +42,27 @@
               }
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Passwort</mat-label>
               <input matInput formControlName="password" data-cy="input-password"
                      [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password">
               <mat-icon matPrefix>lock</mat-icon>
               <button mat-icon-button matSuffix type="button"
-                      (click)="hidePassword = !hidePassword">
+                      (click)="hidePassword = !hidePassword"
+                      aria-label="Passwort anzeigen umschalten">
                 <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
               @if (accountForm.get('password')?.hasError('minlength')) {
                 <mat-error>Mindestens 8 Zeichen</mat-error>
               }
             </mat-form-field>
+
+            <div class="divider-text"><span>oder</span></div>
+
+            <button class="btn-google" type="button" (click)="loginWithGoogle()">
+              <img src="assets/google-icon.svg" width="20" height="20" alt="Google">
+              Mit Google fortfahren
+            </button>
 
             <div class="step-actions">
               <button class="btn-next" matStepperNext data-cy="btn-next-account"
@@ -68,13 +76,13 @@
         <!-- Schritt 2: Betrieb -->
         <mat-step [stepControl]="businessForm" label="Ihr Betrieb">
           <form [formGroup]="businessForm">
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Betriebsname</mat-label>
               <input matInput formControlName="businessName" data-cy="input-business-name">
               <mat-icon matPrefix>business</mat-icon>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
               <mat-label>Telefonnummer</mat-label>
               <input matInput formControlName="businessPhone" data-cy="input-business-phone">
               <mat-icon matPrefix>phone</mat-icon>

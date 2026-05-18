@@ -51,6 +51,11 @@ export class AuthService {
     return u ? JSON.parse(u) : null;
   }
 
+  setTokenFromOAuth(token: string, tenantId: string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('tenantId', tenantId);
+  }
+
   private saveSession(res: any) {
     localStorage.setItem('token', res.token);
     localStorage.setItem('user', JSON.stringify(res.user));

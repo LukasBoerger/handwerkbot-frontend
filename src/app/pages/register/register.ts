@@ -90,6 +90,10 @@ export class Register implements OnInit {
     });
   }
 
+  loginWithGoogle() {
+    window.location.href = environment.apiUrl + '/oauth2/authorization/google';
+  }
+
   private startCheckout(planId: string) {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
     this.http
