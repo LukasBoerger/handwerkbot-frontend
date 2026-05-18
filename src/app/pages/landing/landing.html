@@ -1,83 +1,91 @@
+<!-- Hero -->
 <section class="hero">
   <div class="hero-content">
-    <div class="badge">⚡ KI-gestützt · WhatsApp · 24/7</div>
-    <h1>Mehr Zeit fürs<br><span class="highlight">Handwerk.</span></h1>
+    <div class="badge">WhatsApp · KI · 24/7</div>
+    <h1>Kunden gewinnen.<br><span class="highlight">Auch wenn Sie arbeiten.</span></h1>
     <p class="subtitle">
-      Kein verpasster Auftrag mehr. Kommuvo antwortet Ihren
-      WhatsApp-Kunden automatisch – auch wenn Sie gerade auf der
-      Baustelle sind.
+      Kommuvo antwortet Ihren WhatsApp-Anfragen automatisch — bucht Termine,
+      beantwortet Fragen und hält Ihren Kalender voll. Auch wenn Sie gerade
+      auf der Baustelle sind.
     </p>
     <div class="hero-actions">
-      <a class="btn-hero" routerLink="/register">
-        Kostenlos starten →
-      </a>
-      <a class="btn-ghost" routerLink="/login">
-        Bereits Kunde
-      </a>
+      <a class="btn-primary" routerLink="/register">30 Tage kostenlos testen →</a>
+      <a class="btn-ghost" routerLink="/login">Bereits Kunde</a>
     </div>
     <div class="hero-stats">
       <div class="stat"><strong>24/7</strong><span>Erreichbar</span></div>
-      <div class="stat"><strong>~3h</strong><span>täglich gespart</span></div>
-      <div class="stat"><strong>ab 39€</strong><span>pro Monat</span></div>
+      <div class="stat"><strong>~3h</strong><span>tägl. gespart</span></div>
+      <div class="stat"><strong>ab 39€</strong><span>/Monat</span></div>
     </div>
   </div>
 
   <div class="hero-visual">
-    <div class="phone-wrap">
-      <div class="phone-mockup">
-        <div class="phone-header">
-          <div class="wa-icon">💬</div>
-          <div class="contact-info">
-            <div class="name">KommuvoBot</div>
-            <div class="status">● Online</div>
-          </div>
+    <div class="chat-mockup">
+      <div class="chat-header">
+        <div class="wa-dot">💬</div>
+        <div class="chat-info">
+          <div class="chat-name">Kommuvo Assistent</div>
+          <div class="chat-status">● Online</div>
         </div>
-        <div class="chat-bubble customer">Hallo, ich brauche einen Elektriker 👋</div>
-        <div class="chat-bubble bot">Hallo! Gerne helfe ich. Um welches Anliegen geht es?</div>
-        <div class="chat-bubble customer">Steckdose im Wohnzimmer defekt</div>
-        <div class="chat-bubble bot">Verstanden! Wann passt Ihnen ein Termin?</div>
-        <div class="chat-bubble customer">Dienstag 10 Uhr</div>
-        <div class="chat-bubble bot">✅ Termin bestätigt! Nr: APT-12345</div>
+      </div>
+      <div class="chat-messages">
+        <div class="msg msg-in">Guten Tag, ich brauche einen Elektriker 👋</div>
+        <div class="msg msg-out">Guten Tag! Gerne helfe ich Ihnen weiter. Worum geht es?</div>
+        <div class="msg msg-in">Steckdose im Wohnzimmer ist ausgefallen</div>
+        <div class="msg msg-out">Verstanden. Wann würde Ihnen ein Termin passen?</div>
+        <div class="msg msg-in">Dienstag früh</div>
+        <div class="msg msg-out">✅ Termin Dienstag 9:00 Uhr bestätigt. Nr: APT-4821</div>
       </div>
       <div class="trust-strip">
         <span>✓ Kein Vertrag</span>
-        <span>✓ Setup in 15 Min</span>
-        <span>✓ Kündigung jederzeit</span>
+        <span>✓ Setup 15 Min</span>
+        <span>✓ Jederzeit kündbar</span>
       </div>
     </div>
   </div>
 </section>
 
-<section class="problems">
-  <div class="section-label">Das kennen Sie</div>
-  <h2>Kennen Sie das?</h2>
-  <div class="pain-grid">
-    @for (point of painPoints; track point.text) {
-      <div class="pain-card">
-        <div class="pain-icon">{{ point.emoji }}</div>
-        <p>{{ point.text }}</p>
+<!-- Problem -->
+<section class="problem">
+  <div class="problem-inner">
+    <div class="problem-heading">
+      <div class="section-label">Das kennen Sie</div>
+      <h2>Gute Arbeit reicht nicht mehr.<br><em>Man muss auch erreichbar sein.</em></h2>
+    </div>
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <p>Sie sind auf der Baustelle — WhatsApp-Anfragen bleiben stundenlang unbeantwortet. Der Kunde ruft woanders an.</p>
       </div>
-    }
+      <div class="problem-item">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <p>Abends verbringen Sie Stunden damit, Termine zu koordinieren — das ist keine Arbeit für den Meister.</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <p>Kunden wechseln zum Mitbewerber — nicht weil Ihre Arbeit schlechter ist, sondern weil er schneller geantwortet hat.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="features">
-  <div class="section-label">Features</div>
-  <h2>Alles was Sie<br>brauchen.</h2>
-  <div class="features-grid">
-    @for (feature of features; track feature.title) {
-      <div class="feature-card">
-        <div class="feature-icon">{{ feature.emoji }}</div>
-        <h3>{{ feature.title }}</h3>
-        <p>{{ feature.description }}</p>
-      </div>
-    }
-  </div>
-</section>
-
+<!-- Schritte -->
 <section class="how-it-works">
   <div class="section-label">So funktioniert's</div>
-  <h2>In 3 Schritten<br>startklar.</h2>
+  <h2>In 3 Schritten startklar.</h2>
   <div class="steps">
     @for (step of steps; track step.number) {
       <div class="step">
@@ -89,9 +97,11 @@
   </div>
 </section>
 
+<!-- Preise -->
 <section class="pricing">
   <div class="section-label">Preise</div>
   <h2>Transparent.<br>Fair. Kündbar.</h2>
+  <p class="pricing-sub">Alle Pläne 30 Tage kostenlos testen — kein Risiko.</p>
   <div class="pricing-grid">
     @for (plan of plans; track plan.name) {
       <div class="pricing-card" [class.highlighted]="plan.highlight">
@@ -99,27 +109,38 @@
           <div class="popular-badge">Beliebteste Wahl</div>
         }
         <div class="plan-name">{{ plan.name }}</div>
-        <div class="plan-price"><span class="price-amount">{{ plan.price }}€</span><span class="price-period">/Monat</span></div>
+        <div class="plan-price">
+          <span class="price-amount">{{ plan.price }}€</span>
+          <span class="price-period">/Monat</span>
+        </div>
         <ul class="plan-features">
           @for (f of plan.features; track f) {
-            <li>✓ {{ f }}</li>
+            <li>
+              <svg class="check-icon" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6l2.5 2.5L10 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {{ f }}
+            </li>
           }
         </ul>
-        <a class="btn-plan" [class.btn-plan-dark]="plan.highlight" routerLink="/register">
-          Jetzt starten →
+        <a class="btn-plan" [class.btn-plan-primary]="plan.highlight" routerLink="/register">
+          Kostenlos testen →
         </a>
       </div>
     }
   </div>
-  <p class="pricing-note">Alle Pläne: 30 Tage kostenlos testen</p>
+  <p class="pricing-note">Alle Preise zzgl. MwSt. · Monatlich kündbar · Keine Einrichtungsgebühr</p>
 </section>
 
-<div class="cta">
-  <div>
-    <h2>Wie viele Aufträge verpassen Sie gerade?</h2>
-    <p>Jeder Tag ohne Kommuvo kostet Sie potenzielle Kunden.</p>
+<!-- CTA -->
+<div class="cta-wrapper">
+  <div class="cta-inner">
+    <div>
+      <h2>Wie viele Aufträge verpassen Sie gerade?</h2>
+      <p>Jeder Tag ohne Kommuvo kostet Sie potenzielle Kunden.</p>
+    </div>
+    <a class="btn-primary btn-cta" routerLink="/register">Jetzt kostenlos starten →</a>
   </div>
-  <a class="btn-dark" routerLink="/register">Jetzt kostenlos starten →</a>
 </div>
 
 <p class="privacy-hint">
