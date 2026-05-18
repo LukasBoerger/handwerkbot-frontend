@@ -86,8 +86,25 @@ describe('Register', () => {
     });
 
     it('bleibt auf Schritt 1 wenn accountForm ungültig', () => {
+      component.currentStep = 1;
       component.accountForm.setValue({ fullName: '', email: '', password: '' });
       component.nextStep();
+      expect(component.currentStep).toBe(1);
+    });
+  });
+
+  describe('prevStep', () => {
+    it('setzt currentStep auf 1 zurück', () => {
+      component.currentStep = 2;
+      component.prevStep();
+      expect(component.currentStep).toBe(1);
+    });
+
+    it('kehrt nach nextStep zu Schritt 1 zurück', () => {
+      component.accountForm.setValue(validAccount);
+      component.nextStep();
+      expect(component.currentStep).toBe(2);
+      component.prevStep();
       expect(component.currentStep).toBe(1);
     });
   });
@@ -111,6 +128,7 @@ describe('Register', () => {
       fillForms();
       component.submit();
       expect(registerSpy).toHaveBeenCalled();
+      expect(component.loading).toBe(false);
       expect(navigateSpy).toHaveBeenCalledWith(['/setup']);
     });
 

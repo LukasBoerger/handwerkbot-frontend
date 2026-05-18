@@ -70,6 +70,8 @@ export class Register implements OnInit {
   }
 
   submit() {
+    this.accountForm.markAllAsTouched();
+    this.businessForm.markAllAsTouched();
     if (this.accountForm.invalid || this.businessForm.invalid) return;
     this.loading = true;
     this.error = '';
@@ -82,6 +84,7 @@ export class Register implements OnInit {
         if (this.selectedPlan) {
           this.startCheckout(this.selectedPlan);
         } else {
+          this.loading = false;
           this.router.navigate(['/setup']);
         }
       },
