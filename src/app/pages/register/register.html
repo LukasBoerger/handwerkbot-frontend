@@ -1,109 +1,140 @@
-<div class="auth-container">
+<div class="auth-page">
   <div class="auth-card">
-    <div class="register-header">
-      <div class="register-logo">
-        <span class="logo-text">Kommuvo</span>
-        <span class="logo-icon">🔧</span>
+    <div class="auth-brand">Kommuvo</div>
+    <div class="auth-brand-line"></div>
+    <h1 class="auth-title">Konto erstellen</h1>
+
+    <div class="register-benefits">
+      <span>✓ 30 Tage kostenlos</span>
+      <span>✓ Keine Kreditkarte</span>
+      <span>✓ In 5 Min. eingerichtet</span>
+    </div>
+
+    <div class="step-indicator">
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 1"
+             [class.step-circle--done]="currentStep > 1"
+             [class.step-circle--pending]="currentStep < 1">
+          {{ currentStep > 1 ? '✓' : '1' }}
+        </div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 1"
+              [class.step-label--done]="currentStep > 1"
+              [class.step-label--pending]="currentStep < 1">Konto</span>
       </div>
-      <h1 class="auth-title">Konto erstellen</h1>
-      <div class="register-benefits">
-        <span>✓ 30 Tage kostenlos</span>
-        <span>✓ Keine Kreditkarte</span>
-        <span>✓ In 5 Min. eingerichtet</span>
+      <div class="step-line"
+           [class.step-line--done]="currentStep > 1"
+           [class.step-line--active]="currentStep === 1"
+           [class.step-line--pending]="currentStep < 1"></div>
+      <div class="step-node">
+        <div class="step-circle"
+             [class.step-circle--active]="currentStep === 2"
+             [class.step-circle--done]="currentStep > 2"
+             [class.step-circle--pending]="currentStep < 2">2</div>
+        <span class="step-label"
+              [class.step-label--active]="currentStep === 2"
+              [class.step-label--done]="currentStep > 2"
+              [class.step-label--pending]="currentStep < 2">Betrieb</span>
       </div>
     </div>
 
     @if (error) {
-      <div class="error-banner">
-        <mat-icon>error</mat-icon> {{ error }}
+      <div class="error-banner" role="alert">
+        <mat-icon>error</mat-icon>
+        {{ error }}
       </div>
     }
 
-    <div class="step-indicator">
-      <span [class.active]="currentStep === 1" [class.done]="currentStep > 1">1</span>
-      <span class="step-separator"></span>
-      <span [class.active]="currentStep === 2">2</span>
-    </div>
-
-    <!-- Schritt 1: Account -->
     @if (currentStep === 1) {
       <form [formGroup]="accountForm">
-        <p class="step-label">Ihr Konto</p>
-
-        <div class="form-field">
-          <label for="fullName">Vollständiger Name</label>
-          <div class="input-wrapper">
-            <mat-icon>person</mat-icon>
-            <input id="fullName" formControlName="fullName" data-cy="input-fullname" placeholder="Max Mustermann">
-          </div>
-        </div>
-
-        <div class="form-field">
-          <label for="email">E-Mail</label>
-          <div class="input-wrapper">
-            <mat-icon>email</mat-icon>
-            <input id="email" formControlName="email" type="email" autocomplete="email" data-cy="input-email" placeholder="name@beispiel.de">
-          </div>
-          @if (accountForm.get('email')?.touched && accountForm.get('email')?.hasError('email')) {
-            <span class="field-error">Ungültige E-Mail</span>
+        <div class="field">
+          <label class="field-label" for="reg-name">Vollständiger Name</label>
+          <input id="reg-name" class="field-input"
+                 formControlName="fullName"
+                 placeholder="Max Mustermann"
+                 data-cy="input-fullname">
+          @if (accountForm.get('fullName')?.invalid && accountForm.get('fullName')?.touched) {
+            <span class="field-error">Pflichtfeld</span>
           }
         </div>
 
-        <div class="form-field">
-          <label for="password">Passwort</label>
-          <div class="input-wrapper">
-            <mat-icon>lock</mat-icon>
-            <input id="password" formControlName="password" data-cy="input-password"
-                   [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password" placeholder="Min. 8 Zeichen">
-            <button type="button" class="btn-icon" (click)="hidePassword = !hidePassword"
-                    aria-label="Passwort anzeigen umschalten">
+        <div class="field">
+          <label class="field-label" for="reg-email">E-Mail</label>
+          <input id="reg-email" class="field-input"
+                 formControlName="email"
+                 type="email"
+                 autocomplete="email"
+                 placeholder="name@betrieb.de"
+                 data-cy="input-email">
+          @if (accountForm.get('email')?.hasError('email') && accountForm.get('email')?.touched) {
+            <span class="field-error">Ungültige E-Mail-Adresse</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="reg-password">Passwort</label>
+          <div class="field-input-wrap">
+            <input id="reg-password" class="field-input"
+                   formControlName="password"
+                   [type]="hidePassword ? 'password' : 'text'"
+                   autocomplete="new-password"
+                   placeholder="Mind. 8 Zeichen"
+                   data-cy="input-password">
+            <button type="button" class="field-toggle"
+                    (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="hidePassword ? 'Passwort anzeigen' : 'Passwort verbergen'">
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
           </div>
-          @if (accountForm.get('password')?.touched && accountForm.get('password')?.hasError('minlength')) {
+          @if (accountForm.get('password')?.hasError('minlength') && accountForm.get('password')?.touched) {
             <span class="field-error">Mindestens 8 Zeichen</span>
           }
         </div>
 
         <div class="divider-text"><span>oder</span></div>
 
-        <button class="btn-google" type="button" (click)="loginWithGoogle()">
+        <button type="button" class="btn-google" (click)="loginWithGoogle()">
           <img src="assets/google-icon.svg" width="20" height="20" alt="Google">
           Mit Google fortfahren
         </button>
 
         <div class="step-actions">
-          <button class="btn-next" type="button" data-cy="btn-next-account" (click)="nextStep()">
+          <button type="button" class="btn-primary" data-cy="btn-next-account"
+                  (click)="nextStep()">
             Weiter →
           </button>
         </div>
       </form>
     }
 
-    <!-- Schritt 2: Betrieb -->
     @if (currentStep === 2) {
       <form [formGroup]="businessForm">
-        <p class="step-label">Ihr Betrieb</p>
-
-        <div class="form-field">
-          <label for="businessName">Betriebsname</label>
-          <div class="input-wrapper">
-            <mat-icon>business</mat-icon>
-            <input id="businessName" formControlName="businessName" data-cy="input-business-name" placeholder="Muster GmbH">
-          </div>
+        <div class="field">
+          <label class="field-label" for="reg-business-name">Betriebsname</label>
+          <input id="reg-business-name" class="field-input"
+                 formControlName="businessName"
+                 placeholder="z.B. Müller Elektro GmbH"
+                 data-cy="input-business-name">
+          @if (businessForm.get('businessName')?.invalid && businessForm.get('businessName')?.touched) {
+            <span class="field-error">Pflichtfeld</span>
+          }
         </div>
 
-        <div class="form-field">
-          <label for="businessPhone">Telefonnummer</label>
-          <div class="input-wrapper">
-            <mat-icon>phone</mat-icon>
-            <input id="businessPhone" formControlName="businessPhone" data-cy="input-business-phone" placeholder="+49 123 456789">
-          </div>
+        <div class="field">
+          <label class="field-label" for="reg-business-phone">Telefonnummer</label>
+          <input id="reg-business-phone" class="field-input"
+                 formControlName="businessPhone"
+                 placeholder="+49 ..."
+                 data-cy="input-business-phone">
+          @if (businessForm.get('businessPhone')?.invalid && businessForm.get('businessPhone')?.touched) {
+            <span class="field-error">Pflichtfeld</span>
+          }
         </div>
 
         <div class="step-actions">
-          <button class="btn-back" type="button" (click)="prevStep()">Zurück</button>
-          <button class="btn-submit" type="button" data-cy="btn-submit-register"
+          <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
+          <button type="button" class="btn-primary" data-cy="btn-submit-register"
                   [disabled]="businessForm.invalid || loading"
                   (click)="submit()">
             @if (loading) {
@@ -114,9 +145,8 @@
           </button>
         </div>
 
-        <p class="login-hint">
-          Bereits registriert?
-          <a routerLink="/login">Jetzt anmelden</a>
+        <p class="auth-footer">
+          Bereits registriert? <a routerLink="/login">Jetzt anmelden</a>
         </p>
       </form>
     }
