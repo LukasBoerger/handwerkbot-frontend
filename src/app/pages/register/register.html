@@ -1,120 +1,124 @@
 <div class="auth-container">
-  <mat-card class="auth-card">
-    <mat-card-header>
-      <div class="register-header">
-        <div class="register-logo">
-          <span class="logo-text">Kommuvo</span>
-          <span class="logo-icon">🔧</span>
-        </div>
-        <mat-card-title>Konto erstellen</mat-card-title>
-        <div class="register-benefits">
-          <span>✓ 30 Tage kostenlos</span>
-          <span>✓ Keine Kreditkarte</span>
-          <span>✓ In 5 Min. eingerichtet</span>
-        </div>
+  <div class="auth-card">
+    <div class="register-header">
+      <div class="register-logo">
+        <span class="logo-text">Kommuvo</span>
+        <span class="logo-icon">🔧</span>
       </div>
-    </mat-card-header>
+      <h1 class="auth-title">Konto erstellen</h1>
+      <div class="register-benefits">
+        <span>✓ 30 Tage kostenlos</span>
+        <span>✓ Keine Kreditkarte</span>
+        <span>✓ In 5 Min. eingerichtet</span>
+      </div>
+    </div>
 
-    <mat-card-content>
-      @if (error) {
-        <div class="error-banner">
-          <mat-icon>error</mat-icon> {{ error }}
+    @if (error) {
+      <div class="error-banner">
+        <mat-icon>error</mat-icon> {{ error }}
+      </div>
+    }
+
+    <div class="step-indicator">
+      <span [class.active]="currentStep === 1" [class.done]="currentStep > 1">1</span>
+      <span class="step-separator"></span>
+      <span [class.active]="currentStep === 2">2</span>
+    </div>
+
+    <!-- Schritt 1: Account -->
+    @if (currentStep === 1) {
+      <form [formGroup]="accountForm">
+        <p class="step-label">Ihr Konto</p>
+
+        <div class="form-field">
+          <label for="fullName">Vollständiger Name</label>
+          <div class="input-wrapper">
+            <mat-icon>person</mat-icon>
+            <input id="fullName" formControlName="fullName" data-cy="input-fullname" placeholder="Max Mustermann">
+          </div>
         </div>
-      }
 
-      <mat-stepper orientation="vertical" #stepper>
+        <div class="form-field">
+          <label for="email">E-Mail</label>
+          <div class="input-wrapper">
+            <mat-icon>email</mat-icon>
+            <input id="email" formControlName="email" type="email" autocomplete="email" data-cy="input-email" placeholder="name@beispiel.de">
+          </div>
+          @if (accountForm.get('email')?.touched && accountForm.get('email')?.hasError('email')) {
+            <span class="field-error">Ungültige E-Mail</span>
+          }
+        </div>
 
-        <!-- Schritt 1: Account -->
-        <mat-step [stepControl]="accountForm" label="Ihr Konto">
-          <form [formGroup]="accountForm">
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>Vollständiger Name</mat-label>
-              <input matInput formControlName="fullName" data-cy="input-fullname">
-              <mat-icon matPrefix>person</mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>E-Mail</mat-label>
-              <input matInput formControlName="email" type="email" autocomplete="email" data-cy="input-email">
-              <mat-icon matPrefix>email</mat-icon>
-              @if (accountForm.get('email')?.hasError('email')) {
-                <mat-error>Ungültige E-Mail</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>Passwort</mat-label>
-              <input matInput formControlName="password" data-cy="input-password"
-                     [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password">
-              <mat-icon matPrefix>lock</mat-icon>
-              <button mat-icon-button matSuffix type="button"
-                      (click)="hidePassword = !hidePassword"
-                      aria-label="Passwort anzeigen umschalten">
-                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-              @if (accountForm.get('password')?.hasError('minlength')) {
-                <mat-error>Mindestens 8 Zeichen</mat-error>
-              }
-            </mat-form-field>
-
-            <div class="divider-text"><span>oder</span></div>
-
-            <button class="btn-google" type="button" (click)="loginWithGoogle()">
-              <img src="assets/google-icon.svg" width="20" height="20" alt="Google">
-              Mit Google fortfahren
+        <div class="form-field">
+          <label for="password">Passwort</label>
+          <div class="input-wrapper">
+            <mat-icon>lock</mat-icon>
+            <input id="password" formControlName="password" data-cy="input-password"
+                   [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password" placeholder="Min. 8 Zeichen">
+            <button type="button" class="btn-icon" (click)="hidePassword = !hidePassword"
+                    aria-label="Passwort anzeigen umschalten">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
+          </div>
+          @if (accountForm.get('password')?.touched && accountForm.get('password')?.hasError('minlength')) {
+            <span class="field-error">Mindestens 8 Zeichen</span>
+          }
+        </div>
 
-            <div class="step-actions">
-              <button class="btn-next" matStepperNext data-cy="btn-next-account"
-                      [disabled]="accountForm.invalid">
-                Weiter →
-              </button>
-            </div>
-          </form>
-        </mat-step>
+        <div class="divider-text"><span>oder</span></div>
 
-        <!-- Schritt 2: Betrieb -->
-        <mat-step [stepControl]="businessForm" label="Ihr Betrieb">
-          <form [formGroup]="businessForm">
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>Betriebsname</mat-label>
-              <input matInput formControlName="businessName" data-cy="input-business-name">
-              <mat-icon matPrefix>business</mat-icon>
-            </mat-form-field>
+        <button class="btn-google" type="button" (click)="loginWithGoogle()">
+          <img src="assets/google-icon.svg" width="20" height="20" alt="Google">
+          Mit Google fortfahren
+        </button>
 
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>Telefonnummer</mat-label>
-              <input matInput formControlName="businessPhone" data-cy="input-business-phone">
-              <mat-icon matPrefix>phone</mat-icon>
-            </mat-form-field>
+        <div class="step-actions">
+          <button class="btn-next" type="button" data-cy="btn-next-account" (click)="nextStep()">
+            Weiter →
+          </button>
+        </div>
+      </form>
+    }
 
-            @if (error) {
-              <div class="error-banner">
-                <mat-icon>error</mat-icon> {{ error }}
-              </div>
+    <!-- Schritt 2: Betrieb -->
+    @if (currentStep === 2) {
+      <form [formGroup]="businessForm">
+        <p class="step-label">Ihr Betrieb</p>
+
+        <div class="form-field">
+          <label for="businessName">Betriebsname</label>
+          <div class="input-wrapper">
+            <mat-icon>business</mat-icon>
+            <input id="businessName" formControlName="businessName" data-cy="input-business-name" placeholder="Muster GmbH">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="businessPhone">Telefonnummer</label>
+          <div class="input-wrapper">
+            <mat-icon>phone</mat-icon>
+            <input id="businessPhone" formControlName="businessPhone" data-cy="input-business-phone" placeholder="+49 123 456789">
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" type="button" (click)="prevStep()">Zurück</button>
+          <button class="btn-submit" type="button" data-cy="btn-submit-register"
+                  [disabled]="businessForm.invalid || loading"
+                  (click)="submit()">
+            @if (loading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Konto erstellen →
             }
+          </button>
+        </div>
 
-            <div class="step-actions">
-              <button class="btn-back" matStepperPrevious>Zurück</button>
-              <button class="btn-submit" type="button" data-cy="btn-submit-register"
-                      [disabled]="businessForm.invalid || loading"
-                      (click)="submit(stepper)">
-                @if (loading) {
-                  <mat-spinner diameter="20"></mat-spinner>
-                } @else {
-                  Konto erstellen →
-                }
-              </button>
-            </div>
-
-            <p class="login-hint">
-              Bereits registriert?
-              <a routerLink="/login">Jetzt anmelden</a>
-            </p>
-          </form>
-        </mat-step>
-
-      </mat-stepper>
-    </mat-card-content>
-  </mat-card>
+        <p class="login-hint">
+          Bereits registriert?
+          <a routerLink="/login">Jetzt anmelden</a>
+        </p>
+      </form>
+    }
+  </div>
 </div>

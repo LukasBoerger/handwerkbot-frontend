@@ -4,26 +4,22 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   imports: [
-    ReactiveFormsModule, RouterLink,
-    MatCardModule, MatFormFieldModule, MatInputModule,
-    MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-    MatStepperModule, MatSnackBarModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
   ],
   templateUrl: './register.html',
-  styleUrl: './register.scss'
+  styleUrl: './register.scss',
 })
 export class Register implements OnInit {
   accountForm: FormGroup;
@@ -32,6 +28,7 @@ export class Register implements OnInit {
   error = '';
   hidePassword = true;
   selectedPlan: string | null = null;
+  currentStep = 1;
 
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
@@ -45,12 +42,12 @@ export class Register implements OnInit {
     this.accountForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
 
     this.businessForm = this.fb.group({
       businessName: ['', Validators.required],
-      businessPhone: ['', Validators.required]
+      businessPhone: ['', Validators.required],
     });
   }
 
@@ -62,14 +59,24 @@ export class Register implements OnInit {
     });
   }
 
-  submit(stepper: MatStepper) {
+  nextStep() {
+    this.accountForm.markAllAsTouched();
+    if (this.accountForm.invalid) return;
+    this.currentStep = 2;
+  }
+
+  prevStep() {
+    this.currentStep = 1;
+  }
+
+  submit() {
     if (this.accountForm.invalid || this.businessForm.invalid) return;
     this.loading = true;
     this.error = '';
 
     this.auth.register({
       ...this.accountForm.value,
-      ...this.businessForm.value
+      ...this.businessForm.value,
     }).subscribe({
       next: () => {
         if (this.selectedPlan) {
@@ -82,11 +89,10 @@ export class Register implements OnInit {
         const msg = err.error?.error || 'Registrierung fehlgeschlagen';
         this.error = msg;
         this.loading = false;
-        if (msg.toLowerCase().includes('e-mail') ||
-            msg.toLowerCase().includes('mail')) {
-          stepper.selectedIndex = 0;
+        if (msg.toLowerCase().includes('e-mail') || msg.toLowerCase().includes('mail')) {
+          this.currentStep = 1;
         }
-      }
+      },
     });
   }
 
@@ -108,10 +114,10 @@ export class Register implements OnInit {
           this.snackBar.open(
             'Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.',
             'OK',
-            { duration: 4000 }
+            { duration: 4000 },
           );
           this.router.navigate(['/pricing']);
-        }
+        },
       });
   }
 }
