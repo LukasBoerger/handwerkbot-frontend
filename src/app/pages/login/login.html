@@ -6,7 +6,7 @@
     <p class="auth-subtitle">Melden Sie sich in Ihrem Konto an</p>
 
     @if (error) {
-      <div class="error-banner">
+      <div class="error-banner" role="alert">
         <mat-icon>error</mat-icon>
         {{ error }}
       </div>
@@ -42,7 +42,7 @@
             type="button"
             class="field-toggle"
             (click)="hidePassword = !hidePassword"
-            aria-label="Passwort anzeigen umschalten"
+            [attr.aria-label]="hidePassword ? 'Passwort anzeigen' : 'Passwort verbergen'"
           >
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
@@ -72,7 +72,7 @@
       </div>
     </form>
 
-    <hr class="divider">
+    <hr class="divider" aria-hidden="true">
     <p class="auth-footer">
       Noch kein Konto? <a routerLink="/register">Jetzt registrieren</a>
     </p>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,8 +22,6 @@ export class Login {
   error = '';
   hidePassword = true;
 
-  private cdr = inject(ChangeDetectorRef);
-
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -35,8 +33,10 @@ export class Login {
     });
   }
 
+  // Demo-Zugangsdaten sind bekannt und absichtlich hardcodiert
   fillDemo() {
     this.form.setValue({ email: 'demo@kommuvo.de', password: 'demo1234' });
+    this.form.updateValueAndValidity();
     this.submit();
   }
 
@@ -47,11 +47,13 @@ export class Login {
 
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+      },
       error: (err) => {
         this.error = err.error?.error || 'Ungültige Zugangsdaten';
         this.loading = false;
-        this.cdr.detectChanges();
       },
     });
   }
