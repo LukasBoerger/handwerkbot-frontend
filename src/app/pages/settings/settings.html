@@ -35,13 +35,17 @@
               {{ billingStatus.status === 'active' ? 'Aktiv' : billingStatus.status === 'trial' ? 'Testzeitraum' : billingStatus.status }}
             </span>
           </div>
-          <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
-            @if (portalLoading) {
-              <mat-spinner diameter="16"></mat-spinner>
-            } @else {
-              Abonnement verwalten →
-            }
-          </button>
+          @if (billingStatus.status === 'active') {
+            <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
+              @if (portalLoading) {
+                <mat-spinner diameter="16"></mat-spinner>
+              } @else {
+                Abonnement verwalten →
+              }
+            </button>
+          } @else if (billingStatus.status === 'trial') {
+            <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
+          }
         </div>
       } @else {
         <div class="billing-status-row">
