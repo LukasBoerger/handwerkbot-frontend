@@ -242,4 +242,32 @@
 
     </form>
   }
+
+  <!-- DANGER ZONE -->
+  <mat-card class="section-card danger-card">
+    <mat-card-header>
+      <mat-card-title>⚠️ Gefahrenzone</mat-card-title>
+      <mat-card-subtitle>Diese Aktionen sind unwiderruflich</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="danger-row">
+        <div class="danger-info">
+          <strong>Account löschen</strong>
+          <span>Löscht deinen Account, alle Betriebsdaten und sämtliche Termine dauerhaft.</span>
+        </div>
+        <button
+          class="btn-delete-account"
+          type="button"
+          (click)="openDeleteDialog()"
+          [disabled]="deletingAccount"
+          aria-label="Account löschen">
+          @if (deletingAccount) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Account löschen
+          }
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

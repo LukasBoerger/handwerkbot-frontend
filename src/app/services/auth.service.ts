@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -36,6 +36,13 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('tenantId');
     this.router.navigate(['/login']);
+  }
+
+  deleteAccount(): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`
+    });
+    return this.http.delete<void>(`${environment.apiUrl}/api/users/me`, { headers });
   }
 
   isLoggedIn(): boolean {

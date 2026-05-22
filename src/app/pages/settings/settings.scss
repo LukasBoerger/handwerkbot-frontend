@@ -324,6 +324,57 @@
   }
 }
 
+.danger-card {
+  border: 1px solid rgba(244, 67, 54, 0.4) !important;
+}
+
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.danger-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong {
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 480px;
+  }
+}
+
+.btn-delete-account {
+  background: #c62828;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #b71c1c;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 // Billing Card
 .billing-card {
   border-left: 3px solid var(--accent) !important;

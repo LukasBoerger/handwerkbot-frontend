@@ -1,8 +1,11 @@
 import { Component, DestroyRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,6 +27,25 @@ interface BillingStatus {
 }
 
 @Component({
+  selector: 'app-delete-account-dialog',
+  standalone: true,
+  imports: [MatButtonModule, MatDialogModule],
+  template: `
+    <h2 mat-dialog-title>Account löschen</h2>
+    <mat-dialog-content>
+      <p>Bist du sicher? Alle deine Daten und Termine werden unwiderruflich gelöscht.</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Abbrechen</button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="true">
+        Endgültig löschen
+      </button>
+    </mat-dialog-actions>
+  `,
+})
+export class DeleteAccountDialogComponent {}
+
+@Component({
   selector: 'app-settings',
   imports: [
     ReactiveFormsModule,
@@ -39,6 +61,7 @@ interface BillingStatus {
     MatProgressSpinnerModule,
     MatDividerModule,
     MatSlideToggleModule,
+    MatDialogModule,
   ],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
@@ -53,6 +76,9 @@ export class Settings implements OnInit {
   billingStatus: BillingStatus | null = null;
   billingLoading = false;
   portalLoading = false;
+  deletingAccount = false;
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   private auth = inject(AuthService);
   private http = inject(HttpClient);
@@ -291,6 +317,25 @@ export class Settings implements OnInit {
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.auth.getToken()}`,
+    });
+  }
+
+  openDeleteDialog() {
+    const ref = this.dialog.open(DeleteAccountDialogComponent, { width: '400px' });
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.deletingAccount = true;
+      this.auth.deleteAccount().subscribe({
+        next: () => {
+          this.snackBar.open('Dein Account wurde gelöscht.', 'OK', { duration: 4000 });
+          this.auth.logout();
+        },
+        error: () => {
+          this.deletingAccount = false;
+          this.snackBar.open('❌ Fehler beim Löschen des Accounts', 'OK', { duration: 3000 });
+          this.cdr.detectChanges();
+        },
+      });
     });
   }
 }
