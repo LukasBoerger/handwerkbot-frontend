@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
@@ -27,6 +27,7 @@ function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
 })
 export class SetupWizard implements OnInit {
   private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
@@ -108,6 +109,7 @@ export class SetupWizard implements OnInit {
       if (!this.selectedServices.length) {
         this.snackBar.open('Bitte wähle mindestens eine Leistung aus.', 'OK', { duration: 3000 });
       }
+      this.cdr.detectChanges();
       return;
     }
     this.saveStep1();
@@ -121,10 +123,12 @@ export class SetupWizard implements OnInit {
 
   prevStep(): void {
     this.currentStep--;
+    this.cdr.detectChanges();
   }
 
   confirmWhatsApp(): void {
     this.currentStep = 4;
+    this.cdr.detectChanges();
   }
 
   goToDashboard(): void {
@@ -139,7 +143,7 @@ export class SetupWizard implements OnInit {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, this.step1.value, { headers: this.getHeaders() })
       .subscribe({
-        next: () => { this.savingStep = false; this.currentStep = 2; },
+        next: () => { this.savingStep = false; this.currentStep = 2; this.cdr.detectChanges(); },
         error: () => {
           this.savingStep = false;
           this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
@@ -161,7 +165,7 @@ export class SetupWizard implements OnInit {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() })
       .subscribe({
-        next: () => { this.savingStep = false; this.currentStep = 3; },
+        next: () => { this.savingStep = false; this.currentStep = 3; this.cdr.detectChanges(); },
         error: () => {
           this.savingStep = false;
           this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
