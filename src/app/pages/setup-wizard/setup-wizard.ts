@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
@@ -25,7 +25,7 @@ function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   templateUrl: './setup-wizard.html',
   styleUrl: './setup-wizard.scss',
 })
-export class SetupWizard {
+export class SetupWizard implements OnInit {
   private auth = inject(AuthService);
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
@@ -66,6 +66,31 @@ export class SetupWizard {
     openSun: [false], fromSun: ['08:00'], toSun: ['13:00'],
   }, { validators: atLeastOneDayOpen });
 
+  ngOnInit(): void {
+    const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) return;
+    this.http.get<any>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() })
+      .subscribe({
+        next: (tenant) => {
+          this.step1.patchValue({
+            businessName: tenant.businessName ?? '',
+            businessOwner: tenant.businessOwner ?? '',
+            businessEmail: tenant.businessEmail ?? '',
+            botName: tenant.botName ?? 'KommuvoBot',
+          });
+          if (tenant.businessServices) {
+            const services = tenant.businessServices
+              .split(',')
+              .map((s: string) => s.trim())
+              .filter(Boolean);
+            this.selectedServices = services;
+            this.step1.get('businessServices')?.setValue(tenant.businessServices);
+          }
+        },
+        error: () => {},
+      });
+  }
+
   get activeDays(): string[] {
     return this.days
       .filter(d => this.step2.get(`open${d.key}`)?.value)
@@ -79,7 +104,12 @@ export class SetupWizard {
 
   onNextStep1(): void {
     this.step1.markAllAsTouched();
-    if (this.step1.invalid) return;
+    if (this.step1.invalid) {
+      if (!this.selectedServices.length) {
+        this.snackBar.open('Bitte wähle mindestens eine Leistung aus.', 'OK', { duration: 3000 });
+      }
+      return;
+    }
     this.saveStep1();
   }
 
