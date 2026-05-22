@@ -9,6 +9,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
+function extractErrorMessage(error: any): string {
+  if (typeof error === 'string') return error;
+  if (error?.error?.errors && Array.isArray(error.error.errors)) {
+    return error.error.errors.join(', ');
+  }
+  if (error?.error?.error) return error.error.error;
+  if (error?.error?.message) return error.error.message;
+  if (error?.message) return error.message;
+  return 'Ein Fehler ist aufgetreten.';
+}
+
 @Component({
   selector: 'app-register',
   imports: [
@@ -89,7 +100,7 @@ export class Register implements OnInit {
         }
       },
       error: (err) => {
-        const msg = err.error?.error || 'Registrierung fehlgeschlagen';
+        const msg = extractErrorMessage(err);
         this.error = msg;
         this.loading = false;
         if (msg.toLowerCase().includes('e-mail') || msg.toLowerCase().includes('mail')) {
