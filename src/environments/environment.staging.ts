@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://handwerkbot-frontend-staging.up.railway.app',
-  sentryDsn: ''
+  apiUrl: 'https://handwerkbot-java-staging.up.railway.app',
+  sentryDsn: '',
 };
