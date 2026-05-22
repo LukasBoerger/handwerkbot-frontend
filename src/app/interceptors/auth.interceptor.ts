@@ -8,6 +8,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const snackBar = inject(MatSnackBar);
   const authService = inject(AuthService);
 
+  const token = localStorage.getItem('token');
+  const isPublicRoute = req.url.includes('/api/auth/') ||
+    req.url.includes('/public/') ||
+    req.url.includes('/public-info/');
+
+  if (token && !isPublicRoute) {
+    req = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+  }
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
