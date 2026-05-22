@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, NgZone, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -38,8 +38,6 @@ export class Register implements OnInit {
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
-  private cdr = inject(ChangeDetectorRef);
-  private zone = inject(NgZone);
 
   constructor() {
     this.accountForm = this.fb.group({
@@ -100,14 +98,11 @@ export class Register implements OnInit {
         } else if (typeof err.error === 'string') {
           msg = err.error;
         }
-        this.zone.run(() => {
-          this.error = msg;
-          this.loading = false;
-          if (msg.toLowerCase().includes('mail')) {
-            this.currentStep = 1;
-          }
-          this.cdr.detectChanges();
-        });
+        this.error = msg;
+        this.loading = false;
+        if (msg.toLowerCase().includes('mail')) {
+          this.currentStep = 1;
+        }
       },
     });
   }
