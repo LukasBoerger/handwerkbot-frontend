@@ -101,33 +101,29 @@
 <section class="pricing">
   <div class="section-label">Preise</div>
   <h2>Transparent.<br>Fair. Kündbar.</h2>
-  <p class="pricing-sub">Alle Pläne 14 Tage kostenlos testen — kein Risiko.</p>
-  <div class="pricing-grid">
-    @for (plan of plans; track plan.name) {
-      <div class="pricing-card" [class.highlighted]="plan.highlight">
-        @if (plan.highlight) {
-          <div class="popular-badge">Beliebteste Wahl</div>
-        }
-        <div class="plan-name">{{ plan.name }}</div>
-        <div class="plan-price">
-          <span class="price-amount">{{ plan.price }}€</span>
-          <span class="price-period">/Monat</span>
-        </div>
-        <ul class="plan-features">
-          @for (f of plan.features; track f) {
-            <li>
-              <svg class="check-icon" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 6l2.5 2.5L10 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              {{ f }}
-            </li>
-          }
-        </ul>
-        <a class="btn-plan" [class.btn-plan-primary]="plan.highlight" routerLink="/register">
-          Kostenlos testen →
-        </a>
+  <p class="pricing-sub">14 Tage kostenlos testen — kein Risiko.</p>
+  <div class="plan-wrapper">
+    <div class="plan-card">
+      <div class="trial-badge">✨ 14 Tage kostenlos testen</div>
+      <div class="plan-name">Kommuvo</div>
+      <div class="plan-price">
+        <span class="price-amount">39</span>
+        <span class="price-currency">€</span>
+        <span class="price-period">/ Monat</span>
       </div>
-    }
+      <ul class="plan-features">
+        @for (f of features; track f) {
+          <li>
+            <span class="feature-check">✓</span>
+            <span>{{ f }}</span>
+          </li>
+        }
+      </ul>
+      <div class="plan-actions">
+        <a class="btn-cta" routerLink="/register">Kostenlos starten →</a>
+        <p class="cta-note">Danach 39 € / Monat &nbsp;·&nbsp; Jederzeit kündbar</p>
+      </div>
+    </div>
   </div>
   <p class="pricing-note">Alle Preise zzgl. MwSt. · Monatlich kündbar · Keine Einrichtungsgebühr</p>
 </section>

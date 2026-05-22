@@ -8,25 +8,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './landing.scss',
 })
 export class Landing {
-  plans = [
-    {
-      name: 'Starter',
-      price: '39',
-      highlight: false,
-      features: ['1 WhatsApp-Nummer', 'Bis 100 Termine/Monat', 'KI-Kommunikation 24/7', 'E-Mail-Support'],
-    },
-    {
-      name: 'Pro',
-      price: '79',
-      highlight: true,
-      features: ['1 WhatsApp-Nummer', 'Unbegrenzte Termine', 'Google Calendar Sync', 'Prioritäts-Support'],
-    },
-    {
-      name: 'Team',
-      price: '199',
-      highlight: false,
-      features: ['Bis 3 WhatsApp-Nummern', 'Unbegrenzte Termine', 'Google Calendar Sync', 'Dedicated Support'],
-    },
+  features = [
+    'KI-Chatbot für WhatsApp',
+    'Automatische Terminbuchung',
+    'Google Calendar Integration',
+    'Dashboard & Auswertungen',
+    'E-Mail Support',
   ];
 
   steps = [
