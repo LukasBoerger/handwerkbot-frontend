@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
@@ -28,6 +28,7 @@ function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
 export class SetupWizard implements OnInit {
   private auth = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
+  private zone = inject(NgZone);
   private http = inject(HttpClient);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
@@ -143,9 +144,9 @@ export class SetupWizard implements OnInit {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, this.step1.value, { headers: this.getHeaders() })
       .subscribe({
-        next: () => { this.savingStep = false; this.currentStep = 2; this.cdr.detectChanges(); },
+        next: () => { this.zone.run(() => { this.savingStep = false; this.currentStep = 2; this.cdr.detectChanges(); }); },
         error: () => {
-          this.savingStep = false;
+          this.zone.run(() => { this.savingStep = false; this.cdr.detectChanges(); });
           this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
         },
       });
@@ -165,9 +166,9 @@ export class SetupWizard implements OnInit {
     this.http
       .put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() })
       .subscribe({
-        next: () => { this.savingStep = false; this.currentStep = 3; this.cdr.detectChanges(); },
+        next: () => { this.zone.run(() => { this.savingStep = false; this.currentStep = 3; this.cdr.detectChanges(); }); },
         error: () => {
-          this.savingStep = false;
+          this.zone.run(() => { this.savingStep = false; this.cdr.detectChanges(); });
           this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
         },
       });
