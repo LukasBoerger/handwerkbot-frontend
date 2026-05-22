@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +26,7 @@ export class Login {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,6 +55,7 @@ export class Login {
       error: (err) => {
         this.error = err.error?.error || 'Ungültige Zugangsdaten';
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
