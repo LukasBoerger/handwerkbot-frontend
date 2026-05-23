@@ -565,32 +565,94 @@
 }
 
 // Buchungs-Modus
-.mode-toggle-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+.mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
-.mode-info {
+.mode-card {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
 
-  strong {
-    color: var(--text);
-    font-size: 15px;
+  &:hover {
+    border-color: rgba(124, 110, 255, 0.35);
+    background: rgba(124, 110, 255, 0.04);
   }
 
-  span {
+  &--active {
+    border-color: var(--accent);
+    background: rgba(124, 110, 255, 0.08);
+
+    .mode-card__indicator {
+      border-color: var(--accent);
+      background: var(--accent);
+
+      &::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+
+  &__indicator {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    margin-top: 2px;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #000;
+      opacity: 0;
+      transform: scale(0.4);
+      transition: opacity 0.15s, transform 0.15s;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  &__icon { font-size: 16px; line-height: 1; }
+
+  &__desc {
     color: var(--text-muted);
     font-size: 13px;
     line-height: 1.5;
-    max-width: 560px;
   }
 }
 

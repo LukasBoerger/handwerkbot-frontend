@@ -219,12 +219,35 @@
           <mat-card-subtitle>Wie sollen neue Terminanfragen verarbeitet werden?</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <div class="mode-toggle-row">
-            <div class="mode-info">
-              <strong>Anfrage-Modus</strong>
-              <span>Der Bot sammelt Name, Leistung, Datum und E-Mail des Kunden. Termine werden als "Ausstehend" gespeichert und müssen von Ihnen manuell bestätigt werden. Der Kunde erhält dann eine Bestätigungs-E-Mail.</span>
+          <div class="mode-cards">
+            <div class="mode-card"
+                 [class.mode-card--active]="!form.get('requestMode')?.value"
+                 (click)="form.get('requestMode')?.setValue(false)"
+                 role="radio"
+                 [attr.aria-checked]="!form.get('requestMode')?.value">
+              <div class="mode-card__indicator"></div>
+              <div class="mode-card__body">
+                <div class="mode-card__title">
+                  <span class="mode-card__icon">⚡</span>
+                  Automatisch
+                </div>
+                <span class="mode-card__desc">Bot bestätigt Termine direkt und sendet eine WhatsApp-Bestätigung. Kein manueller Schritt nötig.</span>
+              </div>
             </div>
-            <mat-slide-toggle formControlName="requestMode" color="accent" aria-label="Anfrage-Modus aktivieren"></mat-slide-toggle>
+            <div class="mode-card"
+                 [class.mode-card--active]="form.get('requestMode')?.value"
+                 (click)="form.get('requestMode')?.setValue(true)"
+                 role="radio"
+                 [attr.aria-checked]="form.get('requestMode')?.value">
+              <div class="mode-card__indicator"></div>
+              <div class="mode-card__body">
+                <div class="mode-card__title">
+                  <span class="mode-card__icon">📋</span>
+                  Anfrage-Modus
+                </div>
+                <span class="mode-card__desc">Termine landen als "Ausstehend" im Dashboard. Sie bestätigen manuell — der Kunde erhält eine E-Mail.</span>
+              </div>
+            </div>
           </div>
           @if (form.get('requestMode')?.value) {
             <div class="mode-hint">
