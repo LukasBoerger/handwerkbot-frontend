@@ -184,6 +184,16 @@
   border: 1px solid var(--border) !important;
   border-radius: var(--radius) !important;
   overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+  }
 
   mat-card-content {
     padding: 0 !important;
@@ -351,18 +361,50 @@
   border-radius: var(--radius) !important;
 
   mat-card-header {
-    padding: 16px 16px 0 !important;
+    padding: 12px 16px 0 !important;
     margin-bottom: 4px;
   }
 
   mat-card-title {
-
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
     color: var(--text) !important;
+    flex: 1;
+    text-align: center;
   }
 
   mat-card-content { padding: 8px 16px 16px !important; }
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+}
+
+.cal-nav-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+  }
 }
 
 .calendar-dow {
@@ -406,11 +448,98 @@
     border-radius: 50%;
   }
 
-  &--has-apt:not(.cal-day--today) {
-    background: rgba(74, 222, 128, 0.18);
-    color: #4ade80;
-    font-weight: 600;
+  &--has-apt {
+    cursor: pointer;
+
+    &:not(.cal-day--today):not(.cal-day--selected) {
+      background: rgba(74, 222, 128, 0.18);
+      color: #4ade80;
+      font-weight: 600;
+
+      &:hover { background: rgba(74, 222, 128, 0.32); }
+    }
   }
+
+  &--selected {
+    background: var(--accent) !important;
+    color: #000 !important;
+    font-weight: 700;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(124, 110, 255, 0.5);
+  }
+}
+
+// ── Day detail panel ──────────────────────────────────────────────────────────
+
+.day-detail-panel {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-top: 8px;
+  animation: panel-in 0.18s ease;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.day-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: capitalize;
+  }
+}
+
+.day-detail-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s;
+
+  &:hover { color: var(--text); }
+}
+
+.day-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.apt-time {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 34px;
+  flex-shrink: 0;
+}
+
+.apt-name {
+  font-size: 12px;
+  color: var(--text);
+  flex: 1;
+  min-width: 60px;
+}
+
+.apt-service {
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 // ── Donut chart ───────────────────────────────────────────────────────────────

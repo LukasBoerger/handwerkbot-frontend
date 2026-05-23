@@ -57,7 +57,7 @@
   <!-- STATS -->
   <div class="stats-grid">
 
-    <mat-card class="stat-card stat-card--accent">
+    <mat-card class="stat-card stat-card--accent stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
           <div class="stat-icon">📅</div>
@@ -81,7 +81,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card--green">
+    <mat-card class="stat-card stat-card--green stat-card--clickable" (click)="goToAppointments('confirmed')">
       <mat-card-content>
         <div class="stat-body">
           <div class="stat-icon">✅</div>
@@ -93,7 +93,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card--blue">
+    <mat-card class="stat-card stat-card--blue stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
           <div class="stat-icon">📆</div>
@@ -137,7 +137,11 @@
       <!-- Mini calendar -->
       <mat-card class="calendar-card">
         <mat-card-header>
-          <mat-card-title>📆 {{ calendarMonthName }}</mat-card-title>
+          <div class="calendar-nav">
+            <button class="cal-nav-btn" (click)="prevMonth()" aria-label="Vorheriger Monat">‹</button>
+            <mat-card-title>📆 {{ calendarMonthName }}</mat-card-title>
+            <button class="cal-nav-btn" (click)="nextMonth()" aria-label="Nächster Monat">›</button>
+          </div>
         </mat-card-header>
         <mat-card-content>
           <div class="calendar-dow">
@@ -150,11 +154,36 @@
               <div class="cal-day"
                    [class.cal-day--empty]="cell.value === null"
                    [class.cal-day--today]="cell.isToday"
-                   [class.cal-day--has-apt]="cell.hasAppointment">
+                   [class.cal-day--has-apt]="cell.hasAppointment"
+                   [class.cal-day--selected]="isSelectedDay(cell)"
+                   (click)="onDayClick(cell)">
                 {{ cell.value !== null ? cell.value : '' }}
               </div>
             }
           </div>
+          @if (selectedDate && filteredByDate.length > 0) {
+            <div class="day-detail-panel">
+              <div class="day-detail-header">
+                <span>{{ selectedDateLabel }}</span>
+                <button class="day-detail-close" (click)="selectedDate = null" aria-label="Schließen">✕</button>
+              </div>
+              @for (apt of filteredByDate; track apt.id) {
+                <div class="day-detail-item">
+                  <span class="apt-time">{{ apt.datetime | date:'HH:mm' }}</span>
+                  <span class="apt-name">{{ apt.customerName }}</span>
+                  <span class="apt-service">{{ apt.service }}</span>
+                  <span class="status-badge" [class]="'status-' + apt.status">
+                    {{ apt.status === 'confirmed'   ? '✓ Bestätigt'
+                     : apt.status === 'pending'     ? '⏳ Ausstehend'
+                     : apt.status === 'rescheduled' ? '↺ Umgebucht'
+                     : apt.status === 'completed'   ? '✔ Abgeschlossen'
+                     : apt.status === 'cancelled'   ? '✕ Abgesagt'
+                     : apt.status }}
+                  </span>
+                </div>
+              }
+            </div>
+          }
         </mat-card-content>
       </mat-card>
 

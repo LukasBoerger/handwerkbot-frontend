@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -74,6 +74,9 @@ export class Dashboard implements OnInit {
   weeklyChartData: WeekBar[] = [];
   calendarCells: CalendarDay[] = [];
   calendarMonthName = '';
+  calendarDate: Date = new Date();
+  selectedDate: Date | null = null;
+  filteredByDate: any[] = [];
   donutSegments: DonutSegment[] = [];
   donutTotal = 0;
 
@@ -88,6 +91,7 @@ export class Dashboard implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
@@ -295,9 +299,10 @@ export class Dashboard implements OnInit {
   }
 
   private buildCalendar() {
+    const year = this.calendarDate.getFullYear();
+    const month = this.calendarDate.getMonth();
     const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
+    const isCurrentMonth = now.getFullYear() === year && now.getMonth() === month;
 
     const aptDays = new Set(
       this.appointments
@@ -318,11 +323,11 @@ export class Dashboard implements OnInit {
       ...Array(offset).fill({ value: null, isToday: false, hasAppointment: false }),
       ...Array.from({ length: daysInMonth }, (_, i) => ({
         value: i + 1,
-        isToday: i + 1 === today,
+        isToday: isCurrentMonth && i + 1 === today,
         hasAppointment: aptDays.has(i + 1),
       })),
     ];
-    this.calendarMonthName = now.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+    this.calendarMonthName = this.calendarDate.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
   }
 
   private buildDonut() {
@@ -353,6 +358,62 @@ export class Dashboard implements OnInit {
         transform: `rotate(${rotation}, 50, 50)`,
       };
     });
+  }
+
+  onDayClick(cell: CalendarDay) {
+    if (cell.value === null || !cell.hasAppointment) return;
+    const year = this.calendarDate.getFullYear();
+    const month = this.calendarDate.getMonth();
+    this.selectedDate = new Date(year, month, cell.value);
+    const selStr = this.selectedDate.toLocaleDateString();
+    this.filteredByDate = this.appointments.filter(
+      (a) => a.datetime && new Date(a.datetime).toLocaleDateString() === selStr,
+    );
+    this.cdr.detectChanges();
+  }
+
+  isSelectedDay(cell: CalendarDay): boolean {
+    if (!this.selectedDate || cell.value === null) return false;
+    const year = this.calendarDate.getFullYear();
+    const month = this.calendarDate.getMonth();
+    return (
+      this.selectedDate.getFullYear() === year &&
+      this.selectedDate.getMonth() === month &&
+      this.selectedDate.getDate() === cell.value
+    );
+  }
+
+  get selectedDateLabel(): string {
+    if (!this.selectedDate) return '';
+    return this.selectedDate.toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+    });
+  }
+
+  prevMonth() {
+    this.calendarDate = new Date(this.calendarDate.getFullYear(), this.calendarDate.getMonth() - 1, 1);
+    this.selectedDate = null;
+    this.filteredByDate = [];
+    this.buildCalendar();
+    this.cdr.detectChanges();
+  }
+
+  nextMonth() {
+    this.calendarDate = new Date(this.calendarDate.getFullYear(), this.calendarDate.getMonth() + 1, 1);
+    this.selectedDate = null;
+    this.filteredByDate = [];
+    this.buildCalendar();
+    this.cdr.detectChanges();
+  }
+
+  goToAppointments(status?: string) {
+    if (status) {
+      this.router.navigate(['/appointments'], { queryParams: { status } });
+    } else {
+      this.router.navigate(['/appointments']);
+    }
   }
 
   openChat(): void {
