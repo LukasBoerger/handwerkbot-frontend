@@ -36,6 +36,16 @@ export class AppointmentService {
     );
   }
 
+  updateNotes(appointmentId: string, notes: string): Observable<any> {
+    const tenantId = localStorage.getItem('tenantId');
+    if (!tenantId) return EMPTY;
+    return this.http.patch(
+      `${this.apiUrl}/${tenantId}/appointments/${appointmentId}/notes`,
+      { notes },
+      { headers: this.getHeaders() },
+    );
+  }
+
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.auth.getToken()}`,

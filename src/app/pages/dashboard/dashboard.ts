@@ -85,6 +85,7 @@ export class Dashboard implements OnInit {
   publicToken: string | null = null;
 
   updatingId: string | null = null;
+  savingNoteId: string | null = null;
 
   private auth = inject(AuthService);
   private appointmentService = inject(AppointmentService);
@@ -417,6 +418,27 @@ export class Dashboard implements OnInit {
     this.cdr.detectChanges();
   }
 
+  saveNote(apt: any, event: FocusEvent) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const newValue = textarea.value;
+    if (newValue === (apt.notes ?? '')) return;
+
+    this.savingNoteId = apt.id;
+    this.appointmentService.updateNotes(apt.id, newValue).subscribe({
+      next: (updated) => {
+        apt.notes = updated.notes ?? null;
+        this.savingNoteId = null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.savingNoteId = null;
+        textarea.value = apt.notes ?? '';
+        this.snackBar.open('Notiz konnte nicht gespeichert werden', 'OK', { duration: 3000 });
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   goToAppointments(status?: string) {
     if (status) {
       this.router.navigate(['/appointments'], { queryParams: { status } });
@@ -453,7 +475,7 @@ export class Dashboard implements OnInit {
     if (typeof window !== 'undefined' && window.innerWidth < 600) {
       return ['customer', 'datetime', 'status', 'actions'];
     }
-    return ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
+    return ['customer', 'service', 'datetime', 'address', 'status', 'notes', 'actions'];
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────

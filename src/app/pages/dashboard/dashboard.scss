@@ -880,6 +880,68 @@
   align-self: flex-start;
 }
 
+// ── Notes cell ────────────────────────────────────────────────────────────────
+
+.notes-cell {
+  position: relative;
+  min-width: 160px;
+  max-width: 260px;
+}
+
+.notes-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 5px 8px;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.45;
+  min-height: 30px;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+
+  &::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+  &:hover:not(:focus) {
+    border-color: var(--border);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(124, 110, 255, 0.06);
+    overflow: auto;
+    min-height: 52px;
+  }
+
+  &--saving {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.notes-spinner {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: notes-spin 0.7s linear infinite;
+}
+
+@keyframes notes-spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
 // ── Material overrides ────────────────────────────────────────────────────────
 
 .mat-mdc-table { background: transparent !important; }

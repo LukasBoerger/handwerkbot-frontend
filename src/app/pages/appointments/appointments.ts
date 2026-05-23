@@ -29,6 +29,7 @@ export class AppointmentsPage implements OnInit {
   statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
   updatingId: string | null = null;
+  savingNoteId: string | null = null;
 
   private appointmentService = inject(AppointmentService);
   private snackBar = inject(MatSnackBar);
@@ -84,6 +85,27 @@ export class AppointmentsPage implements OnInit {
     this.applyFilter();
   }
 
+  saveNote(apt: any, event: FocusEvent) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const newValue = textarea.value;
+    if (newValue === (apt.notes ?? '')) return;
+
+    this.savingNoteId = apt.id;
+    this.appointmentService.updateNotes(apt.id, newValue).subscribe({
+      next: (updated) => {
+        apt.notes = updated.notes ?? null;
+        this.savingNoteId = null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.savingNoteId = null;
+        textarea.value = apt.notes ?? '';
+        this.snackBar.open('Notiz konnte nicht gespeichert werden', 'OK', { duration: 3000 });
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   updateStatus(apt: any, status: string) {
     this.updatingId = apt.id;
     this.appointmentService.updateStatus(apt.id, status).subscribe({
@@ -110,6 +132,6 @@ export class AppointmentsPage implements OnInit {
     if (typeof window !== 'undefined' && window.innerWidth < 600) {
       return ['customer', 'datetime', 'status', 'actions'];
     }
-    return ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
+    return ['customer', 'service', 'datetime', 'address', 'status', 'notes', 'actions'];
   }
 }
