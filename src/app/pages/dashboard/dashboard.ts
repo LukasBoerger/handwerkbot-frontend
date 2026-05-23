@@ -225,6 +225,14 @@ export class Dashboard implements OnInit {
 
   // ── Trend texts ────────────────────────────────────────────────────────────
 
+  get upcomingNext(): any[] {
+    const now = Date.now();
+    return this.appointments
+      .filter((a) => a.datetime && new Date(a.datetime).getTime() >= now)
+      .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
+      .slice(0, 5);
+  }
+
   get trendTotal(): string {
     const now = new Date();
     const thisStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -361,14 +369,15 @@ export class Dashboard implements OnInit {
   }
 
   onDayClick(cell: CalendarDay) {
-    if (cell.value === null || !cell.hasAppointment) return;
+    if (cell.value === null) return;
     const year = this.calendarDate.getFullYear();
     const month = this.calendarDate.getMonth();
     this.selectedDate = new Date(year, month, cell.value);
-    const selStr = this.selectedDate.toLocaleDateString();
-    this.filteredByDate = this.appointments.filter(
-      (a) => a.datetime && new Date(a.datetime).toLocaleDateString() === selStr,
-    );
+    this.filteredByDate = this.appointments.filter((a) => {
+      if (!a.datetime) return false;
+      const d = new Date(a.datetime);
+      return d.getFullYear() === year && d.getMonth() === month && d.getDate() === cell.value;
+    });
     this.cdr.detectChanges();
   }
 
