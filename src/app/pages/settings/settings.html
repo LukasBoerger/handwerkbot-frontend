@@ -212,6 +212,28 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- BUCHUNGS-MODUS -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title>📋 Buchungs-Modus</mat-card-title>
+          <mat-card-subtitle>Wie sollen neue Terminanfragen verarbeitet werden?</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="mode-toggle-row">
+            <div class="mode-info">
+              <strong>Anfrage-Modus</strong>
+              <span>Der Bot sammelt Name, Leistung, Datum und E-Mail des Kunden. Termine werden als "Ausstehend" gespeichert und müssen von Ihnen manuell bestätigt werden. Der Kunde erhält dann eine Bestätigungs-E-Mail.</span>
+            </div>
+            <mat-slide-toggle formControlName="requestMode" color="accent" aria-label="Anfrage-Modus aktivieren"></mat-slide-toggle>
+          </div>
+          @if (form.get('requestMode')?.value) {
+            <div class="mode-hint">
+              Neue Buchungen erscheinen im Dashboard mit Status "Ausstehend". Über die Aktionen können Sie Termine bestätigen oder ablehnen — der Kunde wird automatisch per E-Mail informiert.
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
       <!-- WHATSAPP -->
       <mat-card class="section-card whatsapp-card">
         <mat-card-header>

@@ -133,6 +133,7 @@ export class Settings implements OnInit {
       openSun: [false],
       fromSun: ['08:00'],
       toSun: ['13:00'],
+      requestMode: [false],
     });
   }
 
@@ -166,6 +167,7 @@ export class Settings implements OnInit {
           .split(',')
           .map((s: string) => s.trim())
           .filter((s: string) => s.length > 0);
+        this.form.patchValue({ requestMode: tenant.appointmentMode === 'request' });
         // Strukturierte Öffnungszeiten aus "07:00-18:00" String aufdröseln
         for (const day of this.days) {
           const raw: string = tenant[`hours${day.key}`];
@@ -213,6 +215,8 @@ export class Settings implements OnInit {
       delete payload[`from${day.key}`];
       delete payload[`to${day.key}`];
     }
+    payload['appointmentMode'] = payload['requestMode'] ? 'request' : 'auto';
+    delete payload['requestMode'];
 
     this.http.put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() }).subscribe({
       next: () => {
