@@ -1,0 +1,48 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">Kommuvo</div>
+    <div class="auth-brand-line"></div>
+    <h1 class="auth-title">Zugangscode erforderlich</h1>
+    <p class="auth-subtitle">Bitte geben Sie das Zugangspasswort ein</p>
+
+    @if (error) {
+      <div class="error-banner" role="alert">
+        <mat-icon>error</mat-icon>
+        {{ error }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="field-label" for="site-password">Passwort</label>
+        <div class="field-input-wrap">
+          <input
+            id="site-password"
+            class="field-input"
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            autofocus
+          >
+          <button
+            type="button"
+            class="field-toggle"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="hidePassword ? 'Passwort anzeigen' : 'Passwort verbergen'"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button
+        class="btn-primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        Zugang freischalten →
+      </button>
+    </form>
+  </div>
+</div>
