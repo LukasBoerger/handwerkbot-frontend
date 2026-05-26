@@ -5,6 +5,7 @@ import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Settings } from './pages/settings/settings';
 import { authGuard } from './guards/auth.guard';
+import { siteLockGuard } from './guards/site-lock.guard';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { Impressum } from './pages/impressum/impressum';
@@ -15,22 +16,24 @@ import { ChatPage } from './pages/chat/chat';
 import { PublicChatPage } from './pages/public-chat/public-chat';
 import { AppointmentsPage } from './pages/appointments/appointments';
 import { OAuthCallbackPage } from './pages/oauth-callback/oauth-callback';
+import { SiteLockPage } from './pages/site-lock/site-lock';
 
 export const routes: Routes = [
-  { path: '', component: Landing },
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
-  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
-  { path: 'settings', component: Settings, canActivate: [authGuard] },
-  { path: 'appointments', component: AppointmentsPage, canActivate: [authGuard] },
-  { path: 'setup', component: SetupWizard, canActivate: [authGuard] },
-  { path: 'chat', component: ChatPage, canActivate: [authGuard] },
-  { path: 'forgot-password', component: ForgotPassword },
-  { path: 'reset-password', component: ResetPassword },
-  { path: 'impressum', component: Impressum },
-  { path: 'datenschutz', component: Datenschutz },
-  { path: 'pricing', component: Pricing },
-  { path: 'public/chat/:token', component: PublicChatPage },
-  { path: 'oauth2/callback', component: OAuthCallbackPage },
-  { path: '**', redirectTo: '' }
+  { path: 'site-lock', component: SiteLockPage },
+  { path: '', component: Landing, canActivate: [siteLockGuard] },
+  { path: 'login', component: Login, canActivate: [siteLockGuard] },
+  { path: 'register', component: Register, canActivate: [siteLockGuard] },
+  { path: 'dashboard', component: Dashboard, canActivate: [siteLockGuard, authGuard] },
+  { path: 'settings', component: Settings, canActivate: [siteLockGuard, authGuard] },
+  { path: 'appointments', component: AppointmentsPage, canActivate: [siteLockGuard, authGuard] },
+  { path: 'setup', component: SetupWizard, canActivate: [siteLockGuard, authGuard] },
+  { path: 'chat', component: ChatPage, canActivate: [siteLockGuard, authGuard] },
+  { path: 'forgot-password', component: ForgotPassword, canActivate: [siteLockGuard] },
+  { path: 'reset-password', component: ResetPassword, canActivate: [siteLockGuard] },
+  { path: 'impressum', component: Impressum, canActivate: [siteLockGuard] },
+  { path: 'datenschutz', component: Datenschutz, canActivate: [siteLockGuard] },
+  { path: 'pricing', component: Pricing, canActivate: [siteLockGuard] },
+  { path: 'public/chat/:token', component: PublicChatPage, canActivate: [siteLockGuard] },
+  { path: 'oauth2/callback', component: OAuthCallbackPage, canActivate: [siteLockGuard] },
+  { path: '**', redirectTo: '' },
 ];
