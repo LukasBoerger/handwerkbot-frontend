@@ -53,7 +53,13 @@ export class Login {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.error = err.error?.error || 'Ungültige Zugangsdaten';
+        if (typeof err.error?.error === 'string') {
+          this.error = err.error.error;
+        } else if (Array.isArray(err.error?.errors)) {
+          this.error = err.error.errors.join(', ');
+        } else {
+          this.error = 'Ungültige Zugangsdaten';
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },

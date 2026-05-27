@@ -187,10 +187,10 @@ describe('Settings', () => {
     it('setzt billingStatus bei Erfolg', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({});
-      http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ plan: 'pro', status: 'active' });
+      http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ subscriptionStatus: 'active', stripePriceId: 'price_pro' });
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
-      expect(component.billingStatus?.plan).toBe('pro');
+      expect(component.billingStatus?.subscriptionStatus).toBe('active');
       expect(component.billingLoading).toBe(false);
     });
 

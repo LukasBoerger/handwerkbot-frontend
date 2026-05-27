@@ -71,7 +71,13 @@ export class ResetPassword implements OnInit {
           setTimeout(() => this.router.navigate(['/login']), 3000);
         },
         error: (err) => {
-          this.error = err.error?.error || 'Link ungültig oder abgelaufen';
+          if (typeof err.error?.error === 'string') {
+            this.error = err.error.error;
+          } else if (Array.isArray(err.error?.errors)) {
+            this.error = err.error.errors.join(', ');
+          } else {
+            this.error = 'Link ungültig oder abgelaufen';
+          }
           this.loading = false;
         },
       });

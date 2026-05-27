@@ -22,8 +22,8 @@ import { ServiceSelector } from '../../components/service-selector/service-selec
 
 
 interface BillingStatus {
-  plan: string;
-  status: string;
+  subscriptionStatus: string;
+  stripePriceId: string;
 }
 
 @Component({

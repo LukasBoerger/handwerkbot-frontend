@@ -17,7 +17,7 @@
       @if (billingLoading) {
         <div class="billing-loading"><mat-spinner diameter="24"></mat-spinner></div>
       } @else if (billingStatus) {
-        @if (billingStatus.status === 'trial') {
+        @if (billingStatus.subscriptionStatus === 'trial') {
           <div class="billing-trial-banner">
             <div class="billing-trial-icon">⏳</div>
             <div class="billing-trial-text">
@@ -29,13 +29,13 @@
         }
         <div class="billing-status-row">
           <div class="billing-info">
-            <span class="billing-plan">{{ billingStatus.plan | titlecase }}</span>
-            <span class="billing-badge" [class.billing-badge--active]="billingStatus.status === 'active'"
-                  [class.billing-badge--trial]="billingStatus.status === 'trial'">
-              {{ billingStatus.status === 'active' ? 'Aktiv' : billingStatus.status === 'trial' ? 'Testzeitraum' : billingStatus.status }}
+            <span class="billing-plan">Kommuvo Pro</span>
+            <span class="billing-badge" [class.billing-badge--active]="billingStatus.subscriptionStatus === 'active'"
+                  [class.billing-badge--trial]="billingStatus.subscriptionStatus === 'trial'">
+              {{ billingStatus.subscriptionStatus === 'active' ? 'Aktiv' : billingStatus.subscriptionStatus === 'trial' ? 'Testzeitraum' : billingStatus.subscriptionStatus }}
             </span>
           </div>
-          @if (billingStatus.status === 'active') {
+          @if (billingStatus.subscriptionStatus === 'active') {
             <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
               @if (portalLoading) {
                 <mat-spinner diameter="16"></mat-spinner>
