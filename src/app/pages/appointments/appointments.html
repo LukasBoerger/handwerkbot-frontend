@@ -50,9 +50,8 @@
                   }
                   @if (a.customerEmail) {
                     <a class="customer-email"
-                       href="mailto:{{ a.customerEmail }}"
-                       (click)="$event.stopPropagation()"
-                       aria-label="E-Mail an Kunden senden">{{ a.customerEmail }}</a>
+                       [href]="'mailto:' + a.customerEmail"
+                       [attr.aria-label]="'E-Mail an ' + a.customerName + ' senden'">{{ a.customerEmail }}</a>
                   }
                   @if (a.origin && a.origin !== 'whatsapp') {
                     <span class="origin-badge">{{ a.origin }}</span>
