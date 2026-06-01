@@ -1,12 +1,9 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
 
@@ -17,27 +14,21 @@ import { AuthService } from '../../services/auth.service';
     RouterLink,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
-export class Register implements OnInit {
+export class Register {
   accountForm: FormGroup;
   businessForm: FormGroup;
   loading = false;
   error = '';
   hidePassword = true;
-  selectedPlan: string | null = null;
   currentStep = 1;
 
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private http = inject(HttpClient);
-  private snackBar = inject(MatSnackBar);
-  private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
 
   constructor() {
@@ -50,14 +41,6 @@ export class Register implements OnInit {
     this.businessForm = this.fb.group({
       businessName: ['', Validators.required],
       businessPhone: ['', Validators.required],
-    });
-  }
-
-  ngOnInit() {
-    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      if (params['plan']) {
-        this.selectedPlan = params['plan'];
-      }
     });
   }
 
@@ -83,12 +66,8 @@ export class Register implements OnInit {
       ...this.businessForm.value,
     }).subscribe({
       next: () => {
-        if (this.selectedPlan) {
-          this.startCheckout(this.selectedPlan);
-        } else {
-          this.loading = false;
-          this.router.navigate(['/setup']);
-        }
+        this.loading = false;
+        this.router.navigate(['/setup']);
       },
       error: (err) => {
         let msg = 'Registrierung fehlgeschlagen';
@@ -111,26 +90,5 @@ export class Register implements OnInit {
 
   loginWithGoogle() {
     window.location.href = environment.apiUrl + '/oauth2/authorization/google';
-  }
-
-  private startCheckout(planId: string) {
-    const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
-    this.http
-      .post<{ url: string }>(environment.apiUrl + '/api/billing/checkout', { plan: planId }, { headers })
-      .subscribe({
-        next: (res) => {
-          localStorage.removeItem('selectedPlan');
-          window.location.href = res.url;
-        },
-        error: () => {
-          this.loading = false;
-          this.snackBar.open(
-            'Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.',
-            'OK',
-            { duration: 4000 },
-          );
-          this.router.navigate(['/pricing']);
-        },
-      });
   }
 }

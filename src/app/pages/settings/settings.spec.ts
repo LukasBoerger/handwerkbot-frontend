@@ -47,7 +47,7 @@ describe('Settings', () => {
   function flushInit() {
     fixture.detectChanges();
     http.expectOne((r) => r.url.includes('/api/tenants/tenant-1')).flush({});
-    http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ plan: 'starter', status: 'active' });
+    http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
     http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
   }
 

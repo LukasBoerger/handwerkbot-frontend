@@ -29,7 +29,7 @@
         }
         <div class="billing-status-row">
           <div class="billing-info">
-            <span class="billing-plan">Kommuvo Pro</span>
+            <span class="billing-plan">Kommuvo</span>
             <span class="billing-badge" [class.billing-badge--active]="billingStatus.subscriptionStatus === 'active'"
                   [class.billing-badge--trial]="billingStatus.subscriptionStatus === 'trial'">
               {{ billingStatus.subscriptionStatus === 'active' ? 'Aktiv' : billingStatus.subscriptionStatus === 'trial' ? 'Testzeitraum' : billingStatus.subscriptionStatus }}

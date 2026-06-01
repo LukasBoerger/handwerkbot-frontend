@@ -35,22 +35,34 @@
     <div #messagesEnd></div>
   </div>
 
+  <!-- Zugang gesperrt -->
+  @if (blocked) {
+    <div class="chat-blocked" data-cy="chat-blocked" role="alert">
+      <div class="chat-blocked__icon">🔒</div>
+      <div class="chat-blocked__body">
+        <span class="chat-blocked__title">{{ blockTitle }}</span>
+        <span class="chat-blocked__text">{{ blockMessage }}</span>
+        <a class="chat-blocked__action" routerLink="/pricing">Jetzt abonnieren →</a>
+      </div>
+    </div>
+  }
+
   <!-- Input -->
   <div class="chat-input">
     <input
       class="chat-input__field"
       data-cy="chat-input"
       type="text"
-      placeholder="Nachricht schreiben..."
+      [placeholder]="blocked ? 'Zugang nicht aktiv' : 'Nachricht schreiben...'"
       [(ngModel)]="inputText"
       (keydown)="onKeydown($event)"
-      [disabled]="typing"
+      [disabled]="typing || blocked"
       autocomplete="off">
     <button
       class="chat-input__send"
       data-cy="chat-send"
       (click)="send()"
-      [disabled]="!inputText.trim() || typing"
+      [disabled]="!inputText.trim() || typing || blocked"
       title="Senden">
       ➤
     </button>

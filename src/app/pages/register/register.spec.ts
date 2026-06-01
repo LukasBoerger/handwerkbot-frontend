@@ -6,7 +6,6 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 import { Register } from './register';
 import { AuthService } from '../../services/auth.service';
-import { environment } from '../../../environments/environment';
 
 describe('Register', () => {
   let component: Register;
@@ -70,10 +69,6 @@ describe('Register', () => {
     expect(component.businessForm.get('businessName')?.value).toBe('');
   });
 
-  it('selectedPlan ist initial null', () => {
-    expect(component.selectedPlan).toBeNull();
-  });
-
   it('currentStep ist initial 1', () => {
     expect(component.currentStep).toBe(1);
   });
@@ -123,38 +118,13 @@ describe('Register', () => {
       expect(registerSpy).not.toHaveBeenCalled();
     });
 
-    it('navigiert zu /setup nach erfolgreicher Registrierung ohne Plan', () => {
+    it('navigiert zu /setup nach erfolgreicher Registrierung', () => {
       const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
       fillForms();
       component.submit();
       expect(registerSpy).toHaveBeenCalled();
       expect(component.loading).toBe(false);
       expect(navigateSpy).toHaveBeenCalledWith(['/setup']);
-    });
-
-    it('startet Checkout nach Registrierung mit Plan', () => {
-      component.selectedPlan = 'pro';
-      fillForms();
-      component.submit();
-
-      const req = http.expectOne(`${environment.apiUrl}/api/billing/checkout`);
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ plan: 'pro' });
-      req.flush({ url: 'https://stripe.com/checkout' });
-    });
-
-    it('navigiert zu /pricing bei Checkout-Fehler', () => {
-      component.selectedPlan = 'pro';
-      fillForms();
-      const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
-      component.submit();
-
-      http.expectOne(`${environment.apiUrl}/api/billing/checkout`).flush(
-        null,
-        { status: 500, statusText: 'Error' },
-      );
-      expect(component.loading).toBe(false);
-      expect(navigateSpy).toHaveBeenCalledWith(['/pricing']);
     });
 
     it('setzt error und loading=false bei Registrierungsfehler', () => {

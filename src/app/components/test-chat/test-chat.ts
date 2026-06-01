@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
@@ -11,9 +12,16 @@ interface Message {
   time: string;
 }
 
+interface SimulateResponse {
+  reply: string;
+  appointmentSaved?: boolean;
+  blocked?: boolean;
+  reason?: string;
+}
+
 @Component({
   selector: 'app-test-chat',
-  imports: [FormsModule, MatSnackBarModule],
+  imports: [FormsModule, MatSnackBarModule, RouterLink],
   templateUrl: './test-chat.html',
   styleUrl: './test-chat.scss',
 })
@@ -23,6 +31,10 @@ export class TestChat implements OnInit {
   messages: Message[] = [];
   inputText = '';
   typing = false;
+
+  // Zugang gesperrt (abgelaufener Trial / inaktives Abo) – persistenter Hinweis statt Bot-Bubble.
+  blocked = false;
+  blockReason: string | null = null;
 
   private auth = inject(AuthService);
   private http = inject(HttpClient);
@@ -43,9 +55,28 @@ export class TestChat implements OnInit {
       });
   }
 
+  get blockTitle(): string {
+    switch (this.blockReason) {
+      case 'trial_expired': return 'Testzeitraum abgelaufen';
+      case 'inactive': return 'Abonnement nicht aktiv';
+      default: return 'Zugang nicht aktiv';
+    }
+  }
+
+  get blockMessage(): string {
+    switch (this.blockReason) {
+      case 'trial_expired':
+        return 'Ihr Testzeitraum ist abgelaufen. Schließen Sie ein Abonnement ab, um den Bot weiter zu nutzen.';
+      case 'inactive':
+        return 'Ihr Abonnement ist nicht aktiv (gekündigt oder pausiert). Reaktivieren Sie es, um den Bot weiter zu nutzen.';
+      default:
+        return 'Ihr Zugang ist derzeit nicht aktiv. Bitte schließen Sie ein Abonnement ab, um fortzufahren.';
+    }
+  }
+
   send(): void {
     const text = this.inputText.trim();
-    if (!text || this.typing) return;
+    if (!text || this.typing || this.blocked) return;
 
     const history = [...this.messages];
     this.inputText = '';
@@ -60,7 +91,7 @@ export class TestChat implements OnInit {
       return;
     }
     this.http
-      .post<{ reply: string; appointmentSaved?: boolean }>(
+      .post<SimulateResponse>(
         `${this.apiBase}/api/chat/simulate`,
         { tenantId, message: text, conversationHistory: history },
         { headers: this.headers() },
@@ -68,6 +99,13 @@ export class TestChat implements OnInit {
       .subscribe({
         next: (res) => {
           this.typing = false;
+          if (res.blocked) {
+            this.blocked = true;
+            this.blockReason = res.reason ?? null;
+            this.scroll();
+            this.cdr.detectChanges();
+            return;
+          }
           this.pushBot(res.reply);
           if (res.appointmentSaved) {
             this.snackBar.open('✅ Termin wurde gespeichert!', 'OK', { duration: 4000 });
