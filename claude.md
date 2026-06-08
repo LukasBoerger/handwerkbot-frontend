@@ -13,13 +13,13 @@ Arbeitsweise:
 
 ## Projektverständnis
 
-Angular 19 SPA für die Kommuvo-Plattform. Handwerksbetriebe verwalten hier ihren KI-WhatsApp-Bot (Termine, Einstellungen, Onboarding, Billing).
+Angular 21 SPA für die Kommuvo-Plattform. Handwerksbetriebe verwalten hier ihren KI-WhatsApp-Bot (Termine, Einstellungen, Onboarding, Billing).
 
 ---
 
 ## Architektur
 
-- Angular 21.2.x, Angular Material 21.2.2, Reactive Forms
+- Angular 21.2.x, Angular Material 21.2.x, TypeScript 5.9.x, Reactive Forms
 - Hosting: Vercel
 - Backend-API: Railway (api.kommuvo.de)
 - Auth: JWT (localStorage)
