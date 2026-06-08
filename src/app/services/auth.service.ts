@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthUser, AuthResponse } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,16 +20,16 @@ export class AuthService {
     fullName: string;
     businessName: string;
     businessPhone: string;
-  }): Observable<any> {
+  }): Observable<AuthResponse> {
     return this.http
-      .post(`${this.apiUrl}/register`, data)
-      .pipe(tap((res: any) => this.saveSession(res)));
+      .post<AuthResponse>(`${this.apiUrl}/register`, data)
+      .pipe(tap((res) => this.saveSession(res)));
   }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<AuthResponse> {
     return this.http
-      .post(`${this.apiUrl}/login`, { email, password })
-      .pipe(tap((res: any) => this.saveSession(res)));
+      .post<AuthResponse>(`${this.apiUrl}/login`, { email, password })
+      .pipe(tap((res) => this.saveSession(res)));
   }
 
   logout() {
@@ -40,7 +41,7 @@ export class AuthService {
 
   deleteAccount(): Observable<void> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.getToken()}`
+      Authorization: `Bearer ${this.getToken()}`,
     });
     return this.http.delete<void>(`${environment.apiUrl}/api/users/me`, { headers });
   }
@@ -53,9 +54,9 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  getUser(): any {
+  getUser(): AuthUser | null {
     const u = localStorage.getItem('user');
-    return u ? JSON.parse(u) : null;
+    return u ? (JSON.parse(u) as AuthUser) : null;
   }
 
   setTokenFromOAuth(token: string, tenantId: string) {
@@ -63,9 +64,9 @@ export class AuthService {
     localStorage.setItem('tenantId', tenantId);
   }
 
-  private saveSession(res: any) {
+  private saveSession(res: AuthResponse) {
     localStorage.setItem('token', res.token);
     localStorage.setItem('user', JSON.stringify(res.user));
-    localStorage.setItem('tenantId', res.tenantId || res.tenant?.id);
+    localStorage.setItem('tenantId', String(res.tenantId));
   }
 }

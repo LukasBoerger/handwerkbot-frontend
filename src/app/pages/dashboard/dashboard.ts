@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  HostListener,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +22,9 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { environment } from '../../../environments/environment';
+import { Appointment } from '../../models/appointment.model';
+import { Tenant } from '../../models/tenant.model';
+import { AuthUser } from '../../models/auth.model';
 
 interface WeekBar {
   label: string;
@@ -57,7 +67,7 @@ interface DonutSegment {
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
-  user: any;
+  user: AuthUser | null;
   get isDemo(): boolean {
     return this.auth.getUser()?.email === 'demo@kommuvo.de';
   }
@@ -65,8 +75,8 @@ export class Dashboard implements OnInit {
   get isNewUser(): boolean {
     return !localStorage.getItem('setupDone');
   }
-  appointments: any[] = [];
-  filtered: any[] = [];
+  appointments: Appointment[] = [];
+  filtered: Appointment[] = [];
   loading = false;
   statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
@@ -76,7 +86,7 @@ export class Dashboard implements OnInit {
   calendarMonthName = '';
   calendarDate: Date = new Date();
   selectedDate: Date | null = null;
-  filteredByDate: any[] = [];
+  filteredByDate: Appointment[] = [];
   donutSegments: DonutSegment[] = [];
   donutTotal = 0;
 
@@ -105,7 +115,9 @@ export class Dashboard implements OnInit {
     this.loadTenantInfo();
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['payment'] === 'success') {
-        this.snackBar.open('Zahlung erfolgreich! Ihr Abonnement ist jetzt aktiv.', 'OK', { duration: 5000 });
+        this.snackBar.open('Zahlung erfolgreich! Ihr Abonnement ist jetzt aktiv.', 'OK', {
+          duration: 5000,
+        });
       }
     });
   }
@@ -115,17 +127,19 @@ export class Dashboard implements OnInit {
     const token = localStorage.getItem('token');
     if (!tenantId || !token) return;
 
-    this.http.get<any>(`${environment.apiUrl}/api/tenants/${tenantId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).subscribe({
-      next: (data) => {
-        this.trialExpired = data.trialExpired ?? false;
-        this.trialDaysLeft = data.trialDaysLeft ?? 0;
-        this.publicToken = data.publicToken ?? null;
-        this.cdr.detectChanges();
-      },
-      error: () => {},
-    });
+    this.http
+      .get<Tenant>(`${environment.apiUrl}/api/tenants/${tenantId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (data) => {
+          this.trialExpired = data.trialExpired ?? false;
+          this.trialDaysLeft = data.trialDaysLeft ?? 0;
+          this.publicToken = data.publicToken ?? null;
+          this.cdr.detectChanges();
+        },
+        error: () => {},
+      });
   }
 
   loadAppointments() {
@@ -177,7 +191,7 @@ export class Dashboard implements OnInit {
     this.applyFilter();
   }
 
-  updateStatus(apt: any, status: string) {
+  updateStatus(apt: Appointment, status: string) {
     this.updatingId = apt.id;
     this.appointmentService.updateStatus(apt.id, status).subscribe({
       next: (updated) => {
@@ -203,9 +217,7 @@ export class Dashboard implements OnInit {
 
   get todayCount() {
     const today = new Date().toDateString();
-    return this.appointments.filter(
-      (a) => new Date(a.createdAt).toDateString() === today,
-    ).length;
+    return this.appointments.filter((a) => new Date(a.createdAt).toDateString() === today).length;
   }
 
   get upcomingCount() {
@@ -226,7 +238,7 @@ export class Dashboard implements OnInit {
 
   // ── Trend texts ────────────────────────────────────────────────────────────
 
-  get upcomingNext(): any[] {
+  get upcomingNext(): Appointment[] {
     const now = Date.now();
     return this.appointments
       .filter((a) => a.datetime && new Date(a.datetime).getTime() >= now)
@@ -301,7 +313,12 @@ export class Dashboard implements OnInit {
         const d = new Date(a.createdAt);
         return d >= start && d < end;
       }).length;
-      return { label: `KW\u00a0${this.isoWeek(start)}`, count, isCurrent: i === 6, heightPercent: 0 };
+      return {
+        label: `KW\u00a0${this.isoWeek(start)}`,
+        count,
+        isCurrent: i === 6,
+        heightPercent: 0,
+      };
     });
     const max = Math.max(...weeks.map((w) => w.count), 1);
     return weeks.map((w) => ({ ...w, heightPercent: Math.max((w.count / max) * 100, 4) }));
@@ -336,18 +353,24 @@ export class Dashboard implements OnInit {
         hasAppointment: aptDays.has(i + 1),
       })),
     ];
-    this.calendarMonthName = this.calendarDate.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+    this.calendarMonthName = this.calendarDate.toLocaleDateString('de-DE', {
+      month: 'long',
+      year: 'numeric',
+    });
   }
 
   private buildDonut() {
     const map = new Map<string, number>();
     this.appointments.forEach((a) => {
-      const s = (a.service as string) || 'Sonstige';
+      const s = a.service || 'Sonstige';
       map.set(s, (map.get(s) ?? 0) + 1);
     });
     const sorted = [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
     this.donutTotal = sorted.reduce((s, [, c]) => s + c, 0);
-    if (this.donutTotal === 0) { this.donutSegments = []; return; }
+    if (this.donutTotal === 0) {
+      this.donutSegments = [];
+      return;
+    }
 
     const C = 2 * Math.PI * 40;
     const colors = ['#7c6eff', '#4ade80', '#60a5fa'];
@@ -403,7 +426,11 @@ export class Dashboard implements OnInit {
   }
 
   prevMonth() {
-    this.calendarDate = new Date(this.calendarDate.getFullYear(), this.calendarDate.getMonth() - 1, 1);
+    this.calendarDate = new Date(
+      this.calendarDate.getFullYear(),
+      this.calendarDate.getMonth() - 1,
+      1,
+    );
     this.selectedDate = null;
     this.filteredByDate = [];
     this.buildCalendar();
@@ -411,14 +438,18 @@ export class Dashboard implements OnInit {
   }
 
   nextMonth() {
-    this.calendarDate = new Date(this.calendarDate.getFullYear(), this.calendarDate.getMonth() + 1, 1);
+    this.calendarDate = new Date(
+      this.calendarDate.getFullYear(),
+      this.calendarDate.getMonth() + 1,
+      1,
+    );
     this.selectedDate = null;
     this.filteredByDate = [];
     this.buildCalendar();
     this.cdr.detectChanges();
   }
 
-  saveNote(apt: any, event: FocusEvent) {
+  saveNote(apt: Appointment, event: FocusEvent) {
     const textarea = event.target as HTMLTextAreaElement;
     const newValue = textarea.value;
     if (newValue === (apt.notes ?? '')) return;

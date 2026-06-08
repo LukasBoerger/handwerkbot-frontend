@@ -18,8 +18,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { Tenant } from '../../models/tenant.model';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
-
 
 interface BillingStatus {
   subscriptionStatus: string;
@@ -37,9 +37,7 @@ interface BillingStatus {
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Abbrechen</button>
-      <button mat-raised-button color="warn" [mat-dialog-close]="true">
-        Endgültig löschen
-      </button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="true">Endgültig löschen</button>
     </mat-dialog-actions>
   `,
 })
@@ -158,9 +156,12 @@ export class Settings implements OnInit {
   loadSettings() {
     this.loading = true;
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { this.loading = false; return; }
+    if (!tenantId) {
+      this.loading = false;
+      return;
+    }
 
-    this.http.get<any>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
+    this.http.get<Tenant>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
       next: (tenant) => {
         this.form.patchValue(tenant);
         this.selectedServices = (tenant.businessServices || '')
@@ -201,10 +202,13 @@ export class Settings implements OnInit {
     if (this.form.invalid) return;
     this.saving = true;
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { this.saving = false; return; }
+    if (!tenantId) {
+      this.saving = false;
+      return;
+    }
 
     // Von/Bis wieder zu "07:00-18:00" zusammenbauen
-    const payload: any = { ...this.form.value };
+    const payload: Record<string, unknown> = { ...this.form.value };
     for (const day of this.days) {
       const open = this.form.value[`open${day.key}`];
       payload[`hours${day.key}`] = open
@@ -326,20 +330,23 @@ export class Settings implements OnInit {
 
   openDeleteDialog() {
     const ref = this.dialog.open(DeleteAccountDialogComponent, { width: '400px' });
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed) => {
-      if (!confirmed) return;
-      this.deletingAccount = true;
-      this.auth.deleteAccount().subscribe({
-        next: () => {
-          this.snackBar.open('Dein Account wurde gelöscht.', 'OK', { duration: 4000 });
-          this.auth.logout();
-        },
-        error: () => {
-          this.deletingAccount = false;
-          this.snackBar.open('❌ Fehler beim Löschen des Accounts', 'OK', { duration: 3000 });
-          this.cdr.detectChanges();
-        },
+    ref
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.deletingAccount = true;
+        this.auth.deleteAccount().subscribe({
+          next: () => {
+            this.snackBar.open('Dein Account wurde gelöscht.', 'OK', { duration: 4000 });
+            this.auth.logout();
+          },
+          error: () => {
+            this.deletingAccount = false;
+            this.snackBar.open('❌ Fehler beim Löschen des Accounts', 'OK', { duration: 3000 });
+            this.cdr.detectChanges();
+          },
+        });
       });
-    });
   }
 }

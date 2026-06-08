@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../models/appointment.model';
 
 @Component({
   selector: 'app-appointments-page',
@@ -23,8 +24,8 @@ import { AppointmentService } from '../../services/appointment.service';
   styleUrl: './appointments.scss',
 })
 export class AppointmentsPage implements OnInit {
-  appointments: any[] = [];
-  filtered: any[] = [];
+  appointments: Appointment[] = [];
+  filtered: Appointment[] = [];
   loading = false;
   statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
@@ -85,7 +86,7 @@ export class AppointmentsPage implements OnInit {
     this.applyFilter();
   }
 
-  saveNote(apt: any, event: FocusEvent) {
+  saveNote(apt: Appointment, event: FocusEvent) {
     const textarea = event.target as HTMLTextAreaElement;
     const newValue = textarea.value;
     if (newValue === (apt.notes ?? '')) return;
@@ -106,7 +107,7 @@ export class AppointmentsPage implements OnInit {
     });
   }
 
-  updateStatus(apt: any, status: string) {
+  updateStatus(apt: Appointment, status: string) {
     this.updatingId = apt.id;
     this.appointmentService.updateStatus(apt.id, status).subscribe({
       next: (updated) => {

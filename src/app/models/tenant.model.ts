@@ -1,0 +1,32 @@
+export interface Tenant {
+  id: number;
+  phoneNumberId: string;
+  businessName: string;
+  businessOwner: string | null;
+  businessPhone: string | null;
+  businessEmail: string | null;
+  businessServices: string | null;
+  businessHours: string | null;
+  welcomeMessage: string | null;
+  botName: string;
+  maxDaysAhead: number;
+  hoursMon: string | null;
+  hoursTue: string | null;
+  hoursWed: string | null;
+  hoursThu: string | null;
+  hoursFri: string | null;
+  hoursSat: string | null;
+  hoursSun: string | null;
+  outOfHoursMsg: string | null;
+  googleCalendarId: string;
+  googleConnected: boolean;
+  active: boolean;
+  subscriptionStatus: string;
+  trialStartedAt: string;
+  trialDays: number;
+  publicToken: string | null;
+  appointmentMode: string;
+  autoConfirm: boolean;
+  trialExpired: boolean;
+  trialDaysLeft: number;
+}

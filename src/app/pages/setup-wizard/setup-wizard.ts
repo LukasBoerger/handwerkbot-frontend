@@ -1,5 +1,11 @@
 import { ChangeDetectorRef, Component, inject, NgZone, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -7,21 +13,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { Tenant } from '../../models/tenant.model';
 
 function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const anyOpen = days.some(d => control.get(`open${d}`)?.value === true);
+  const anyOpen = days.some((d) => control.get(`open${d}`)?.value === true);
   return anyOpen ? null : { noDaySelected: true };
 }
 
 @Component({
   selector: 'app-setup-wizard',
-  imports: [
-    ReactiveFormsModule,
-    ServiceSelector,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [ReactiveFormsModule, ServiceSelector, MatSnackBarModule, MatProgressSpinnerModule],
   templateUrl: './setup-wizard.html',
   styleUrl: './setup-wizard.scss',
 })
@@ -58,45 +60,59 @@ export class SetupWizard implements OnInit {
     botName: ['KommuvoBot', Validators.required],
   });
 
-  step2 = this.fb.group({
-    openMon: [false], fromMon: ['07:00'], toMon: ['18:00'],
-    openTue: [false], fromTue: ['07:00'], toTue: ['18:00'],
-    openWed: [false], fromWed: ['07:00'], toWed: ['18:00'],
-    openThu: [false], fromThu: ['07:00'], toThu: ['18:00'],
-    openFri: [false], fromFri: ['07:00'], toFri: ['18:00'],
-    openSat: [false], fromSat: ['08:00'], toSat: ['13:00'],
-    openSun: [false], fromSun: ['08:00'], toSun: ['13:00'],
-  }, { validators: atLeastOneDayOpen });
+  step2 = this.fb.group(
+    {
+      openMon: [false],
+      fromMon: ['07:00'],
+      toMon: ['18:00'],
+      openTue: [false],
+      fromTue: ['07:00'],
+      toTue: ['18:00'],
+      openWed: [false],
+      fromWed: ['07:00'],
+      toWed: ['18:00'],
+      openThu: [false],
+      fromThu: ['07:00'],
+      toThu: ['18:00'],
+      openFri: [false],
+      fromFri: ['07:00'],
+      toFri: ['18:00'],
+      openSat: [false],
+      fromSat: ['08:00'],
+      toSat: ['13:00'],
+      openSun: [false],
+      fromSun: ['08:00'],
+      toSun: ['13:00'],
+    },
+    { validators: atLeastOneDayOpen },
+  );
 
   ngOnInit(): void {
     const tenantId = localStorage.getItem('tenantId');
     if (!tenantId) return;
-    this.http.get<any>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() })
-      .subscribe({
-        next: (tenant) => {
-          this.step1.patchValue({
-            businessName: tenant.businessName ?? '',
-            businessOwner: tenant.businessOwner ?? '',
-            businessEmail: tenant.businessEmail ?? '',
-            botName: tenant.botName ?? 'KommuvoBot',
-          });
-          if (tenant.businessServices) {
-            const services = tenant.businessServices
-              .split(',')
-              .map((s: string) => s.trim())
-              .filter(Boolean);
-            this.selectedServices = services;
-            this.step1.get('businessServices')?.setValue(tenant.businessServices);
-          }
-        },
-        error: () => {},
-      });
+    this.http.get<Tenant>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
+      next: (tenant) => {
+        this.step1.patchValue({
+          businessName: tenant.businessName ?? '',
+          businessOwner: tenant.businessOwner ?? '',
+          businessEmail: tenant.businessEmail ?? '',
+          botName: tenant.botName ?? 'KommuvoBot',
+        });
+        if (tenant.businessServices) {
+          const services = tenant.businessServices
+            .split(',')
+            .map((s: string) => s.trim())
+            .filter(Boolean);
+          this.selectedServices = services;
+          this.step1.get('businessServices')?.setValue(tenant.businessServices);
+        }
+      },
+      error: () => {},
+    });
   }
 
   get activeDays(): string[] {
-    return this.days
-      .filter(d => this.step2.get(`open${d.key}`)?.value)
-      .map(d => d.label);
+    return this.days.filter((d) => this.step2.get(`open${d.key}`)?.value).map((d) => d.label);
   }
 
   onServicesChanged(services: string[]): void {
@@ -139,14 +155,26 @@ export class SetupWizard implements OnInit {
 
   private saveStep1(): void {
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { this.currentStep = 2; return; }
+    if (!tenantId) {
+      this.currentStep = 2;
+      return;
+    }
     this.savingStep = true;
     this.http
       .put(`${this.apiUrl}/${tenantId}`, this.step1.value, { headers: this.getHeaders() })
       .subscribe({
-        next: () => { this.zone.run(() => { this.savingStep = false; this.currentStep = 2; this.cdr.detectChanges(); }); },
+        next: () => {
+          this.zone.run(() => {
+            this.savingStep = false;
+            this.currentStep = 2;
+            this.cdr.detectChanges();
+          });
+        },
         error: () => {
-          this.zone.run(() => { this.savingStep = false; this.cdr.detectChanges(); });
+          this.zone.run(() => {
+            this.savingStep = false;
+            this.cdr.detectChanges();
+          });
           this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
         },
       });
@@ -154,7 +182,10 @@ export class SetupWizard implements OnInit {
 
   private saveStep2(): void {
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { this.currentStep = 3; return; }
+    if (!tenantId) {
+      this.currentStep = 3;
+      return;
+    }
     this.savingStep = true;
     const payload: Record<string, string | null> = {};
     for (const day of this.days) {
@@ -163,15 +194,22 @@ export class SetupWizard implements OnInit {
       const to = this.step2.get(`to${day.key}`)?.value;
       payload[`hours${day.key}`] = open ? `${from}-${to}` : null;
     }
-    this.http
-      .put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() })
-      .subscribe({
-        next: () => { this.zone.run(() => { this.savingStep = false; this.currentStep = 3; this.cdr.detectChanges(); }); },
-        error: () => {
-          this.zone.run(() => { this.savingStep = false; this.cdr.detectChanges(); });
-          this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
-        },
-      });
+    this.http.put(`${this.apiUrl}/${tenantId}`, payload, { headers: this.getHeaders() }).subscribe({
+      next: () => {
+        this.zone.run(() => {
+          this.savingStep = false;
+          this.currentStep = 3;
+          this.cdr.detectChanges();
+        });
+      },
+      error: () => {
+        this.zone.run(() => {
+          this.savingStep = false;
+          this.cdr.detectChanges();
+        });
+        this.snackBar.open('Fehler beim Speichern', 'OK', { duration: 3000 });
+      },
+    });
   }
 
   private getHeaders(): HttpHeaders {
