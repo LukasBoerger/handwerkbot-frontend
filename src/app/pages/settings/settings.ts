@@ -2,7 +2,6 @@ import { Component, DestroyRef, inject, OnInit, ChangeDetectorRef } from '@angul
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -48,7 +47,6 @@ export class DeleteAccountDialogComponent {}
   imports: [
     ReactiveFormsModule,
     ServiceSelector,
-    TitleCasePipe,
     RouterLink,
     MatCardModule,
     MatFormFieldModule,
@@ -171,7 +169,7 @@ export class Settings implements OnInit {
         this.form.patchValue({ requestMode: !tenant.autoConfirm });
         // Strukturierte Öffnungszeiten aus "07:00-18:00" String aufdröseln
         for (const day of this.days) {
-          const raw: string = tenant[`hours${day.key}`];
+          const raw = (tenant as unknown as Record<string, string | null>)[`hours${day.key}`];
           if (raw && raw.includes('-')) {
             const [from, to] = raw.split('-');
             this.form.patchValue({

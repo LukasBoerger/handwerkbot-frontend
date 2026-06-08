@@ -75,7 +75,7 @@ export class AppointmentsPage implements OnInit {
 
     const past = base
       .filter((a) => a.datetime && new Date(a.datetime).getTime() < now)
-      .sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+      .sort((a, b) => new Date(b.datetime!).getTime() - new Date(a.datetime!).getTime());
 
     this.filtered = [...upcoming, ...past];
     this.cdr.detectChanges();

@@ -180,7 +180,7 @@ export class Dashboard implements OnInit {
     // Vergangene Termine: neueste zuerst
     const past = base
       .filter((a) => a.datetime && new Date(a.datetime).getTime() < now)
-      .sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+      .sort((a, b) => new Date(b.datetime!).getTime() - new Date(a.datetime!).getTime());
 
     this.filtered = [...upcoming, ...past].slice(0, 5);
     this.cdr.detectChanges();
@@ -242,7 +242,7 @@ export class Dashboard implements OnInit {
     const now = Date.now();
     return this.appointments
       .filter((a) => a.datetime && new Date(a.datetime).getTime() >= now)
-      .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
+      .sort((a, b) => new Date(a.datetime!).getTime() - new Date(b.datetime!).getTime())
       .slice(0, 5);
   }
 
@@ -334,7 +334,7 @@ export class Dashboard implements OnInit {
       this.appointments
         .filter((a) => a.datetime)
         .map((a) => {
-          const d = new Date(a.datetime);
+          const d = new Date(a.datetime!);
           return d.getFullYear() === year && d.getMonth() === month ? d.getDate() : -1;
         })
         .filter((d) => d !== -1),
