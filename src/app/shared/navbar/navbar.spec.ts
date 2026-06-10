@@ -34,4 +34,30 @@ describe('Navbar', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('menuOpen ist initial false', () => {
+    expect(component.menuOpen).toBe(false);
+  });
+
+  it('toggleMenu setzt menuOpen auf true', () => {
+    component.toggleMenu();
+    expect(component.menuOpen).toBe(true);
+  });
+
+  it('toggleMenu beim zweiten Aufruf setzt menuOpen zurück auf false', () => {
+    component.toggleMenu();
+    component.toggleMenu();
+    expect(component.menuOpen).toBe(false);
+  });
+
+  it('closeMenu setzt menuOpen auf false', () => {
+    component.menuOpen = true;
+    component.closeMenu();
+    expect(component.menuOpen).toBe(false);
+  });
+
+  it('closeMenu macht nichts wenn menuOpen bereits false', () => {
+    component.closeMenu();
+    expect(component.menuOpen).toBe(false);
+  });
 });

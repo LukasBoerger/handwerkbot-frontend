@@ -7,6 +7,7 @@ import { of, throwError } from 'rxjs';
 import { Dashboard } from './dashboard';
 import { AuthService } from '../../services/auth.service';
 import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentStatus } from '../../models/appointment.model';
 
 describe('Dashboard', () => {
   let component: Dashboard;
@@ -14,13 +15,21 @@ describe('Dashboard', () => {
 
   const now = new Date();
 
-  function makeApt(id: string, status: string, service = 'Elektro') {
+  function makeApt(id: string, status: AppointmentStatus, service = 'Elektro') {
     return {
-      id, service, status,
+      id,
+      service,
+      status,
       datetime: now.toISOString(),
       createdAt: now.toISOString(),
-      customer: `Kunde ${id}`,
+      customerName: `Kunde ${id}`,
       address: 'Teststr. 1',
+      tenantId: 1,
+      phoneNumber: null,
+      googleEventId: null,
+      origin: 'whatsapp',
+      notes: null,
+      customerEmail: null,
     };
   }
 
@@ -31,7 +40,10 @@ describe('Dashboard', () => {
   ];
 
   let logoutSpy: ReturnType<typeof vi.fn>;
-  let appointmentSvc: { getMyAppointments: ReturnType<typeof vi.fn>; updateStatus: ReturnType<typeof vi.fn> };
+  let appointmentSvc: {
+    getMyAppointments: ReturnType<typeof vi.fn>;
+    updateStatus: ReturnType<typeof vi.fn>;
+  };
   let authMock: object;
 
   beforeEach(async () => {
@@ -215,9 +227,7 @@ describe('Dashboard', () => {
     });
 
     it('begrenzt Anzeige auf maximal 5 Einträge', () => {
-      component.appointments = Array.from({ length: 10 }, (_, i) =>
-        makeApt(`${i}`, 'confirmed'),
-      );
+      component.appointments = Array.from({ length: 10 }, (_, i) => makeApt(`${i}`, 'confirmed'));
       component.setFilter('all');
       expect(component.filtered.length).toBe(5);
     });
