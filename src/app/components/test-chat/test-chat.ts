@@ -42,24 +42,34 @@ export class TestChat implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   private readonly apiBase = environment.apiUrl;
-  private readonly fallback = 'Vielen Dank für Ihre Nachricht! Wann würden Sie einen Termin wünschen?';
+  private readonly fallback =
+    'Vielen Dank für Ihre Nachricht! Wann würden Sie einen Termin wünschen?';
 
   ngOnInit(): void {
     const tenantId = localStorage.getItem('tenantId');
-    if (!tenantId) { this.pushBot('Hallo! Wie kann ich Ihnen helfen?'); return; }
+    if (!tenantId) {
+      this.pushBot('Hallo! Wie kann ich Ihnen helfen?');
+      return;
+    }
     this.http
       .get<any>(`${this.apiBase}/api/tenants/${tenantId}`, { headers: this.headers() })
       .subscribe({
         next: (t) => this.pushBot(t.welcomeMessage || 'Hallo! Wie kann ich Ihnen helfen?'),
-        error: ()  => this.pushBot('Hallo! Wie kann ich Ihnen helfen?'),
+        // Bewusste Degradation: Schlägt das Laden der (rein kosmetischen)
+        // Willkommensnachricht fehl, zeigen wir die Standard-Begrüßung statt
+        // den Test-Chat mit einer Fehlermeldung zu starten.
+        error: () => this.pushBot('Hallo! Wie kann ich Ihnen helfen?'),
       });
   }
 
   get blockTitle(): string {
     switch (this.blockReason) {
-      case 'trial_expired': return 'Testzeitraum abgelaufen';
-      case 'inactive': return 'Abonnement nicht aktiv';
-      default: return 'Zugang nicht aktiv';
+      case 'trial_expired':
+        return 'Testzeitraum abgelaufen';
+      case 'inactive':
+        return 'Abonnement nicht aktiv';
+      default:
+        return 'Zugang nicht aktiv';
     }
   }
 
@@ -112,11 +122,14 @@ export class TestChat implements OnInit {
           }
         },
         error: () => {
-          setTimeout(() => {
-            this.typing = false;
-            this.pushBot(this.fallback);
-            this.cdr.detectChanges();
-          }, 1200);
+          // Kein getarnter Fake-Reply: Fehler klar als Störung anzeigen,
+          // damit der Nutzer den Bot nicht fälschlich für funktionsfähig hält.
+          this.typing = false;
+          this.pushBot(
+            '⚠️ Der Bot ist gerade nicht erreichbar. Bitte versuchen Sie es gleich erneut.',
+          );
+          this.snackBar.open('❌ Bot aktuell nicht erreichbar', 'OK', { duration: 4000 });
+          this.cdr.detectChanges();
         },
       });
   }

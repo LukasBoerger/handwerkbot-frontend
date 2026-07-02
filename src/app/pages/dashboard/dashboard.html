@@ -297,6 +297,12 @@
     <mat-card-content>
       @if (loading) {
         <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else if (loadError) {
+        <div class="empty-state" data-cy="appointments-error">
+          <div class="empty-icon">⚠️</div>
+          <p>Termine konnten nicht geladen werden</p>
+          <button class="btn-outline" (click)="loadAppointments()">Erneut laden</button>
+        </div>
       } @else if (filtered.length === 0) {
         <div class="empty-state" data-cy="appointments-empty">
           <div class="empty-icon">📭</div>

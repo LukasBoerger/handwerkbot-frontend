@@ -66,6 +66,7 @@ export class Settings implements OnInit {
   form: FormGroup;
   selectedServices: string[] = [];
   loading = false;
+  loadError = false;
   saving = false;
   googleConnected = false;
   googleLoading = false;
@@ -153,6 +154,7 @@ export class Settings implements OnInit {
 
   loadSettings() {
     this.loading = true;
+    this.loadError = false;
     const tenantId = localStorage.getItem('tenantId');
     if (!tenantId) {
       this.loading = false;
@@ -186,6 +188,10 @@ export class Settings implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.loadError = true;
+        this.snackBar.open('❌ Einstellungen konnten nicht geladen werden', 'OK', {
+          duration: 4000,
+        });
         this.cdr.detectChanges();
       },
     });
@@ -248,6 +254,7 @@ export class Settings implements OnInit {
         },
         error: () => {
           this.billingLoading = false;
+          this.snackBar.open('❌ Abo-Status konnte nicht geladen werden', 'OK', { duration: 3000 });
           this.cdr.detectChanges();
         },
       });
@@ -281,7 +288,11 @@ export class Settings implements OnInit {
           this.googleConnected = res.connected;
           this.cdr.detectChanges();
         },
-        error: () => {},
+        error: () => {
+          this.snackBar.open('❌ Google-Status konnte nicht geladen werden', 'OK', {
+            duration: 3000,
+          });
+        },
       });
   }
 

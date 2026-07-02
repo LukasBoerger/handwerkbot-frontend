@@ -1,5 +1,14 @@
 describe('Onboarding Flow', () => {
 
+  beforeEach(() => {
+    // Auth-Token setzen, damit der authGuard /setup rendert
+    // (gleiches Muster wie der bestehende "Betriebsname"-Test).
+    // Nur Token, keine tenantId: so überspringt ngOnInit den Tenant-Load.
+    cy.window().then((win) => {
+      win.localStorage.setItem('token', 'cypress-test-token');
+    });
+  });
+
   it('sollte nach Login den Setup-Wizard anzeigen', () => {
     cy.visit('/login');
     cy.get('input[type="email"]').type('test@example.com');

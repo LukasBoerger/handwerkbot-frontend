@@ -58,6 +58,12 @@
 
   @if (loading) {
     <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
+  } @else if (loadError) {
+    <div class="load-error">
+      <div class="load-error__icon">⚠️</div>
+      <p>Einstellungen konnten nicht geladen werden.</p>
+      <button class="btn-outline" type="button" (click)="loadSettings()">Erneut laden</button>
+    </div>
   } @else {
     <form [formGroup]="form" (ngSubmit)="save()">
 

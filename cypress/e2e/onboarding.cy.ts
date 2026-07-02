@@ -55,18 +55,15 @@ describe('Onboarding: Registrierung + Setup-Wizard', () => {
     cy.get('[data-cy="category-Elektro"]').click();
     cy.get('[data-cy="service-Elektroinstallation"]').click();
 
-    cy.get('[data-cy="input-setup-bot-name"]').clear({ force: true }).type('MuellerBot', { force: true });
+    cy.get('[data-cy="input-setup-bot-name"]')
+      .clear({ force: true })
+      .type('MuellerBot', { force: true });
 
     cy.get('[data-cy="btn-setup-next-step1"]').click();
     cy.wait('@updateTenant');
 
     // ── Setup-Wizard: Schritt 2 – Öffnungszeiten ────────────────────────────
-    cy.get('[data-cy="toggle-Mon"]').click();
-    cy.get('[data-cy="toggle-Tue"]').click();
-    cy.get('[data-cy="toggle-Wed"]').click();
-    cy.get('[data-cy="toggle-Thu"]').click();
-    cy.get('[data-cy="toggle-Fri"]').click();
-
+    // Mo–Fr sind standardmäßig aktiviert, daher kein Umschalten nötig.
     cy.get('[data-cy="btn-setup-next-step2"]').click();
     cy.wait('@updateTenant');
 

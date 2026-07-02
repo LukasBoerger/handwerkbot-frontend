@@ -71,9 +71,10 @@
     @if (currentStep === 1) {
       <form [formGroup]="step1">
         <p class="auth-step-title">Betriebsdaten</p>
+        <p class="required-legend"><span class="req">*</span> Pflichtfeld</p>
         <div class="field-row">
           <div class="field">
-            <label class="field-label" for="setup-business-name">Betriebsname</label>
+            <label class="field-label" for="setup-business-name">Betriebsname <span class="req">*</span></label>
             <input id="setup-business-name" class="field-input"
                    formControlName="businessName"
                    placeholder="z.B. Müller Elektro GmbH"
@@ -83,7 +84,7 @@
             }
           </div>
           <div class="field">
-            <label class="field-label" for="setup-owner">Inhaber</label>
+            <label class="field-label" for="setup-owner">Inhaber <span class="req">*</span></label>
             <input id="setup-owner" class="field-input"
                    formControlName="businessOwner"
                    placeholder="Vor- und Nachname"
@@ -93,28 +94,34 @@
             }
           </div>
           <div class="field">
-            <label class="field-label" for="setup-email">E-Mail</label>
+            <label class="field-label" for="setup-email">E-Mail <span class="req">*</span></label>
             <input id="setup-email" class="field-input"
                    formControlName="businessEmail"
                    type="email"
                    placeholder="kontakt@betrieb.de"
                    data-cy="input-setup-email">
-            @if (step1.get('businessEmail')?.hasError('email') && step1.get('businessEmail')?.touched) {
+            @if (step1.get('businessEmail')?.hasError('required') && step1.get('businessEmail')?.touched) {
+              <span class="field-error">Pflichtfeld</span>
+            } @else if (step1.get('businessEmail')?.hasError('email') && step1.get('businessEmail')?.touched) {
               <span class="field-error">Gültige E-Mail eingeben</span>
             }
           </div>
           <div class="field">
-            <label class="field-label" for="setup-bot-name">Bot-Name</label>
+            <label class="field-label" for="setup-bot-name">Bot-Name <span class="req">*</span></label>
             <input id="setup-bot-name" class="field-input"
                    formControlName="botName"
                    placeholder="KommuvoBot"
                    data-cy="input-setup-bot-name">
-            <span class="field-hint">So stellt sich Ihr Bot bei Kunden vor</span>
+            @if (step1.get('botName')?.invalid && step1.get('botName')?.touched) {
+              <span class="field-error">Pflichtfeld</span>
+            } @else {
+              <span class="field-hint">So stellt sich Ihr Bot bei Kunden vor</span>
+            }
           </div>
         </div>
 
         <div class="services-section">
-          <span class="field-label">Leistungen auswählen</span>
+          <span class="field-label">Leistungen auswählen <span class="req">*</span></span>
           <app-service-selector
             [selectedServices]="selectedServices"
             (servicesChanged)="onServicesChanged($event)">
@@ -173,8 +180,14 @@
             </div>
           }
         </div>
+        <div class="hours-tools">
+          <button type="button" class="btn-link" data-cy="btn-copy-hours-all"
+                  (click)="copyHoursToAllDays()">
+            Zeiten auf alle Tage übertragen
+          </button>
+        </div>
         @if (step2.hasError('noDaySelected') && step2.touched) {
-          <span class="field-error">Mindestens ein Tag muss aktiviert sein.</span>
+          <span class="field-error">Bitte aktivieren Sie mindestens einen Tag.</span>
         }
         <div class="step-actions">
           <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
@@ -196,11 +209,11 @@
       <div class="info-card">
         <p class="info-card-title">Schritt-für-Schritt-Anleitung</p>
         <ol class="info-card-steps">
-          <li>Gehe zu <strong>developers.facebook.com</strong></li>
-          <li>Erstelle eine WhatsApp Business App</li>
-          <li>Kopiere deinen Access Token und die Phone Number ID</li>
+          <li>Gehen Sie zu <strong>developers.facebook.com</strong></li>
+          <li>Erstellen Sie eine WhatsApp Business App</li>
+          <li>Kopieren Sie Ihren Access Token und die Phone Number ID</li>
           <li>
-            Kontaktiere uns — wir richten es für dich ein:<br>
+            Kontaktieren Sie uns — wir richten es für Sie ein:<br>
             <a href="mailto:setup@kommuvo.de" class="setup-link">setup@kommuvo.de</a>
           </li>
         </ol>

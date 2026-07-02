@@ -78,6 +78,7 @@ export class Dashboard implements OnInit {
   appointments: Appointment[] = [];
   filtered: Appointment[] = [];
   loading = false;
+  loadError = false;
   statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
 
@@ -138,12 +139,17 @@ export class Dashboard implements OnInit {
           this.publicToken = data.publicToken ?? null;
           this.cdr.detectChanges();
         },
-        error: () => {},
+        error: () => {
+          this.snackBar.open('❌ Konto-Infos konnten nicht geladen werden', 'OK', {
+            duration: 3000,
+          });
+        },
       });
   }
 
   loadAppointments() {
     this.loading = true;
+    this.loadError = false;
     this.appointmentService.getMyAppointments().subscribe({
       next: (data) => {
         this.appointments = Array.isArray(data) ? data : [];
@@ -153,8 +159,11 @@ export class Dashboard implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
+        // Ladefehler vom echten Leerzustand unterscheiden: Flag + sichtbare Meldung.
         this.appointments = [];
         this.loading = false;
+        this.loadError = true;
+        this.snackBar.open('❌ Termine konnten nicht geladen werden', 'OK', { duration: 4000 });
         this.cdr.detectChanges();
       },
     });
@@ -488,9 +497,14 @@ export class Dashboard implements OnInit {
       return;
     }
     const link = `${window.location.origin}/public/chat/${this.publicToken}`;
-    navigator.clipboard.writeText(link).then(() => {
-      this.snackBar.open('Link kopiert! ✓', 'OK', { duration: 3000 });
-    });
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        this.snackBar.open('Link kopiert! ✓', 'OK', { duration: 3000 });
+      })
+      .catch(() => {
+        this.snackBar.open('❌ Link konnte nicht kopiert werden', 'OK', { duration: 3000 });
+      });
   }
 
   logout() {

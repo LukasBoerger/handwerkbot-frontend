@@ -62,19 +62,19 @@ export class SetupWizard implements OnInit {
 
   step2 = this.fb.group(
     {
-      openMon: [false],
+      openMon: [true],
       fromMon: ['07:00'],
       toMon: ['18:00'],
-      openTue: [false],
+      openTue: [true],
       fromTue: ['07:00'],
       toTue: ['18:00'],
-      openWed: [false],
+      openWed: [true],
       fromWed: ['07:00'],
       toWed: ['18:00'],
-      openThu: [false],
+      openThu: [true],
       fromThu: ['07:00'],
       toThu: ['18:00'],
-      openFri: [false],
+      openFri: [true],
       fromFri: ['07:00'],
       toFri: ['18:00'],
       openSat: [false],
@@ -107,7 +107,11 @@ export class SetupWizard implements OnInit {
           this.step1.get('businessServices')?.setValue(tenant.businessServices);
         }
       },
-      error: () => {},
+      error: () => {
+        this.snackBar.open('Bestehende Daten konnten nicht geladen werden', 'OK', {
+          duration: 3000,
+        });
+      },
     });
   }
 
@@ -124,7 +128,9 @@ export class SetupWizard implements OnInit {
     this.step1.markAllAsTouched();
     if (this.step1.invalid) {
       if (!this.selectedServices.length) {
-        this.snackBar.open('Bitte wähle mindestens eine Leistung aus.', 'OK', { duration: 3000 });
+        this.snackBar.open('Bitte wählen Sie mindestens eine Leistung aus.', 'OK', {
+          duration: 3000,
+        });
       }
       this.cdr.detectChanges();
       return;
@@ -140,6 +146,18 @@ export class SetupWizard implements OnInit {
 
   prevStep(): void {
     this.currentStep--;
+    this.cdr.detectChanges();
+  }
+
+  // Überträgt die Zeiten des ersten aktiven Tages (Fallback: Montag) auf alle Tage
+  copyHoursToAllDays(): void {
+    const sourceKey = this.days.find((d) => this.step2.get(`open${d.key}`)?.value)?.key ?? 'Mon';
+    const from = this.step2.get(`from${sourceKey}`)?.value ?? null;
+    const to = this.step2.get(`to${sourceKey}`)?.value ?? null;
+    for (const day of this.days) {
+      (this.step2.get(`from${day.key}`) as AbstractControl | null)?.setValue(from);
+      (this.step2.get(`to${day.key}`) as AbstractControl | null)?.setValue(to);
+    }
     this.cdr.detectChanges();
   }
 
