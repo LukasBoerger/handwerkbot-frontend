@@ -129,4 +129,20 @@ describe('ServiceSelector', () => {
       expect(component.customServiceInput).toBe('');
     });
   });
+
+  describe('Empty-State', () => {
+    it('zeigt den Hinweis, wenn keine Leistung ausgewählt ist', () => {
+      component.selectedServices = [];
+      fixture.detectChanges();
+      const empty = fixture.nativeElement.querySelector('[data-cy="services-empty"]');
+      expect(empty).not.toBeNull();
+    });
+
+    it('blendet den Hinweis aus, sobald eine Leistung ausgewählt ist', () => {
+      component.selectedServices = ['Elektroinstallation'];
+      fixture.detectChanges();
+      const empty = fixture.nativeElement.querySelector('[data-cy="services-empty"]');
+      expect(empty).toBeNull();
+    });
+  });
 });

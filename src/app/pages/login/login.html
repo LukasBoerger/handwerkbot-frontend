@@ -3,7 +3,7 @@
     <div class="auth-brand">Kommuvo</div>
     <div class="auth-brand-line"></div>
     <h1 class="auth-title">Willkommen zurück</h1>
-    <p class="auth-subtitle">Melden Sie sich in Ihrem Konto an</p>
+    <p class="auth-subtitle">Melde dich in deinem Konto an</p>
 
     @if (error) {
       <div class="error-banner" role="alert">
@@ -13,8 +13,9 @@
     }
 
     <form [formGroup]="form" (ngSubmit)="submit()">
+      <p class="required-legend"><span class="req">*</span> Pflichtfeld</p>
       <div class="field">
-        <label class="field-label" for="login-email">E-Mail</label>
+        <label class="field-label" for="login-email">E-Mail <span class="req">*</span></label>
         <input
           id="login-email"
           class="field-input"
@@ -24,10 +25,15 @@
           placeholder="name@betrieb.de"
           data-cy="input-email"
         >
+        @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+          <span class="field-error">Pflichtfeld</span>
+        } @else if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <span class="field-error">Ungültige E-Mail-Adresse</span>
+        }
       </div>
 
       <div class="field">
-        <label class="field-label" for="login-password">Passwort</label>
+        <label class="field-label" for="login-password">Passwort <span class="req">*</span></label>
         <div class="field-input-wrap">
           <input
             id="login-password"
@@ -47,6 +53,9 @@
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
         </div>
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span class="field-error">Pflichtfeld</span>
+        }
       </div>
 
       <p class="forgot-link">
@@ -67,7 +76,7 @@
       </button>
 
       <div class="demo-hint">
-        Oder testen Sie ohne Registrierung:
+        Oder teste ohne Registrierung:
         <button type="button" data-cy="btn-demo" (click)="fillDemo()">Demo ausprobieren →</button>
       </div>
     </form>

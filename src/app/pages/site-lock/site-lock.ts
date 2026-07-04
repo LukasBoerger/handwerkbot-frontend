@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { environment } from '../../../environments/environment';
+import { focusFirstInvalid } from '../../shared/form-utils';
 
 @Component({
   selector: 'app-site-lock',
@@ -14,6 +15,8 @@ export class SiteLockPage {
   form: FormGroup;
   error = '';
   hidePassword = true;
+
+  private host = inject(ElementRef<HTMLElement>);
 
   constructor(
     private fb: FormBuilder,
@@ -27,7 +30,12 @@ export class SiteLockPage {
   }
 
   submit() {
-    if (this.form.invalid) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
+      return;
+    }
     const { password } = this.form.value;
 
     if (password === environment.sitePassword) {

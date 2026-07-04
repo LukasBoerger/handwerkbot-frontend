@@ -48,8 +48,9 @@
 
     @if (currentStep === 1) {
       <form [formGroup]="accountForm">
+        <p class="required-legend"><span class="req">*</span> Pflichtfeld</p>
         <div class="field">
-          <label class="field-label" for="reg-name">Vollständiger Name</label>
+          <label class="field-label" for="reg-name">Vollständiger Name <span class="req">*</span></label>
           <input id="reg-name" class="field-input"
                  formControlName="fullName"
                  placeholder="Max Mustermann"
@@ -60,20 +61,22 @@
         </div>
 
         <div class="field">
-          <label class="field-label" for="reg-email">E-Mail</label>
+          <label class="field-label" for="reg-email">E-Mail <span class="req">*</span></label>
           <input id="reg-email" class="field-input"
                  formControlName="email"
                  type="email"
                  autocomplete="email"
                  placeholder="name@betrieb.de"
                  data-cy="input-email">
-          @if (accountForm.get('email')?.hasError('email') && accountForm.get('email')?.touched) {
+          @if (accountForm.get('email')?.hasError('required') && accountForm.get('email')?.touched) {
+            <span class="field-error">Pflichtfeld</span>
+          } @else if (accountForm.get('email')?.hasError('email') && accountForm.get('email')?.touched) {
             <span class="field-error">Ungültige E-Mail-Adresse</span>
           }
         </div>
 
         <div class="field">
-          <label class="field-label" for="reg-password">Passwort</label>
+          <label class="field-label" for="reg-password">Passwort <span class="req">*</span></label>
           <div class="field-input-wrap">
             <input id="reg-password" class="field-input"
                    formControlName="password"
@@ -87,7 +90,9 @@
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
           </div>
-          @if (accountForm.get('password')?.hasError('minlength') && accountForm.get('password')?.touched) {
+          @if (accountForm.get('password')?.hasError('required') && accountForm.get('password')?.touched) {
+            <span class="field-error">Pflichtfeld</span>
+          } @else if (accountForm.get('password')?.hasError('minlength') && accountForm.get('password')?.touched) {
             <span class="field-error">Mindestens 8 Zeichen</span>
           }
         </div>
@@ -110,8 +115,9 @@
 
     @if (currentStep === 2) {
       <form [formGroup]="businessForm">
+        <p class="required-legend"><span class="req">*</span> Pflichtfeld</p>
         <div class="field">
-          <label class="field-label" for="reg-business-name">Betriebsname</label>
+          <label class="field-label" for="reg-business-name">Betriebsname <span class="req">*</span></label>
           <input id="reg-business-name" class="field-input"
                  formControlName="businessName"
                  placeholder="z.B. Müller Elektro GmbH"
@@ -122,7 +128,7 @@
         </div>
 
         <div class="field">
-          <label class="field-label" for="reg-business-phone">Telefonnummer</label>
+          <label class="field-label" for="reg-business-phone">Telefonnummer <span class="req">*</span></label>
           <input id="reg-business-phone" class="field-input"
                  formControlName="businessPhone"
                  placeholder="+49 ..."
@@ -135,7 +141,7 @@
         <div class="step-actions">
           <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
           <button type="button" class="btn-primary" data-cy="btn-submit-register"
-                  [disabled]="businessForm.invalid || loading"
+                  [disabled]="loading"
                   (click)="submit()">
             @if (loading) {
               <mat-spinner diameter="20"></mat-spinner>

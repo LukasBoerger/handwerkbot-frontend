@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 import { Tenant } from '../../models/tenant.model';
 import { ServiceSelector } from '../../components/service-selector/service-selector';
+import { focusFirstInvalid } from '../../shared/form-utils';
 
 interface BillingStatus {
   subscriptionStatus: string;
@@ -84,6 +85,7 @@ export class Settings implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+  private host = inject(ElementRef<HTMLElement>);
 
   private apiUrl = environment.apiUrl + '/api/tenants';
 
@@ -152,6 +154,12 @@ export class Settings implements OnInit {
     });
   }
 
+  // True, wenn kein einziger Tag als geöffnet markiert ist – dann sind keine
+  // Terminbuchungen möglich und wir zeigen im Template einen Warnhinweis.
+  get hasNoOpenDay(): boolean {
+    return this.days.every((d) => !this.form.get(`open${d.key}`)?.value);
+  }
+
   loadSettings() {
     this.loading = true;
     this.loadError = false;
@@ -203,7 +211,13 @@ export class Settings implements OnInit {
   }
 
   save() {
-    if (this.form.invalid) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      this.snackBar.open('Bitte prüfe die rot markierten Pflichtfelder.', 'OK', { duration: 3000 });
+      this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
+      return;
+    }
     this.saving = true;
     const tenantId = localStorage.getItem('tenantId');
     if (!tenantId) {

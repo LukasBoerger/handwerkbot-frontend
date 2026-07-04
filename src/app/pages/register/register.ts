@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
+import { focusFirstInvalid } from '../../shared/form-utils';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class Register {
   private auth = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private host = inject(ElementRef<HTMLElement>);
 
   constructor() {
     this.accountForm = this.fb.group({
@@ -46,7 +48,11 @@ export class Register {
 
   nextStep() {
     this.accountForm.markAllAsTouched();
-    if (this.accountForm.invalid) return;
+    if (this.accountForm.invalid) {
+      this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
+      return;
+    }
     this.currentStep = 2;
   }
 
@@ -57,7 +63,14 @@ export class Register {
   submit() {
     this.accountForm.markAllAsTouched();
     this.businessForm.markAllAsTouched();
-    if (this.accountForm.invalid || this.businessForm.invalid) return;
+    if (this.accountForm.invalid || this.businessForm.invalid) {
+      if (this.accountForm.invalid) {
+        this.currentStep = 1;
+      }
+      this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
+      return;
+    }
     this.loading = true;
     this.error = '';
 

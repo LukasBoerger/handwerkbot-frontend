@@ -47,7 +47,9 @@ describe('Settings', () => {
   function flushInit() {
     fixture.detectChanges();
     http.expectOne((r) => r.url.includes('/api/tenants/tenant-1')).flush({});
-    http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
+    http
+      .expectOne((r) => r.url.includes('/api/billing/status'))
+      .flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
     http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
   }
 
@@ -142,16 +144,24 @@ describe('Settings', () => {
     it('sendet PUT mit korrekten Öffnungszeiten', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({
-        businessName: 'Test GmbH', businessOwner: 'Max',
-        businessPhone: '0123', businessEmail: 'a@b.de', businessServices: 'Elektro'
+        businessName: 'Test GmbH',
+        businessOwner: 'Max',
+        businessPhone: '0123',
+        businessEmail: 'a@b.de',
+        businessServices: 'Elektro',
       });
       http.expectOne((r) => r.url.includes('/api/billing/status')).flush({});
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
       component.form.patchValue({
-        businessName: 'Test GmbH', businessOwner: 'Max',
-        businessPhone: '0123', businessEmail: 'a@b.de', businessServices: 'Elektro',
-        openMon: true, fromMon: '08:00', toMon: '17:00',
+        businessName: 'Test GmbH',
+        businessOwner: 'Max',
+        businessPhone: '0123',
+        businessEmail: 'a@b.de',
+        businessServices: 'Elektro',
+        openMon: true,
+        fromMon: '08:00',
+        toMon: '17:00',
         openTue: false,
       });
       component.save();
@@ -166,15 +176,21 @@ describe('Settings', () => {
     it('setzt saving auf false bei Fehler', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({
-        businessName: 'Test', businessOwner: 'X',
-        businessPhone: '0', businessEmail: 'a@b.de', businessServices: 'X'
+        businessName: 'Test',
+        businessOwner: 'X',
+        businessPhone: '0',
+        businessEmail: 'a@b.de',
+        businessServices: 'X',
       });
       http.expectOne((r) => r.url.includes('/api/billing/status')).flush({});
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
       component.form.patchValue({
-        businessName: 'Test', businessOwner: 'X',
-        businessPhone: '0', businessEmail: 'a@b.de', businessServices: 'X'
+        businessName: 'Test',
+        businessOwner: 'X',
+        businessPhone: '0',
+        businessEmail: 'a@b.de',
+        businessServices: 'X',
       });
       component.save();
 
@@ -187,7 +203,9 @@ describe('Settings', () => {
     it('setzt billingStatus bei Erfolg', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({});
-      http.expectOne((r) => r.url.includes('/api/billing/status')).flush({ subscriptionStatus: 'active', stripePriceId: 'price_pro' });
+      http
+        .expectOne((r) => r.url.includes('/api/billing/status'))
+        .flush({ subscriptionStatus: 'active', stripePriceId: 'price_pro' });
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
       expect(component.billingStatus?.subscriptionStatus).toBe('active');
@@ -197,7 +215,8 @@ describe('Settings', () => {
     it('setzt billingLoading auf false bei Fehler', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({});
-      http.expectOne((r) => r.url.includes('/api/billing/status'))
+      http
+        .expectOne((r) => r.url.includes('/api/billing/status'))
         .flush(null, { status: 500, statusText: 'Error' });
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
@@ -222,8 +241,52 @@ describe('Settings', () => {
       component.googleConnected = true;
       component.disconnectGoogle();
 
-      http.expectOne((r) => r.method === 'DELETE' && r.url.includes('/auth/google/disconnect')).flush({});
+      http
+        .expectOne((r) => r.method === 'DELETE' && r.url.includes('/auth/google/disconnect'))
+        .flush({});
       expect(component.googleConnected).toBe(false);
+    });
+  });
+
+  describe('Validierung & Öffnungszeiten', () => {
+    it('save() sendet kein PUT und markiert Felder bei ungültigem Formular', () => {
+      flushInit();
+      component.form.patchValue({
+        businessName: '',
+        businessOwner: '',
+        businessPhone: '',
+        businessEmail: '',
+        businessServices: '',
+      });
+      component.save();
+      http.expectNone((r) => r.method === 'PUT');
+      expect(component.form.get('businessName')?.touched).toBe(true);
+    });
+
+    it('hasNoOpenDay ist true, wenn kein Tag aktiv ist', () => {
+      flushInit();
+      component.form.patchValue({
+        openMon: false,
+        openTue: false,
+        openWed: false,
+        openThu: false,
+        openFri: false,
+        openSat: false,
+        openSun: false,
+      });
+      expect(component.hasNoOpenDay).toBe(true);
+    });
+
+    it('hasNoOpenDay ist false, sobald ein Tag aktiv ist', () => {
+      flushInit();
+      component.form.patchValue({ openMon: true });
+      expect(component.hasNoOpenDay).toBe(false);
+    });
+
+    it('businessServices ist ohne Auswahl ungültig', () => {
+      flushInit();
+      component.form.get('businessServices')?.setValue('');
+      expect(component.form.get('businessServices')?.invalid).toBe(true);
     });
   });
 });

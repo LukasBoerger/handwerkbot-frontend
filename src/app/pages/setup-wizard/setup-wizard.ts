@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, NgZone, OnInit } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -14,6 +14,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 import { Tenant } from '../../models/tenant.model';
+import { focusFirstInvalid } from '../../shared/form-utils';
 
 function atLeastOneDayOpen(control: AbstractControl): ValidationErrors | null {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -35,6 +36,7 @@ export class SetupWizard implements OnInit {
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private host = inject(ElementRef<HTMLElement>);
 
   private apiUrl = environment.apiUrl + '/api/tenants';
 
@@ -128,11 +130,12 @@ export class SetupWizard implements OnInit {
     this.step1.markAllAsTouched();
     if (this.step1.invalid) {
       if (!this.selectedServices.length) {
-        this.snackBar.open('Bitte wählen Sie mindestens eine Leistung aus.', 'OK', {
+        this.snackBar.open('Bitte wähle mindestens eine Leistung aus.', 'OK', {
           duration: 3000,
         });
       }
       this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
       return;
     }
     this.saveStep1();
@@ -140,7 +143,10 @@ export class SetupWizard implements OnInit {
 
   onNextStep2(): void {
     this.step2.markAllAsTouched();
-    if (this.step2.invalid) return;
+    if (this.step2.invalid) {
+      this.cdr.detectChanges();
+      return;
+    }
     this.saveStep2();
   }
 

@@ -2,7 +2,7 @@
   <div class="settings-header">
     <div>
       <h1>⚙️ Einstellungen</h1>
-      <p>Passen Sie die Daten Ihres Betriebs an</p>
+      <p>Passe die Daten deines Betriebs an</p>
     </div>
     <a class="btn-outline" routerLink="/dashboard">← Dashboard</a>
   </div>
@@ -11,7 +11,7 @@
   <mat-card class="section-card billing-card">
     <mat-card-header>
       <mat-card-title>💳 Abonnement</mat-card-title>
-      <mat-card-subtitle>Ihr aktueller Plan und Abrechnungsstatus</mat-card-subtitle>
+      <mat-card-subtitle>Dein aktueller Plan und Abrechnungsstatus</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       @if (billingLoading) {
@@ -21,8 +21,8 @@
           <div class="billing-trial-banner">
             <div class="billing-trial-icon">⏳</div>
             <div class="billing-trial-text">
-              <strong>Sie befinden sich im Testzeitraum</strong>
-              <span>Schließen Sie jetzt ein Abonnement ab um alle Funktionen zu behalten.</span>
+              <strong>Du befindest dich im Testzeitraum</strong>
+              <span>Schließe jetzt ein Abonnement ab, um alle Funktionen zu behalten.</span>
             </div>
             <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
           </div>
@@ -71,32 +71,43 @@
       <mat-card class="section-card">
         <mat-card-header>
           <mat-card-title>🏢 Betriebsdaten</mat-card-title>
-          <mat-card-subtitle>Grundlegende Informationen zu Ihrem Betrieb</mat-card-subtitle>
+          <mat-card-subtitle>Grundlegende Informationen zu deinem Betrieb <span class="required-note">· Pflichtfelder sind mit * markiert</span></mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Betriebsname</mat-label>
-              <input matInput formControlName="businessName">
+              <input matInput formControlName="businessName" required>
+              <mat-error>Pflichtfeld</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Inhaber</mat-label>
-              <input matInput formControlName="businessOwner">
+              <input matInput formControlName="businessOwner" required>
+              <mat-error>Pflichtfeld</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Telefon</mat-label>
-              <input matInput formControlName="businessPhone">
+              <input matInput formControlName="businessPhone" required>
+              <mat-error>Pflichtfeld</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>E-Mail</mat-label>
-              <input matInput formControlName="businessEmail" type="email">
+              <input matInput formControlName="businessEmail" type="email" required>
+              @if (form.get('businessEmail')?.hasError('required')) {
+                <mat-error>Pflichtfeld</mat-error>
+              } @else {
+                <mat-error>Gültige E-Mail eingeben</mat-error>
+              }
             </mat-form-field>
             <div class="full-width services-section">
-              <span class="services-label">Leistungen auswählen</span>
+              <span class="services-label">Leistungen auswählen *</span>
               <app-service-selector
                 [selectedServices]="selectedServices"
                 (servicesChanged)="onServicesChanged($event)">
               </app-service-selector>
+              @if (form.get('businessServices')?.invalid && form.get('businessServices')?.touched) {
+                <span class="services-error">Bitte wähle mindestens eine Leistung aus.</span>
+              }
             </div>
           </div>
         </mat-card-content>
@@ -106,19 +117,27 @@
       <mat-card class="section-card">
         <mat-card-header>
           <mat-card-title>🤖 Bot-Einstellungen</mat-card-title>
-          <mat-card-subtitle>So verhält sich Ihr KI-Assistent</mat-card-subtitle>
+          <mat-card-subtitle>So verhält sich dein KI-Assistent</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Bot-Name</mat-label>
-              <input matInput formControlName="botName" placeholder="z.B. KommuvoBot">
-              <mat-hint>So stellt sich der Bot vor</mat-hint>
+              <input matInput formControlName="botName" placeholder="z.B. KommuvoBot" required>
+              @if (form.get('botName')?.invalid && form.get('botName')?.touched) {
+                <mat-error>Pflichtfeld</mat-error>
+              } @else {
+                <mat-hint>So stellt sich der Bot vor</mat-hint>
+              }
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Max. Vorlaufzeit (Tage)</mat-label>
-              <input matInput formControlName="maxDaysAhead" type="number" min="1" max="365">
-              <mat-hint>Wie weit im Voraus kann gebucht werden?</mat-hint>
+              <input matInput formControlName="maxDaysAhead" type="number" min="1" max="365" required>
+              @if (form.get('maxDaysAhead')?.invalid && form.get('maxDaysAhead')?.touched) {
+                <mat-error>Wert zwischen 1 und 365 eingeben</mat-error>
+              } @else {
+                <mat-hint>Wie weit im Voraus kann gebucht werden?</mat-hint>
+              }
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Willkommensnachricht</mat-label>
@@ -142,9 +161,15 @@
       <mat-card class="section-card">
         <mat-card-header>
           <mat-card-title>🕐 Öffnungszeiten</mat-card-title>
-          <mat-card-subtitle>Aktivieren Sie die Tage an denen Sie erreichbar sind</mat-card-subtitle>
+          <mat-card-subtitle>Aktiviere die Tage, an denen du erreichbar bist</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
+          @if (hasNoOpenDay) {
+            <div class="hours-warning" data-cy="hours-warning">
+              <span aria-hidden="true">⚠️</span>
+              <span>Aktuell ist kein Öffnungstag aktiv. Ohne mindestens einen aktiven Tag kann dein Bot keine Termine buchen.</span>
+            </div>
+          }
           <div class="hours-list">
             @for (day of days; track day.key) {
               <div class="hours-row" [class.hours-row--open]="form.get('open' + day.key)?.value">
@@ -184,7 +209,7 @@
       <mat-card class="section-card google-card">
         <mat-card-header>
           <mat-card-title>📅 Google Calendar</mat-card-title>
-          <mat-card-subtitle>Termine automatisch in Ihren Kalender eintragen</mat-card-subtitle>
+          <mat-card-subtitle>Termine automatisch in deinen Kalender eintragen</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           @if (googleConnected) {
@@ -192,7 +217,7 @@
               <div class="google-status__icon">✅</div>
               <div class="google-status__text">
                 <strong>Verbunden</strong>
-                <span>Neue Termine werden automatisch in Ihren Google Calendar eingetragen</span>
+                <span>Neue Termine werden automatisch in deinen Google Calendar eingetragen</span>
               </div>
               <button class="btn-disconnect" type="button" (click)="disconnectGoogle()">
                 Trennen
@@ -203,7 +228,7 @@
               <div class="google-status__icon">📅</div>
               <div class="google-status__text">
                 <strong>Nicht verbunden</strong>
-                <span>Verbinden Sie Ihren Google Calendar um Termine automatisch zu synchronisieren</span>
+                <span>Verbinde deinen Google Calendar, um Termine automatisch zu synchronisieren</span>
               </div>
               <button class="btn-connect" type="button"
                       (click)="connectGoogle()" [disabled]="googleLoading">
@@ -251,13 +276,13 @@
                   <span class="mode-card__icon">📋</span>
                   Anfrage-Modus
                 </div>
-                <span class="mode-card__desc">Termine landen als "Ausstehend" im Dashboard. Sie bestätigen manuell — der Kunde erhält eine E-Mail.</span>
+                <span class="mode-card__desc">Termine landen als "Ausstehend" im Dashboard. Du bestätigst manuell — der Kunde erhält eine E-Mail.</span>
               </div>
             </div>
           </div>
           @if (form.get('requestMode')?.value) {
             <div class="mode-hint">
-              Neue Buchungen erscheinen im Dashboard mit Status "Ausstehend". Über die Aktionen können Sie Termine bestätigen oder ablehnen — der Kunde wird automatisch per E-Mail informiert.
+              Neue Buchungen erscheinen im Dashboard mit Status "Ausstehend". Über die Aktionen kannst du Termine bestätigen oder ablehnen — der Kunde wird automatisch per E-Mail informiert.
             </div>
           }
         </mat-card-content>
@@ -267,7 +292,7 @@
       <mat-card class="section-card whatsapp-card">
         <mat-card-header>
           <mat-card-title>💬 WhatsApp Verbindung</mat-card-title>
-          <mat-card-subtitle>So verbinden Sie Ihre WhatsApp Business Nummer</mat-card-subtitle>
+          <mat-card-subtitle>So verbindest du deine WhatsApp Business Nummer</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="info-banner">
@@ -275,10 +300,10 @@
             <div>
               <strong>Einrichtungsanleitung</strong>
               <ol>
-                <li>Gehen Sie zu <strong>developers.facebook.com</strong></li>
-                <li>Erstellen Sie eine WhatsApp Business App</li>
-                <li>Kopieren Sie Token und Phone Number ID</li>
-                <li>Kontaktieren Sie uns – wir richten es für Sie ein</li>
+                <li>Gehe zu <strong>developers.facebook.com</strong></li>
+                <li>Erstelle eine WhatsApp Business App</li>
+                <li>Kopiere Token und Phone Number ID</li>
+                <li>Kontaktiere uns – wir richten es für dich ein</li>
               </ol>
             </div>
           </div>
@@ -286,7 +311,7 @@
       </mat-card>
 
       <div class="save-actions">
-        <button class="btn-save" type="submit" [disabled]="form.invalid || saving">
+        <button class="btn-save" type="submit" [disabled]="saving">
           @if (saving) {
             <mat-spinner diameter="18"></mat-spinner>
           } @else {

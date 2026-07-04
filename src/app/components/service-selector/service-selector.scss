@@ -87,6 +87,16 @@
   }
 }
 
+.selected-empty {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .custom-service {
   display: flex;
   gap: 8px;

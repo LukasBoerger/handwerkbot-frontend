@@ -3,7 +3,7 @@
     <div class="auth-brand">Kommuvo</div>
     <div class="auth-brand-line"></div>
     <h1 class="auth-title">Einrichtungsassistent</h1>
-    <p class="auth-subtitle">Richten Sie Ihren Bot in wenigen Minuten ein</p>
+    <p class="auth-subtitle">Richte deinen Bot in wenigen Minuten ein</p>
 
     <!-- 4-Schritt-Indikator -->
     <div class="step-indicator">
@@ -115,7 +115,7 @@
             @if (step1.get('botName')?.invalid && step1.get('botName')?.touched) {
               <span class="field-error">Pflichtfeld</span>
             } @else {
-              <span class="field-hint">So stellt sich Ihr Bot bei Kunden vor</span>
+              <span class="field-hint">So stellt sich dein Bot bei Kunden vor</span>
             }
           </div>
         </div>
@@ -148,6 +148,7 @@
     @if (currentStep === 2) {
       <form [formGroup]="step2">
         <p class="auth-step-title">Öffnungszeiten</p>
+        <p class="field-hint hours-hint">Ohne aktive Öffnungszeiten kann dein Bot keine Termine buchen. Aktiviere mindestens einen Tag.</p>
         <div class="hours-list">
           @for (day of days; track day.key) {
             <div class="hours-row" [class.hours-row--open]="step2.get('open' + day.key)?.value">
@@ -187,7 +188,7 @@
           </button>
         </div>
         @if (step2.hasError('noDaySelected') && step2.touched) {
-          <span class="field-error">Bitte aktivieren Sie mindestens einen Tag.</span>
+          <span class="field-error">Bitte aktiviere mindestens einen Tag.</span>
         }
         <div class="step-actions">
           <button type="button" class="btn-secondary" (click)="prevStep()">← Zurück</button>
@@ -209,11 +210,11 @@
       <div class="info-card">
         <p class="info-card-title">Schritt-für-Schritt-Anleitung</p>
         <ol class="info-card-steps">
-          <li>Gehen Sie zu <strong>developers.facebook.com</strong></li>
-          <li>Erstellen Sie eine WhatsApp Business App</li>
-          <li>Kopieren Sie Ihren Access Token und die Phone Number ID</li>
+          <li>Gehe zu <strong>developers.facebook.com</strong></li>
+          <li>Erstelle eine WhatsApp Business App</li>
+          <li>Kopiere deinen Access Token und die Phone Number ID</li>
           <li>
-            Kontaktieren Sie uns — wir richten es für Sie ein:<br>
+            Kontaktiere uns — wir richten es für dich ein:<br>
             <a href="mailto:setup@kommuvo.de" class="setup-link">setup@kommuvo.de</a>
           </li>
         </ol>
@@ -232,7 +233,7 @@
       <div class="success-content">
         <div class="success-check">✓</div>
         <h2>Einrichtung abgeschlossen!</h2>
-        <p>Ihr Bot ist bereit. Zusammenfassung Ihrer Eingaben:</p>
+        <p>Dein Bot ist bereit. Zusammenfassung deiner Eingaben:</p>
         <div class="summary-grid">
           <div class="summary-item">
             <span class="summary-label">Inhaber</span>

@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
+import { focusFirstInvalid } from '../../shared/form-utils';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,8 @@ export class Login {
   loading = false;
   error = '';
   hidePassword = true;
+
+  private host = inject(ElementRef<HTMLElement>);
 
   constructor(
     private fb: FormBuilder,
@@ -42,7 +45,12 @@ export class Login {
   }
 
   submit() {
-    if (this.form.invalid) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      this.cdr.detectChanges();
+      focusFirstInvalid(this.host.nativeElement);
+      return;
+    }
     this.loading = true;
     this.error = '';
 
