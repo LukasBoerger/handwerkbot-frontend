@@ -8,12 +8,7 @@ import { focusFirstInvalid } from '../../shared/form-utils';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatIconModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
