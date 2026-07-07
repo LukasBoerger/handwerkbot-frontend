@@ -13,10 +13,13 @@ import { MatDividerModule } from '@angular/material/divider';
 @Component({
   selector: 'app-navbar',
   imports: [
-    RouterLink, RouterLinkActive,
-    MatToolbarModule, MatButtonModule,
-    MatIconModule, MatMenuModule,
-    MatDividerModule
+    RouterLink,
+    RouterLinkActive,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatDividerModule,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
