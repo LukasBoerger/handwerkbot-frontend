@@ -82,6 +82,8 @@ export class Settings implements OnInit {
   billingLoading = false;
   portalLoading = false;
   deletingAccount = false;
+  // Study-Mode blendet Abo-, WhatsApp- und Gefahrenzone-Karte aus (Default false).
+  studyMode = false;
   private dialog = inject(MatDialog);
   private router = inject(Router);
 
@@ -178,6 +180,7 @@ export class Settings implements OnInit {
 
     this.http.get<Tenant>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
       next: (tenant) => {
+        this.studyMode = tenant.studyMode ?? false;
         this.form.patchValue(tenant);
         this.selectedServices = (tenant.businessServices || '')
           .split(',')

@@ -289,4 +289,48 @@ describe('Settings', () => {
       expect(component.form.get('businessServices')?.invalid).toBe(true);
     });
   });
+
+  describe('Study-Mode', () => {
+    // Lädt die Settings mit gegebenem studyMode-Wert und rendert das DOM.
+    function flushInitWithStudyMode(studyMode: boolean) {
+      fixture.detectChanges();
+      http.expectOne(`${BASE}/tenant-1`).flush({ studyMode });
+      http
+        .expectOne((r) => r.url.includes('/api/billing/status'))
+        .flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
+      http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
+      fixture.detectChanges();
+    }
+
+    it('studyMode=true blendet Abo-, WhatsApp- und Gefahrenzone-Karte aus', () => {
+      flushInitWithStudyMode(true);
+      const el = fixture.nativeElement;
+
+      expect(component.studyMode).toBe(true);
+      expect(el.querySelector('.billing-card')).toBeNull();
+      expect(el.querySelector('.whatsapp-card')).toBeNull();
+      expect(el.querySelector('.danger-card')).toBeNull();
+    });
+
+    it('studyMode=false zeigt alle drei Karten', () => {
+      flushInitWithStudyMode(false);
+      const el = fixture.nativeElement;
+
+      expect(component.studyMode).toBe(false);
+      expect(el.querySelector('.billing-card')).toBeTruthy();
+      expect(el.querySelector('.whatsapp-card')).toBeTruthy();
+      expect(el.querySelector('.danger-card')).toBeTruthy();
+    });
+
+    it('fehlendes studyMode-Feld gilt als false – Karten bleiben sichtbar', () => {
+      fixture.detectChanges();
+      http.expectOne(`${BASE}/tenant-1`).flush({});
+      http.expectOne((r) => r.url.includes('/api/billing/status')).flush({});
+      http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
+      fixture.detectChanges();
+
+      expect(component.studyMode).toBe(false);
+      expect(fixture.nativeElement.querySelector('.danger-card')).toBeTruthy();
+    });
+  });
 });

@@ -94,6 +94,8 @@ export class Dashboard implements OnInit {
   trialExpired = false;
   trialDaysLeft = 0;
   publicToken: string | null = null;
+  // Study-Mode blendet beide Trial-Banner aus (Default false = Normalmodus).
+  studyMode = false;
 
   updatingId: string | null = null;
   savingNoteId: string | null = null;
@@ -137,6 +139,7 @@ export class Dashboard implements OnInit {
           this.trialExpired = data.trialExpired ?? false;
           this.trialDaysLeft = data.trialDaysLeft ?? 0;
           this.publicToken = data.publicToken ?? null;
+          this.studyMode = data.studyMode ?? false;
           this.cdr.detectChanges();
         },
         error: () => {

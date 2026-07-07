@@ -29,4 +29,7 @@ export interface Tenant {
   autoConfirm: boolean;
   trialExpired: boolean;
   trialDaysLeft: number;
+  // Reines UI-Flag der Probandenstudie – blendet Kommerz/Gefahrenzonen aus.
+  // Fehlt das Feld in der Response (undefined), gilt Normalmodus (false).
+  studyMode?: boolean;
 }

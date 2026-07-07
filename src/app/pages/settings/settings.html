@@ -7,54 +7,56 @@
     <a class="btn-outline" routerLink="/dashboard">← Dashboard</a>
   </div>
 
-  <!-- ABONNEMENT -->
-  <mat-card class="section-card billing-card">
-    <mat-card-header>
-      <mat-card-title>💳 Abonnement</mat-card-title>
-      <mat-card-subtitle>Dein aktueller Plan und Abrechnungsstatus</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      @if (billingLoading) {
-        <div class="billing-loading"><mat-spinner diameter="24"></mat-spinner></div>
-      } @else if (billingStatus) {
-        @if (billingStatus.subscriptionStatus === 'trial') {
-          <div class="billing-trial-banner">
-            <div class="billing-trial-icon">⏳</div>
-            <div class="billing-trial-text">
-              <strong>Du befindest dich im Testzeitraum</strong>
-              <span>Schließe jetzt ein Abonnement ab, um alle Funktionen zu behalten.</span>
+  <!-- ABONNEMENT (im Study-Mode ausgeblendet) -->
+  @if (!studyMode) {
+    <mat-card class="section-card billing-card">
+      <mat-card-header>
+        <mat-card-title>💳 Abonnement</mat-card-title>
+        <mat-card-subtitle>Dein aktueller Plan und Abrechnungsstatus</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        @if (billingLoading) {
+          <div class="billing-loading"><mat-spinner diameter="24"></mat-spinner></div>
+        } @else if (billingStatus) {
+          @if (billingStatus.subscriptionStatus === 'trial') {
+            <div class="billing-trial-banner">
+              <div class="billing-trial-icon">⏳</div>
+              <div class="billing-trial-text">
+                <strong>Du befindest dich im Testzeitraum</strong>
+                <span>Schließe jetzt ein Abonnement ab, um alle Funktionen zu behalten.</span>
+              </div>
+              <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
             </div>
-            <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
+          }
+          <div class="billing-status-row">
+            <div class="billing-info">
+              <span class="billing-plan">Kommuvo</span>
+              <span class="billing-badge" [class.billing-badge--active]="billingStatus.subscriptionStatus === 'active'"
+                    [class.billing-badge--trial]="billingStatus.subscriptionStatus === 'trial'">
+                {{ billingStatus.subscriptionStatus === 'active' ? 'Aktiv' : billingStatus.subscriptionStatus === 'trial' ? 'Testzeitraum' : billingStatus.subscriptionStatus }}
+              </span>
+            </div>
+            @if (billingStatus.subscriptionStatus === 'active') {
+              <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
+                @if (portalLoading) {
+                  <mat-spinner diameter="16"></mat-spinner>
+                } @else {
+                  Abonnement verwalten →
+                }
+              </button>
+            } @else {
+              <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
+            }
+          </div>
+        } @else {
+          <div class="billing-status-row">
+            <span class="billing-info-empty">Kein aktives Abonnement</span>
+            <a class="btn-subscribe" routerLink="/pricing">Plan auswählen →</a>
           </div>
         }
-        <div class="billing-status-row">
-          <div class="billing-info">
-            <span class="billing-plan">Kommuvo</span>
-            <span class="billing-badge" [class.billing-badge--active]="billingStatus.subscriptionStatus === 'active'"
-                  [class.billing-badge--trial]="billingStatus.subscriptionStatus === 'trial'">
-              {{ billingStatus.subscriptionStatus === 'active' ? 'Aktiv' : billingStatus.subscriptionStatus === 'trial' ? 'Testzeitraum' : billingStatus.subscriptionStatus }}
-            </span>
-          </div>
-          @if (billingStatus.subscriptionStatus === 'active') {
-            <button class="btn-portal" type="button" (click)="openPortal()" [disabled]="portalLoading">
-              @if (portalLoading) {
-                <mat-spinner diameter="16"></mat-spinner>
-              } @else {
-                Abonnement verwalten →
-              }
-            </button>
-          } @else {
-            <a class="btn-subscribe" routerLink="/pricing">Jetzt abonnieren →</a>
-          }
-        </div>
-      } @else {
-        <div class="billing-status-row">
-          <span class="billing-info-empty">Kein aktives Abonnement</span>
-          <a class="btn-subscribe" routerLink="/pricing">Plan auswählen →</a>
-        </div>
-      }
-    </mat-card-content>
-  </mat-card>
+      </mat-card-content>
+    </mat-card>
+  }
 
   @if (loading) {
     <div class="loading"><mat-spinner diameter="36"></mat-spinner></div>
@@ -288,27 +290,29 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- WHATSAPP -->
-      <mat-card class="section-card whatsapp-card">
-        <mat-card-header>
-          <mat-card-title>💬 WhatsApp Verbindung</mat-card-title>
-          <mat-card-subtitle>So verbindest du deine WhatsApp Business Nummer</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="info-banner">
-            <div class="info-icon">💡</div>
-            <div>
-              <strong>Einrichtungsanleitung</strong>
-              <ol>
-                <li>Gehe zu <strong>developers.facebook.com</strong></li>
-                <li>Erstelle eine WhatsApp Business App</li>
-                <li>Kopiere Token und Phone Number ID</li>
-                <li>Kontaktiere uns – wir richten es für dich ein</li>
-              </ol>
+      <!-- WHATSAPP (im Study-Mode ausgeblendet) -->
+      @if (!studyMode) {
+        <mat-card class="section-card whatsapp-card">
+          <mat-card-header>
+            <mat-card-title>💬 WhatsApp Verbindung</mat-card-title>
+            <mat-card-subtitle>So verbindest du deine WhatsApp Business Nummer</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-banner">
+              <div class="info-icon">💡</div>
+              <div>
+                <strong>Einrichtungsanleitung</strong>
+                <ol>
+                  <li>Gehe zu <strong>developers.facebook.com</strong></li>
+                  <li>Erstelle eine WhatsApp Business App</li>
+                  <li>Kopiere Token und Phone Number ID</li>
+                  <li>Kontaktiere uns – wir richten es für dich ein</li>
+                </ol>
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
+      }
 
       <div class="save-actions">
         <button class="btn-save" type="submit" [disabled]="saving">
@@ -323,31 +327,33 @@
     </form>
   }
 
-  <!-- DANGER ZONE -->
-  <mat-card class="section-card danger-card">
-    <mat-card-header>
-      <mat-card-title>⚠️ Gefahrenzone</mat-card-title>
-      <mat-card-subtitle>Diese Aktionen sind unwiderruflich</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="danger-row">
-        <div class="danger-info">
-          <strong>Account löschen</strong>
-          <span>Löscht deinen Account, alle Betriebsdaten und sämtliche Termine dauerhaft.</span>
+  <!-- DANGER ZONE (im Study-Mode ausgeblendet) -->
+  @if (!studyMode) {
+    <mat-card class="section-card danger-card">
+      <mat-card-header>
+        <mat-card-title>⚠️ Gefahrenzone</mat-card-title>
+        <mat-card-subtitle>Diese Aktionen sind unwiderruflich</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="danger-row">
+          <div class="danger-info">
+            <strong>Account löschen</strong>
+            <span>Löscht deinen Account, alle Betriebsdaten und sämtliche Termine dauerhaft.</span>
+          </div>
+          <button
+            class="btn-delete-account"
+            type="button"
+            (click)="openDeleteDialog()"
+            [disabled]="deletingAccount"
+            aria-label="Account löschen">
+            @if (deletingAccount) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              Account löschen
+            }
+          </button>
         </div>
-        <button
-          class="btn-delete-account"
-          type="button"
-          (click)="openDeleteDialog()"
-          [disabled]="deletingAccount"
-          aria-label="Account löschen">
-          @if (deletingAccount) {
-            <mat-spinner diameter="18"></mat-spinner>
-          } @else {
-            Account löschen
-          }
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      </mat-card-content>
+    </mat-card>
+  }
 </div>

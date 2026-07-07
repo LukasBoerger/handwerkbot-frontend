@@ -41,17 +41,19 @@
     </div>
   }
 
-  <!-- TRIAL BANNERS -->
-  @if (trialExpired) {
-    <div class="trial-expired-banner">
-      ⚠️ Dein Testzeitraum ist abgelaufen.
-      <a routerLink="/pricing">Jetzt abonnieren →</a>
-    </div>
-  } @else if (trialDaysLeft <= 7 && trialDaysLeft > 0) {
-    <div class="trial-warning-banner">
-      ⏳ Dein Testzeitraum endet in {{ trialDaysLeft }} Tagen.
-      <a routerLink="/pricing">Jetzt abonnieren →</a>
-    </div>
+  <!-- TRIAL BANNERS (im Study-Mode ausgeblendet) -->
+  @if (!studyMode) {
+    @if (trialExpired) {
+      <div class="trial-expired-banner">
+        ⚠️ Dein Testzeitraum ist abgelaufen.
+        <a routerLink="/pricing">Jetzt abonnieren →</a>
+      </div>
+    } @else if (trialDaysLeft <= 7 && trialDaysLeft > 0) {
+      <div class="trial-warning-banner">
+        ⏳ Dein Testzeitraum endet in {{ trialDaysLeft }} Tagen.
+        <a routerLink="/pricing">Jetzt abonnieren →</a>
+      </div>
+    }
   }
 
   <!-- STATS -->

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 import { Dashboard } from './dashboard';
@@ -307,5 +307,77 @@ describe('Dashboard', () => {
       component.onResize();
       expect(component.displayedColumns.length).toBeGreaterThan(0);
     });
+  });
+});
+
+// Eigenes Setup: loadTenantInfo feuert nur mit token + tenantId im localStorage,
+// deshalb setzen wir beide VOR dem Erstellen der Komponente.
+describe('Dashboard – Study-Mode / Trial-Banner', () => {
+  let fixture: ComponentFixture<Dashboard>;
+  let component: Dashboard;
+  let http: HttpTestingController;
+
+  const authMock = {
+    getToken: () => 'test-token',
+    getUser: () => ({ fullName: 'Test User', email: 'test@test.de' }),
+    isLoggedIn: () => true,
+    logout: () => {},
+  };
+
+  beforeEach(async () => {
+    localStorage.setItem('token', 'test-token');
+    localStorage.setItem('tenantId', 'tenant-1');
+
+    await TestBed.configureTestingModule({
+      imports: [Dashboard],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideNoopAnimations(),
+        { provide: AuthService, useValue: authMock },
+        {
+          provide: AppointmentService,
+          useValue: { getMyAppointments: vi.fn().mockReturnValue(of([])), updateStatus: vi.fn() },
+        },
+        { provide: ActivatedRoute, useValue: { queryParams: of({}) } },
+      ],
+    }).compileComponents();
+
+    http = TestBed.inject(HttpTestingController);
+    fixture = TestBed.createComponent(Dashboard);
+    component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    http.verify();
+    localStorage.clear();
+  });
+
+  function flushTenant(body: {
+    trialExpired?: boolean;
+    trialDaysLeft?: number;
+    studyMode?: boolean;
+  }) {
+    fixture.detectChanges();
+    http.expectOne((r) => r.url.includes('/api/tenants/tenant-1')).flush(body);
+    fixture.detectChanges();
+  }
+
+  it('studyMode=true blendet den abgelaufenen Trial-Banner aus', () => {
+    flushTenant({ trialExpired: true, studyMode: true });
+    expect(component.studyMode).toBe(true);
+    expect(fixture.nativeElement.querySelector('.trial-expired-banner')).toBeNull();
+  });
+
+  it('studyMode=false zeigt den abgelaufenen Trial-Banner (Kontrolle)', () => {
+    flushTenant({ trialExpired: true, studyMode: false });
+    expect(component.studyMode).toBe(false);
+    expect(fixture.nativeElement.querySelector('.trial-expired-banner')).toBeTruthy();
+  });
+
+  it('studyMode=true blendet auch den Trial-Warnbanner aus', () => {
+    flushTenant({ trialExpired: false, trialDaysLeft: 3, studyMode: true });
+    expect(fixture.nativeElement.querySelector('.trial-warning-banner')).toBeNull();
   });
 });

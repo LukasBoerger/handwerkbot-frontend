@@ -35,6 +35,8 @@ export class TestChat implements OnInit {
   // Zugang gesperrt (abgelaufener Trial / inaktives Abo) – persistenter Hinweis statt Bot-Bubble.
   blocked = false;
   blockReason: string | null = null;
+  // Study-Mode blendet den kommerziellen /pricing-Link im Block-Hinweis aus.
+  studyMode = false;
 
   private auth = inject(AuthService);
   private http = inject(HttpClient);
@@ -54,7 +56,10 @@ export class TestChat implements OnInit {
     this.http
       .get<any>(`${this.apiBase}/api/tenants/${tenantId}`, { headers: this.headers() })
       .subscribe({
-        next: (t) => this.pushBot(t.welcomeMessage || 'Hallo! Wie kann ich Ihnen helfen?'),
+        next: (t) => {
+          this.studyMode = t.studyMode ?? false;
+          this.pushBot(t.welcomeMessage || 'Hallo! Wie kann ich Ihnen helfen?');
+        },
         // Bewusste Degradation: Schlägt das Laden der (rein kosmetischen)
         // Willkommensnachricht fehl, zeigen wir die Standard-Begrüßung statt
         // den Test-Chat mit einer Fehlermeldung zu starten.

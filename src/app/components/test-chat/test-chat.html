@@ -42,7 +42,9 @@
       <div class="chat-blocked__body">
         <span class="chat-blocked__title">{{ blockTitle }}</span>
         <span class="chat-blocked__text">{{ blockMessage }}</span>
-        <a class="chat-blocked__action" routerLink="/pricing">Jetzt abonnieren →</a>
+        @if (!studyMode) {
+          <a class="chat-blocked__action" routerLink="/pricing">Jetzt abonnieren →</a>
+        }
       </div>
     </div>
   }
