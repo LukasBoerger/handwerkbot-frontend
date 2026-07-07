@@ -98,11 +98,7 @@ describe('Dashboard – Statistiken und Filter', () => {
     cy.get('[data-cy="appointments-table"]').should('not.contain.text', 'Hans Müller');
   });
 
-  it('zeigt Empty-State wenn kein umgebuchter Termin vorhanden', () => {
-    cy.get('[data-cy="filter-rescheduled"]').click();
-    cy.get('[data-cy="appointments-empty"]').should('be.visible');
-    cy.get('[data-cy="appointments-empty"]').should('contain.text', 'umgebucht');
-  });
+  // Studienphase: Test für Filter-Tab "Umgebucht" entfernt (Tab existiert nicht mehr) – Revert nach Studie.
 
   it('zeigt Telefonnummer in der Kundenzelle', () => {
     cy.get('[data-cy="appointments-table"]').should('contain.text', '+49 151 12345678');
@@ -160,43 +156,9 @@ describe('Dashboard – Termin absagen', () => {
   });
 });
 
-describe('Dashboard – Termin umbuchen', () => {
-  beforeEach(() => {
-    cy.clearLocalStorage();
-    cy.intercept('GET', `**/api/tenants/${TENANT_ID}/appointments`, {
-      statusCode: 200,
-      body: appointments,
-    }).as('getAppointments');
-
-    cy.loginAndVisit('/dashboard', session);
-    cy.wait('@getAppointments');
-  });
-
-  it('setzt Status auf "rescheduled" und zeigt korrektes Badge', () => {
-    cy.intercept('PATCH', `**/api/tenants/${TENANT_ID}/appointments/apt-confirmed-1/status`, {
-      statusCode: 200,
-      body: { ...appointments[0], status: 'rescheduled' },
-    }).as('rescheduleApt');
-
-    cy.get('[data-cy="btn-reschedule-apt-confirmed-1"]').click();
-    cy.wait('@rescheduleApt');
-
-    cy.get('[data-cy="apt-row-apt-confirmed-1"] .status-badge')
-      .should('contain.text', '↺ Umgebucht');
-  });
-
-  it('zeigt nach dem Umbuchen den Bestätigen-Button', () => {
-    cy.intercept('PATCH', `**/api/tenants/${TENANT_ID}/appointments/apt-confirmed-1/status`, {
-      statusCode: 200,
-      body: { ...appointments[0], status: 'rescheduled' },
-    }).as('rescheduleApt');
-
-    cy.get('[data-cy="btn-reschedule-apt-confirmed-1"]').click();
-    cy.wait('@rescheduleApt');
-
-    cy.get('[data-cy="btn-confirm-apt-confirmed-1"]').should('exist');
-  });
-});
+// Studienphase: describe-Block "Dashboard – Termin umbuchen" entfernt
+// (Umbuchen-Button und der nur bei 'rescheduled' sichtbare Bestätigen-Button
+// existieren nicht mehr in der UI) – Revert nach Studie.
 
 describe('Dashboard – Termin wiederherstellen', () => {
   beforeEach(() => {
@@ -223,7 +185,7 @@ describe('Dashboard – Termin wiederherstellen', () => {
       .should('contain.text', '✓ Bestätigt');
   });
 
-  it('zeigt nach der Wiederherstellung Absagen- und Umbuchen-Button', () => {
+  it('zeigt nach der Wiederherstellung den Absagen-Button', () => {
     cy.intercept('PATCH', `**/api/tenants/${TENANT_ID}/appointments/apt-cancelled-1/status`, {
       statusCode: 200,
       body: { ...appointments[2], status: 'confirmed' },
@@ -232,7 +194,7 @@ describe('Dashboard – Termin wiederherstellen', () => {
     cy.get('[data-cy="btn-restore-apt-cancelled-1"]').click();
     cy.wait('@restoreApt');
 
+    // Studienphase: Umbuchen-Button-Assertion entfernt – Revert nach Studie.
     cy.get('[data-cy="btn-cancel-apt-cancelled-1"]').should('exist');
-    cy.get('[data-cy="btn-reschedule-apt-cancelled-1"]').should('exist');
   });
 });

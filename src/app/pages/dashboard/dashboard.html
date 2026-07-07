@@ -290,7 +290,7 @@
         <button class="filter-tab" data-cy="filter-all"         [class.active]="statusFilter === 'all'"          (click)="setFilter('all')">Alle</button>
         <button class="filter-tab" data-cy="filter-confirmed"   [class.active]="statusFilter === 'confirmed'"    (click)="setFilter('confirmed')">Bestätigt</button>
         <button class="filter-tab" data-cy="filter-pending"     [class.active]="statusFilter === 'pending'"      (click)="setFilter('pending')">Ausstehend</button>
-        <button class="filter-tab" data-cy="filter-rescheduled" [class.active]="statusFilter === 'rescheduled'"  (click)="setFilter('rescheduled')">Umgebucht</button>
+        <!-- Studienphase: Filter-Tab "Umgebucht" entfernt – Revert nach Studie -->
         <button class="filter-tab" data-cy="filter-completed"   [class.active]="statusFilter === 'completed'"    (click)="setFilter('completed')">Abgeschlossen</button>
         <button class="filter-tab" data-cy="filter-cancelled"   [class.active]="statusFilter === 'cancelled'"    (click)="setFilter('cancelled')">Abgesagt</button>
       </div>
@@ -409,20 +409,8 @@
                             (click)="updateStatus(a, 'completed')"
                             title="Als abgeschlossen markieren" aria-label="Abschließen">✔</button>
                   }
-                  @if (a.status === 'confirmed' || a.status === 'pending') {
-                    <button class="action-btn action-btn--reschedule"
-                            [attr.data-cy]="'btn-reschedule-' + a.id"
-                            [disabled]="updatingId === a.id"
-                            (click)="updateStatus(a, 'rescheduled')"
-                            title="Umbuchen" aria-label="Umbuchen">↺</button>
-                  }
-                  @if (a.status === 'rescheduled') {
-                    <button class="action-btn action-btn--restore"
-                            [attr.data-cy]="'btn-confirm-' + a.id"
-                            [disabled]="updatingId === a.id"
-                            (click)="updateStatus(a, 'confirmed')"
-                            title="Termin bestätigen" aria-label="Bestätigen">✓</button>
-                  }
+                  <!-- Studienphase: Umbuchen-Button und der nur bei 'rescheduled' sichtbare
+                       Bestätigen-Button entfernt – Revert nach Studie. Status-Badge bleibt. -->
                   @if (a.status !== 'cancelled' && a.status !== 'completed') {
                     <button class="action-btn action-btn--cancel"
                             [attr.data-cy]="'btn-cancel-' + a.id"
