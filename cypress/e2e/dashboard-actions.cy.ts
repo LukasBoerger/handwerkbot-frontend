@@ -126,8 +126,10 @@ describe('Dashboard – Termin absagen', () => {
     cy.get('[data-cy="btn-cancel-apt-confirmed-1"]').click();
     cy.wait('@cancelApt');
 
-    cy.get('[data-cy="apt-row-apt-confirmed-1"] .status-badge')
-      .should('contain.text', '✕ Abgesagt');
+    cy.get('[data-cy="apt-row-apt-confirmed-1"] .status-badge').should(
+      'contain.text',
+      '✕ Abgesagt',
+    );
   });
 
   it('zeigt nach dem Absagen den Wiederherstellen-Button', () => {
@@ -151,8 +153,7 @@ describe('Dashboard – Termin absagen', () => {
     cy.get('[data-cy="btn-cancel-apt-pending-1"]').click();
     cy.wait('@cancelPending');
 
-    cy.get('[data-cy="apt-row-apt-pending-1"] .status-badge')
-      .should('contain.text', '✕ Abgesagt');
+    cy.get('[data-cy="apt-row-apt-pending-1"] .status-badge').should('contain.text', '✕ Abgesagt');
   });
 });
 
@@ -181,8 +182,10 @@ describe('Dashboard – Termin wiederherstellen', () => {
     cy.get('[data-cy="btn-restore-apt-cancelled-1"]').click();
     cy.wait('@restoreApt');
 
-    cy.get('[data-cy="apt-row-apt-cancelled-1"] .status-badge')
-      .should('contain.text', '✓ Bestätigt');
+    cy.get('[data-cy="apt-row-apt-cancelled-1"] .status-badge').should(
+      'contain.text',
+      '✓ Bestätigt',
+    );
   });
 
   it('zeigt nach der Wiederherstellung den Absagen-Button', () => {
