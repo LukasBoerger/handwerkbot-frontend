@@ -302,23 +302,25 @@ describe('Settings', () => {
       fixture.detectChanges();
     }
 
-    it('studyMode=true blendet Abo-, WhatsApp- und Gefahrenzone-Karte aus', () => {
+    it('studyMode=true blendet Abo-, WhatsApp-, Google-Calendar- und Gefahrenzone-Karte aus', () => {
       flushInitWithStudyMode(true);
       const el = fixture.nativeElement;
 
       expect(component.studyMode).toBe(true);
       expect(el.querySelector('.billing-card')).toBeNull();
       expect(el.querySelector('.whatsapp-card')).toBeNull();
+      expect(el.querySelector('.google-card')).toBeNull();
       expect(el.querySelector('.danger-card')).toBeNull();
     });
 
-    it('studyMode=false zeigt alle drei Karten', () => {
+    it('studyMode=false zeigt alle vier Karten', () => {
       flushInitWithStudyMode(false);
       const el = fixture.nativeElement;
 
       expect(component.studyMode).toBe(false);
       expect(el.querySelector('.billing-card')).toBeTruthy();
       expect(el.querySelector('.whatsapp-card')).toBeTruthy();
+      expect(el.querySelector('.google-card')).toBeTruthy();
       expect(el.querySelector('.danger-card')).toBeTruthy();
     });
 
