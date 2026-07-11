@@ -10,10 +10,11 @@ import { Impressum } from './pages/impressum/impressum';
 import { Datenschutz } from './pages/datenschutz/datenschutz';
 import { Pricing } from './pages/pricing/pricing';
 import { SiteLockPage } from './pages/site-lock/site-lock';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
   { path: 'site-lock', component: SiteLockPage },
-  { path: '', component: Landing, canActivate: [siteLockGuard] },
+  { path: '', component: Dashboard, canActivate: [siteLockGuard] },
   { path: 'login', component: Login, canActivate: [siteLockGuard] },
   { path: 'register', component: Register, canActivate: [siteLockGuard] },
   { path: 'forgot-password', component: ForgotPassword, canActivate: [siteLockGuard] },
