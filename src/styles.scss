@@ -170,3 +170,27 @@ mat-chip {
   background: var(--green-dim) !important;
   color: var(--green) !important;
 }
+
+// ── Phase B: Mikro-Labels in Monospace (Referenz-Angleichung) ─────────────────
+// Tabellen-Header brauchen !important gegen die MDC-Standard-Schrift.
+.mat-mdc-header-cell {
+  font-family: var(--font-mono) !important;
+}
+
+// Eigene Micro-Label-Klassen erben sonst die Body-Sans – hier bewusst Mono.
+.stat-label,
+.origin-badge,
+.up-month,
+.billing-badge,
+.status-badge,
+.services-label,
+.time-field label {
+  font-family: var(--font-mono);
+}
+
+// In der Referenz sind diese Labels UPPERCASE – waren es bisher nicht.
+.stat-label,
+.services-label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
