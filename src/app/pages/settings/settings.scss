@@ -709,3 +709,23 @@
   color: var(--text-muted);
   font-size: 12px;
 }
+
+// ── Phase E: Formularfelder im Referenz-Stil ──────────────────────────────────
+// Referenz: Mono-Uppercase-Label über einem flachen, gefüllten Eingabefeld.
+// Material bleibt erhalten (Vorgabe "Angular Material durchgehend"); wir stylen
+// nur Label-Typografie und Feld-Fläche. Die Label-Skalierung überlassen wir
+// Material, damit der Notch der Outline nicht aufreißt.
+.mat-mdc-form-field {
+  // Flache, solide Fläche statt transparenter Outline-Optik
+  .mat-mdc-text-field-wrapper {
+    background: var(--bg-3) !important;
+    border-radius: var(--radius) !important;
+  }
+
+  // Label als Mono-Uppercase-Mikro-Label (Referenz-Signatur)
+  .mdc-floating-label {
+    font-family: var(--font-mono) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
