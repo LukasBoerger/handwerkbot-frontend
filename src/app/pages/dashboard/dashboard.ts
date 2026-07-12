@@ -528,7 +528,7 @@ export class Dashboard implements OnInit {
     if (typeof window !== 'undefined' && window.innerWidth < 600) {
       return ['customer', 'datetime', 'status', 'actions'];
     }
-    return ['customer', 'service', 'datetime', 'address', 'status', 'notes', 'actions'];
+    return ['customer', 'service', 'datetime', 'address', 'status', 'actions'];
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
