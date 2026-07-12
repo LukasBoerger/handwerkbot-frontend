@@ -1,7 +1,7 @@
 <div class="settings-container">
   <div class="settings-header">
     <div>
-      <h1>⚙️ Einstellungen</h1>
+      <h1>Einstellungen</h1>
       <p>Passe die Daten deines Betriebs an</p>
     </div>
     <a class="btn-outline" routerLink="/dashboard">← Dashboard</a>
@@ -72,35 +72,43 @@
       <!-- BETRIEBSDATEN -->
       <mat-card class="section-card">
         <mat-card-header>
-          <mat-card-title>🏢 Betriebsdaten</mat-card-title>
+          <mat-card-title>Betriebsdaten</mat-card-title>
           <mat-card-subtitle>Grundlegende Informationen zu deinem Betrieb <span class="required-note">· Pflichtfelder sind mit * markiert</span></mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Betriebsname</mat-label>
-              <input matInput formControlName="businessName" required>
-              <mat-error>Pflichtfeld</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Inhaber</mat-label>
-              <input matInput formControlName="businessOwner" required>
-              <mat-error>Pflichtfeld</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Telefon</mat-label>
-              <input matInput formControlName="businessPhone" required>
-              <mat-error>Pflichtfeld</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>E-Mail</mat-label>
-              <input matInput formControlName="businessEmail" type="email" required>
-              @if (form.get('businessEmail')?.hasError('required')) {
-                <mat-error>Pflichtfeld</mat-error>
-              } @else {
-                <mat-error>Gültige E-Mail eingeben</mat-error>
+            <div class="field">
+              <label class="field-label" for="f-businessName">Betriebsname *</label>
+              <input id="f-businessName" class="field-input" formControlName="businessName" required>
+              @if (form.get('businessName')?.invalid && form.get('businessName')?.touched) {
+                <span class="field-error">Pflichtfeld</span>
               }
-            </mat-form-field>
+            </div>
+            <div class="field">
+              <label class="field-label" for="f-businessOwner">Inhaber *</label>
+              <input id="f-businessOwner" class="field-input" formControlName="businessOwner" required>
+              @if (form.get('businessOwner')?.invalid && form.get('businessOwner')?.touched) {
+                <span class="field-error">Pflichtfeld</span>
+              }
+            </div>
+            <div class="field">
+              <label class="field-label" for="f-businessPhone">Telefon *</label>
+              <input id="f-businessPhone" class="field-input" formControlName="businessPhone" required>
+              @if (form.get('businessPhone')?.invalid && form.get('businessPhone')?.touched) {
+                <span class="field-error">Pflichtfeld</span>
+              }
+            </div>
+            <div class="field">
+              <label class="field-label" for="f-businessEmail">E-Mail *</label>
+              <input id="f-businessEmail" class="field-input" type="email" formControlName="businessEmail" required>
+              @if (form.get('businessEmail')?.touched && form.get('businessEmail')?.invalid) {
+                @if (form.get('businessEmail')?.hasError('required')) {
+                  <span class="field-error">Pflichtfeld</span>
+                } @else {
+                  <span class="field-error">Gültige E-Mail eingeben</span>
+                }
+              }
+            </div>
             <div class="full-width services-section">
               <span class="services-label">Leistungen auswählen *</span>
               <app-service-selector
@@ -118,43 +126,41 @@
       <!-- BOT-EINSTELLUNGEN -->
       <mat-card class="section-card">
         <mat-card-header>
-          <mat-card-title>🤖 Bot-Einstellungen</mat-card-title>
+          <mat-card-title>Bot-Einstellungen</mat-card-title>
           <mat-card-subtitle>So verhält sich dein KI-Assistent</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Bot-Name</mat-label>
-              <input matInput formControlName="botName" placeholder="z.B. KommuvoBot" required>
+            <div class="field">
+              <label class="field-label" for="f-botName">Bot-Name *</label>
+              <input id="f-botName" class="field-input" formControlName="botName" placeholder="z.B. KommuvoBot" required>
               @if (form.get('botName')?.invalid && form.get('botName')?.touched) {
-                <mat-error>Pflichtfeld</mat-error>
+                <span class="field-error">Pflichtfeld</span>
               } @else {
-                <mat-hint>So stellt sich der Bot vor</mat-hint>
+                <span class="field-hint">So stellt sich der Bot vor</span>
               }
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Max. Vorlaufzeit (Tage)</mat-label>
-              <input matInput formControlName="maxDaysAhead" type="number" min="1" max="365" required>
+            </div>
+            <div class="field">
+              <label class="field-label" for="f-maxDaysAhead">Max. Vorlaufzeit (Tage) *</label>
+              <input id="f-maxDaysAhead" class="field-input" type="number" min="1" max="365" formControlName="maxDaysAhead" required>
               @if (form.get('maxDaysAhead')?.invalid && form.get('maxDaysAhead')?.touched) {
-                <mat-error>Wert zwischen 1 und 365 eingeben</mat-error>
+                <span class="field-error">Wert zwischen 1 und 365 eingeben</span>
               } @else {
-                <mat-hint>Wie weit im Voraus kann gebucht werden?</mat-hint>
+                <span class="field-hint">Wie weit im Voraus kann gebucht werden?</span>
               }
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Willkommensnachricht</mat-label>
-              <textarea matInput formControlName="welcomeMessage" rows="3"
-                        placeholder="z.B. Hallo! Wie kann ich Ihnen helfen?">
-              </textarea>
-              <mat-hint>Wird beim ersten Kontakt gesendet (leer = Standard)</mat-hint>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Nachricht außerhalb der Öffnungszeiten</mat-label>
-              <textarea matInput formControlName="outOfHoursMsg" rows="3"
-                        placeholder="z.B. Wir sind gerade nicht erreichbar...">
-              </textarea>
-              <mat-hint>Wird gesendet wenn ein Termin außerhalb der Zeiten gewünscht wird</mat-hint>
-            </mat-form-field>
+            </div>
+            <div class="field full-width">
+              <label class="field-label" for="f-welcomeMessage">Willkommensnachricht</label>
+              <textarea id="f-welcomeMessage" class="field-input field-input--area" formControlName="welcomeMessage" rows="3"
+                        placeholder="z.B. Hallo! Wie kann ich Ihnen helfen?"></textarea>
+              <span class="field-hint">Wird beim ersten Kontakt gesendet (leer = Standard)</span>
+            </div>
+            <div class="field full-width">
+              <label class="field-label" for="f-outOfHoursMsg">Nachricht außerhalb der Öffnungszeiten</label>
+              <textarea id="f-outOfHoursMsg" class="field-input field-input--area" formControlName="outOfHoursMsg" rows="3"
+                        placeholder="z.B. Wir sind gerade nicht erreichbar..."></textarea>
+              <span class="field-hint">Wird gesendet wenn ein Termin außerhalb der Zeiten gewünscht wird</span>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
