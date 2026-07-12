@@ -151,7 +151,7 @@
     <!-- Nächste Termine (Kurzliste) -->
     <mat-card class="upcoming-card">
       <mat-card-header>
-        <mat-card-title>🗓 Nächste Termine</mat-card-title>
+        <mat-card-title>Nächste Termine</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         @if (loading) {
@@ -174,11 +174,11 @@
                   <span class="up-meta">{{ apt.service }}&nbsp;·&nbsp;{{ apt.datetime | date:'HH:mm' }}</span>
                 </div>
                 <span class="status-badge" [class]="'status-' + apt.status">
-                  {{ apt.status === 'confirmed'   ? '✓'
-                   : apt.status === 'pending'     ? '⏳'
-                   : apt.status === 'rescheduled' ? '↺'
-                   : apt.status === 'completed'   ? '✔'
-                   : apt.status === 'cancelled'   ? '✕'
+                  {{ apt.status === 'confirmed'   ? 'Bestätigt'
+                   : apt.status === 'pending'     ? 'Ausstehend'
+                   : apt.status === 'rescheduled' ? 'Umgebucht'
+                   : apt.status === 'completed'   ? 'Abgeschlossen'
+                   : apt.status === 'cancelled'   ? 'Abgesagt'
                    : apt.status }}
                 </span>
               </div>
