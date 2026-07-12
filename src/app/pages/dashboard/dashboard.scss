@@ -932,3 +932,22 @@
 
   &:hover { opacity: 0.7; text-decoration: underline; }
 }
+
+// ── Phase C: Stat-Cards auf Referenz-Layout ─────────────────────────────────────
+// Referenz: Mono-Uppercase-Label oben, große Zahl darunter – ohne Emoji-Icon
+// und ohne farbigen Bodenbalken. Wir blenden diese Elemente aus und ordnen das
+// Label per Flex-order über den Wert (rein visuell, Template unverändert).
+.stat-card {
+  .stat-icon,
+  .stat-bar { display: none; }
+
+  .stat-label {
+    order: -1;
+    margin: 0 0 8px;
+    font-size: 11px;
+  }
+
+  .stat-value { font-size: 38px; }
+
+  .stat-trend { margin-top: 8px; }
+}
