@@ -10,7 +10,26 @@
   --green:     #25D366;
   --green-dim: #25D36622;
   --danger:    #ff4d4d;
-  --radius:    12px;
+
+  /* Sekundär-Akzent (orange) – bislang nur Fallback in service-selector */
+  --primary:     #f5a623;
+  --chip-orange: #f5a623;
+
+  /* Semantische Status-Farben (Referenz-Screenshots) – in Phase B angewandt */
+  --status-confirmed:     #4ade80; /* BESTÄTIGT     → grün */
+  --status-confirmed-dim: rgba(34, 197, 94, 0.15);
+  --status-pending:       #fbbf24; /* AUSSTEHEND    → amber */
+  --status-pending-dim:   rgba(245, 158, 11, 0.15);
+  --status-completed:     #9ca3af; /* ABGESCHLOSSEN → grau */
+  --status-completed-dim: rgba(156, 163, 175, 0.15);
+  --status-cancelled:     #f87171; /* ABGESAGT      → rot */
+  --status-cancelled-dim: rgba(239, 68, 68, 0.15);
+
+  /* Typografie – Mono für Mikro-Labels (Phase B) */
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+
+  --radius:    14px;
+  --radius-sm: 8px;
   --radius-lg: 20px;
 }
 
