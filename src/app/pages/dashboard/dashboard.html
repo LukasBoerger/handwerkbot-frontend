@@ -87,68 +87,7 @@
   <!-- MAIN GRID: Kalender + Nächste Termine -->
   <div class="main-grid">
 
-    <!-- Interaktiver Kalender -->
-    <mat-card class="calendar-card">
-      <mat-card-header>
-        <div class="calendar-nav">
-          <button class="cal-nav-btn" (click)="prevMonth()" aria-label="Vorheriger Monat">‹</button>
-          <mat-card-title>📆 {{ calendarMonthName }}</mat-card-title>
-          <button class="cal-nav-btn" (click)="nextMonth()" aria-label="Nächster Monat">›</button>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="calendar-dow">
-          @for (d of weekDays; track d) {
-            <span>{{ d }}</span>
-          }
-        </div>
-        <div class="calendar-grid">
-          @for (cell of calendarCells; track $index) {
-            <div class="cal-day"
-                 [class.cal-day--empty]="cell.value === null"
-                 [class.cal-day--today]="cell.isToday"
-                 [class.cal-day--has-apt]="cell.hasAppointment"
-                 [class.cal-day--selected]="isSelectedDay(cell)"
-                 (click)="onDayClick(cell)">
-              {{ cell.value !== null ? cell.value : '' }}
-              @if (cell.hasAppointment && !cell.isToday && !isSelectedDay(cell)) {
-                <span class="cal-dot"></span>
-              }
-            </div>
-          }
-        </div>
-
-        @if (selectedDate) {
-          <div class="day-detail-panel">
-            <div class="day-detail-header">
-              <span>{{ selectedDateLabel }}</span>
-              <button class="day-detail-close" (click)="selectedDate = null" aria-label="Schließen">✕</button>
-            </div>
-            @if (filteredByDate.length === 0) {
-              <p class="day-no-apts">Keine Termine an diesem Tag.</p>
-            } @else {
-              @for (apt of filteredByDate; track apt.id) {
-                <div class="day-detail-item">
-                  <span class="apt-time">{{ apt.datetime | date:'HH:mm' }}</span>
-                  <span class="apt-name">{{ apt.customerName }}</span>
-                  <span class="apt-service">{{ apt.service }}</span>
-                  <span class="status-badge" [class]="'status-' + apt.status">
-                    {{ apt.status === 'confirmed'   ? '✓ Bestätigt'
-                     : apt.status === 'pending'     ? '⏳ Ausstehend'
-                     : apt.status === 'rescheduled' ? '↺ Umgebucht'
-                     : apt.status === 'completed'   ? '✔ Abgeschlossen'
-                     : apt.status === 'cancelled'   ? '✕ Abgesagt'
-                     : apt.status }}
-                  </span>
-                </div>
-              }
-            }
-          </div>
-        }
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Nächste Termine (Kurzliste) -->
+    <!-- Nächste Termine (Kurzliste) – linke, breitere Spalte -->
     <mat-card class="upcoming-card">
       <mat-card-header>
         <mat-card-title>Nächste Termine</mat-card-title>
@@ -191,69 +130,100 @@
       </mat-card-actions>
     </mat-card>
 
-  </div>
+    <!-- Rechte Spalte: Kalender oben + Termine nach Leistung unten -->
+    <div class="side-column">
 
-  <!-- CHARTS ROW -->
-  <div class="charts-grid">
-
-    <mat-card class="chart-card">
-      <mat-card-header>
-        <mat-card-title>📊 Termine pro Woche</mat-card-title>
-        <mat-card-subtitle>Letzte 7 Wochen (nach Erstellungsdatum)</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="bar-chart">
-          @for (week of weeklyChartData; track week.label) {
-            <div class="bar-col" [class.bar-col--current]="week.isCurrent">
-              <span class="bar-count">{{ week.count }}</span>
-              <div class="bar-track">
-                <div class="bar-fill" [style.height.%]="week.heightPercent"></div>
+      <!-- Interaktiver Kalender -->
+      <mat-card class="calendar-card">
+        <mat-card-header>
+          <div class="calendar-nav">
+            <button class="cal-nav-btn" (click)="prevMonth()" aria-label="Vorheriger Monat">‹</button>
+            <mat-card-title>{{ calendarMonthName }}</mat-card-title>
+            <button class="cal-nav-btn" (click)="nextMonth()" aria-label="Nächster Monat">›</button>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="calendar-dow">
+            @for (d of weekDays; track d) {
+              <span>{{ d }}</span>
+            }
+          </div>
+          <div class="calendar-grid">
+            @for (cell of calendarCells; track $index) {
+              <div class="cal-day"
+                   [class.cal-day--empty]="cell.value === null"
+                   [class.cal-day--today]="cell.isToday"
+                   [class.cal-day--has-apt]="cell.hasAppointment"
+                   [class.cal-day--selected]="isSelectedDay(cell)"
+                   (click)="onDayClick(cell)">
+                {{ cell.value !== null ? cell.value : '' }}
+                @if (cell.hasAppointment && !cell.isToday && !isSelectedDay(cell)) {
+                  <span class="cal-dot"></span>
+                }
               </div>
-              <span class="bar-label">{{ week.label }}</span>
+            }
+          </div>
+
+          @if (selectedDate) {
+            <div class="day-detail-panel">
+              <div class="day-detail-header">
+                <span>{{ selectedDateLabel }}</span>
+                <button class="day-detail-close" (click)="selectedDate = null" aria-label="Schließen">✕</button>
+              </div>
+              @if (filteredByDate.length === 0) {
+                <p class="day-no-apts">Keine Termine an diesem Tag.</p>
+              } @else {
+                @for (apt of filteredByDate; track apt.id) {
+                  <div class="day-detail-item">
+                    <span class="apt-time">{{ apt.datetime | date:'HH:mm' }}</span>
+                    <span class="apt-name">{{ apt.customerName }}</span>
+                    <span class="apt-service">{{ apt.service }}</span>
+                    <span class="status-badge" [class]="'status-' + apt.status">
+                      {{ apt.status === 'confirmed'   ? 'Bestätigt'
+                       : apt.status === 'pending'     ? 'Ausstehend'
+                       : apt.status === 'rescheduled' ? 'Umgebucht'
+                       : apt.status === 'completed'   ? 'Abgeschlossen'
+                       : apt.status === 'cancelled'   ? 'Abgesagt'
+                       : apt.status }}
+                    </span>
+                  </div>
+                }
+              }
             </div>
           }
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
 
-    <mat-card class="donut-card">
-      <mat-card-header>
-        <mat-card-title>🍩 Termine nach Leistung</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        @if (donutTotal > 0) {
-          <div class="donut-wrapper">
-            <svg viewBox="0 0 100 100" class="donut-svg">
-              <circle r="40" cx="50" cy="50" fill="none" stroke-width="12"
-                      stroke="rgba(255,255,255,0.06)"/>
+      <!-- Termine nach Leistung (horizontale Balken) -->
+      <mat-card class="leistung-card">
+        <mat-card-header>
+          <mat-card-title>Termine nach Leistung</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (donutTotal > 0) {
+            <div class="leistung-list">
               @for (seg of donutSegments; track seg.service) {
-                <circle r="40" cx="50" cy="50" fill="none" stroke-width="12"
-                        [attr.stroke]="seg.color"
-                        [attr.stroke-dasharray]="seg.dashArray"
-                        stroke-dashoffset="0"
-                        [attr.transform]="seg.transform"/>
-              }
-              <text x="50" y="46" text-anchor="middle" class="donut-val">{{ donutTotal }}</text>
-              <text x="50" y="60" text-anchor="middle" class="donut-lbl">Termine</text>
-            </svg>
-            <div class="donut-legend">
-              @for (seg of donutSegments; track seg.service) {
-                <div class="donut-legend-item">
-                  <span class="legend-dot" [style.background]="seg.color"></span>
-                  <span class="legend-name">{{ seg.service }}</span>
-                  <span class="legend-pct">{{ seg.percent }}%</span>
+                <div class="leistung-row">
+                  <div class="leistung-head">
+                    <span class="leistung-name">{{ seg.service }}</span>
+                    <span class="leistung-count">{{ seg.count }}</span>
+                  </div>
+                  <div class="leistung-track">
+                    <div class="leistung-fill" [style.width.%]="seg.percent"></div>
+                  </div>
                 </div>
               }
             </div>
-          </div>
-        } @else {
-          <div class="empty-state empty-state--padded">
-            <div class="empty-icon">📭</div>
-            <p>Keine Daten</p>
-          </div>
-        }
-      </mat-card-content>
-    </mat-card>
+          } @else {
+            <div class="empty-state empty-state--padded">
+              <div class="empty-icon">📭</div>
+              <p>Keine Daten</p>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>
 
   </div>
 

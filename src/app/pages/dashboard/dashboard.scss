@@ -317,12 +317,19 @@
 
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   gap: 16px;
   margin-bottom: 20px;
   align-items: start;
 
   @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+// Rechte Spalte: Kalender + Leistungs-Balken gestapelt
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 // ── Kalender ──────────────────────────────────────────────────────────────────
@@ -994,4 +1001,70 @@
   .stat-value { font-size: 38px; }
 
   .stat-trend { margin-top: 8px; }
+}
+
+// ── Termine nach Leistung (horizontale Balken, ersetzt Donut/Wochen-Chart) ──────
+.leistung-card {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+
+  mat-card-header { padding: 20px 20px 0 !important; margin-bottom: 12px; }
+
+  mat-card-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+  }
+
+  mat-card-content { padding: 4px 20px 20px !important; }
+}
+
+.leistung-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leistung-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.leistung-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.leistung-name {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leistung-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.leistung-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.leistung-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.4s ease;
 }
