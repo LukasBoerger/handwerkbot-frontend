@@ -1,5 +1,4 @@
 describe('Onboarding Flow', () => {
-
   beforeEach(() => {
     // Auth-Token setzen, damit der authGuard /setup rendert
     // (gleiches Muster wie der bestehende "Betriebsname"-Test).
@@ -39,7 +38,7 @@ describe('Onboarding Flow', () => {
 
   it('sollte Betriebsname vorausgefüllt haben', () => {
     // Setup: localStorage mit tenantId und token setzen
-    cy.window().then(win => {
+    cy.window().then((win) => {
       win.localStorage.setItem('token', 'test-token');
       win.localStorage.setItem('tenantId', '1');
     });
@@ -50,12 +49,11 @@ describe('Onboarding Flow', () => {
         businessName: 'Elektro Test GmbH',
         businessOwner: 'Max Mustermann',
         businessEmail: 'test@test.de',
-        botName: 'KommuvoBot'
-      }
+        botName: 'KommuvoBot',
+      },
     });
     cy.visit('/setup');
-    cy.get('input[formControlName="businessName"]')
-      .should('have.value', 'Elektro Test GmbH');
+    cy.get('input[formControlName="businessName"]').should('have.value', 'Elektro Test GmbH');
   });
 
   it('sollte Fehlermeldung zeigen wenn keine Leistung gewählt', () => {
@@ -68,5 +66,4 @@ describe('Onboarding Flow', () => {
     cy.contains('button', 'Weiter').click();
     cy.contains('mindestens eine Leistung').should('be.visible');
   });
-
 });
