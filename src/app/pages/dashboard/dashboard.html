@@ -55,51 +55,30 @@
   <!-- STATS -->
   <div class="stats-grid">
 
-    <mat-card class="stat-card stat-card--accent stat-card--clickable" (click)="goToAppointments()">
+    <mat-card class="stat-card stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-icon">📅</div>
           <div class="stat-value" data-cy="stat-total">{{ totalCount }}</div>
           <div class="stat-label">Termine gesamt</div>
-          <div class="stat-trend">{{ trendTotal }}</div>
         </div>
-        <div class="stat-bar"></div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card--orange">
+    <mat-card class="stat-card stat-card--accent stat-card--clickable" (click)="goToAppointments('pending')">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-icon">🕐</div>
-          <div class="stat-value" data-cy="stat-today">{{ todayCount }}</div>
-          <div class="stat-label">Heute gebucht</div>
-          <div class="stat-trend">{{ trendToday }}</div>
+          <div class="stat-value" data-cy="stat-pending">{{ pendingCount }}</div>
+          <div class="stat-label">Ausstehend</div>
         </div>
-        <div class="stat-bar"></div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card--green stat-card--clickable" (click)="goToAppointments('confirmed')">
+    <mat-card class="stat-card stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-icon">✅</div>
-          <div class="stat-value" data-cy="stat-upcoming">{{ upcomingCount }}</div>
-          <div class="stat-label">Offen / Bestätigt</div>
-          <div class="stat-trend">{{ trendUpcoming }}</div>
-        </div>
-        <div class="stat-bar"></div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="stat-card stat-card--blue stat-card--clickable" (click)="goToAppointments()">
-      <mat-card-content>
-        <div class="stat-body">
-          <div class="stat-icon">📆</div>
           <div class="stat-value" data-cy="stat-week">{{ thisWeekCount }}</div>
           <div class="stat-label">Diese Woche</div>
-          <div class="stat-trend">{{ trendThisWeek }}</div>
         </div>
-        <div class="stat-bar"></div>
       </mat-card-content>
     </mat-card>
 

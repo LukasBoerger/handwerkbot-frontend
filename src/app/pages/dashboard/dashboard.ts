@@ -248,6 +248,11 @@ export class Dashboard implements OnInit {
     }).length;
   }
 
+  // Referenz-Stat-Card "Ausstehend": Anzahl offener (pending) Termine
+  get pendingCount() {
+    return this.appointments.filter((a) => a.status === 'pending').length;
+  }
+
   // ── Trend texts ────────────────────────────────────────────────────────────
 
   get upcomingNext(): Appointment[] {
