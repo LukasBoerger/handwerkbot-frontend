@@ -407,7 +407,7 @@
                             [attr.data-cy]="'btn-complete-' + a.id"
                             [disabled]="updatingId === a.id"
                             (click)="updateStatus(a, 'completed')"
-                            title="Als abgeschlossen markieren" aria-label="Abschließen">✔</button>
+                            title="Als abgeschlossen markieren" aria-label="Abschließen">Abschließen</button>
                   }
                   <!-- Studienphase: Umbuchen-Button und der nur bei 'rescheduled' sichtbare
                        Bestätigen-Button entfernt – Revert nach Studie. Status-Badge bleibt. -->
@@ -416,14 +416,14 @@
                             [attr.data-cy]="'btn-cancel-' + a.id"
                             [disabled]="updatingId === a.id"
                             (click)="updateStatus(a, 'cancelled')"
-                            title="Absagen" aria-label="Absagen">✕</button>
+                            title="Absagen" aria-label="Absagen">Absagen</button>
                   }
                   @if (a.status === 'cancelled') {
                     <button class="action-btn action-btn--restore"
                             [attr.data-cy]="'btn-restore-' + a.id"
                             [disabled]="updatingId === a.id"
                             (click)="updateStatus(a, 'confirmed')"
-                            title="Wiederherstellen" aria-label="Wiederherstellen">↩</button>
+                            title="Wiederherstellen" aria-label="Wiederherstellen">Wiederherstellen</button>
                   }
                 </div>
               </td>
