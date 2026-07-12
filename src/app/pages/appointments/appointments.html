@@ -110,8 +110,8 @@
             </ng-container>
 
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef></th>
-              <td mat-cell *matCellDef="let a">
+              <th mat-header-cell *matHeaderCellDef class="col-actions"></th>
+              <td mat-cell *matCellDef="let a" class="col-actions">
                 <div class="action-menu">
                   @if (a.status === 'confirmed' || a.status === 'pending') {
                     <button class="action-btn action-btn--complete"
