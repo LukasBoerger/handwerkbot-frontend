@@ -16,7 +16,7 @@
       @if (!isDemo) {
         <button class="btn-primary" (click)="openChat()">Bot testen</button>
       }
-      <button class="btn-outline" (click)="loadAppointments()" title="Aktualisieren">Aktualisieren</button>
+      <button class="btn-outline" [disabled]="loading" (click)="loadAppointments()" title="Aktualisieren">Aktualisieren</button>
       @if (!isDemo) {
         <button class="btn-outline" (click)="copyPublicLink()">Link</button>
       }
