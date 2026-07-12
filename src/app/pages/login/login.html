@@ -75,10 +75,12 @@
         }
       </button>
 
-      <div class="demo-hint">
-        Oder teste ohne Registrierung:
-        <button type="button" data-cy="btn-demo" (click)="fillDemo()">Demo ausprobieren →</button>
-      </div>
+      @if (!isProd) {
+        <div class="demo-hint">
+          Oder teste ohne Registrierung:
+          <button type="button" data-cy="btn-demo" (click)="fillDemo()">Demo ausprobieren →</button>
+        </div>
+      }
     </form>
 
     <hr class="divider" aria-hidden="true">

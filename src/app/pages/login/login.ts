@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/auth.service';
 import { focusFirstInvalid } from '../../shared/form-utils';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,8 @@ export class Login {
   loading = false;
   error = '';
   hidePassword = true;
+  // Demo-Button nur außerhalb der Produktion zeigen (Studienbetrieb: kein Demo-Login).
+  readonly isProd = environment.production;
 
   private host = inject(ElementRef<HTMLElement>);
 
