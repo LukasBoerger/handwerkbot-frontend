@@ -27,6 +27,7 @@ export class AppointmentsPage implements OnInit {
   appointments: Appointment[] = [];
   filtered: Appointment[] = [];
   loading = false;
+  loadError = false;
   statusFilter: 'all' | 'confirmed' | 'pending' | 'rescheduled' | 'completed' | 'cancelled' = 'all';
   displayedColumns = this.getColumns();
   updatingId: string | null = null;
@@ -42,6 +43,7 @@ export class AppointmentsPage implements OnInit {
 
   loadAppointments() {
     this.loading = true;
+    this.loadError = false;
     this.appointmentService.getMyAppointments().subscribe({
       next: (data) => {
         this.appointments = Array.isArray(data) ? data : [];
@@ -50,8 +52,11 @@ export class AppointmentsPage implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
+        // Ladefehler vom echten Leerzustand unterscheiden: Flag + sichtbare Meldung.
         this.appointments = [];
         this.loading = false;
+        this.loadError = true;
+        this.snackBar.open('❌ Termine konnten nicht geladen werden', 'OK', { duration: 4000 });
         this.cdr.detectChanges();
       },
     });
