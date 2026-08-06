@@ -7,9 +7,9 @@ import { Tenant } from '../models/tenant.model';
 
 /**
  * Liefert das reine UI-Flag `studyMode` aus der bestehenden Tenant-Status-Response.
- * Wird u.a. von der Navbar genutzt, die selbst keinen Tenant lädt. Ein Fetch pro
- * App-Sitzung (shareReplay), damit die Navbar den Wert ohne eigenen Request-Spam
- * erhält. Fehlt das Feld oder scheitert der Request, gilt Normalmodus (false).
+ * Wird u.a. vom Setup-Redirect-Guard genutzt, der selbst keinen Tenant lädt. Ein Fetch
+ * pro App-Sitzung (shareReplay), damit Aufrufer den Wert ohne eigenen Request-Spam
+ * erhalten. Fehlt das Feld oder scheitert der Request, gilt Normalmodus (false).
  */
 @Injectable({ providedIn: 'root' })
 export class TenantStatusService {

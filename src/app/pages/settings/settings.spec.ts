@@ -110,7 +110,8 @@ describe('Settings', () => {
     it('setzt loading auf false bei Fehler', () => {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush(null, { status: 500, statusText: 'Error' });
-      http.expectOne((r) => r.url.includes('/api/billing/status')).flush({});
+      // Bei fehlgeschlagenem Tenant-Load ist studyMode unbekannt -> kein Billing-Request.
+      http.expectNone((r) => r.url.includes('/api/billing/status'));
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
 
       expect(component.loading).toBe(false);
@@ -295,9 +296,14 @@ describe('Settings', () => {
     function flushInitWithStudyMode(studyMode: boolean) {
       fixture.detectChanges();
       http.expectOne(`${BASE}/tenant-1`).flush({ studyMode });
-      http
-        .expectOne((r) => r.url.includes('/api/billing/status'))
-        .flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
+      if (studyMode) {
+        // Study-Mode lädt bewusst KEINEN Abo-Status.
+        http.expectNone((r) => r.url.includes('/api/billing/status'));
+      } else {
+        http
+          .expectOne((r) => r.url.includes('/api/billing/status'))
+          .flush({ subscriptionStatus: 'active', stripePriceId: 'price_test' });
+      }
       http.expectOne((r) => r.url.includes('/auth/google/status')).flush({ connected: false });
       fixture.detectChanges();
     }

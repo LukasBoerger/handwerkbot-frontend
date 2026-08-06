@@ -4,6 +4,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
 import { siteLockGuard } from './guards/site-lock.guard';
+import { studyModeRedirectGuard } from './guards/study-mode-redirect.guard';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { Impressum } from './pages/impressum/impressum';
@@ -41,7 +42,7 @@ export const routes: Routes = [
   {
     path: 'setup',
     loadComponent: () => import('./pages/setup-wizard/setup-wizard').then((m) => m.SetupWizard),
-    canActivate: [siteLockGuard, authGuard],
+    canActivate: [siteLockGuard, authGuard, studyModeRedirectGuard],
   },
   {
     path: 'chat',

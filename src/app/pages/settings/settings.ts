@@ -146,9 +146,11 @@ export class Settings implements OnInit {
   }
 
   ngOnInit() {
+    // loadBillingStatus() wird bewusst NICHT hier aufgerufen: der Study-Mode ist erst
+    // nach dem Tenant-Load bekannt. Der Abo-Status wird daher in loadSettings() geladen,
+    // sobald studyMode feststeht (und nur im Normalmodus).
     this.loadSettings();
     this.loadGoogleStatus();
-    this.loadBillingStatus();
 
     // Nach OAuth-Redirect Feedback anzeigen
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -181,6 +183,11 @@ export class Settings implements OnInit {
     this.http.get<Tenant>(`${this.apiUrl}/${tenantId}`, { headers: this.getHeaders() }).subscribe({
       next: (tenant) => {
         this.studyMode = tenant.studyMode ?? false;
+        // Abo-Status nur im Normalmodus laden – im Study-Mode ist die Billing-Karte
+        // ausgeblendet, der Request (und seine Fehler-Snackbar) entfällt komplett.
+        if (!this.studyMode) {
+          this.loadBillingStatus();
+        }
         this.form.patchValue(tenant);
         this.selectedServices = (tenant.businessServices || '')
           .split(',')

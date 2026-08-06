@@ -5,7 +5,6 @@ import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TestChat } from './test-chat';
 import { AuthService } from '../../services/auth.service';
-import { environment } from '../../../environments/environment';
 
 describe('TestChat', () => {
   let component: TestChat;
@@ -43,10 +42,17 @@ describe('TestChat', () => {
   // ngOnInit lädt die Begrüßung über /api/tenants/{id}
   function init() {
     fixture.detectChanges();
-    http.expectOne((r) => r.url.includes('/api/tenants/tenant-1')).flush({ welcomeMessage: 'Hallo' });
+    http
+      .expectOne((r) => r.url.includes('/api/tenants/tenant-1'))
+      .flush({ welcomeMessage: 'Hallo' });
   }
 
-  function sendAndRespond(body: { reply?: string; appointmentSaved?: boolean; blocked?: boolean; reason?: string }) {
+  function sendAndRespond(body: {
+    reply?: string;
+    appointmentSaved?: boolean;
+    blocked?: boolean;
+    reason?: string;
+  }) {
     component.inputText = 'Ich hätte gern einen Termin';
     component.send();
     http.expectOne((r) => r.url.includes('/api/chat/simulate')).flush(body);
@@ -115,5 +121,26 @@ describe('TestChat', () => {
 
     const input = fixture.nativeElement.querySelector('[data-cy="chat-input"]');
     expect(input.disabled).toBe(false);
+  });
+
+  it('zeigt im Study-Mode einen neutralen Block-Hinweis ohne Abo-Bezug und ohne Pricing-Link', () => {
+    // Begrüßung mit studyMode=true laden (statt des Standard-init()).
+    fixture.detectChanges();
+    http
+      .expectOne((r) => r.url.includes('/api/tenants/tenant-1'))
+      .flush({ welcomeMessage: 'Hallo', studyMode: true });
+
+    sendAndRespond({ blocked: true, reason: 'trial_expired', appointmentSaved: false });
+
+    expect(component.studyMode).toBe(true);
+
+    const banner = fixture.nativeElement.querySelector('[data-cy="chat-blocked"]');
+    expect(banner).toBeTruthy();
+    // Neutrale Formulierung statt "Testzeitraum abgelaufen"/Abo-Text.
+    expect(banner.textContent).toContain('Studienleitung');
+    expect(banner.textContent).not.toContain('Testzeitraum');
+    expect(banner.textContent).not.toContain('Abonnement');
+    // Kein kommerzieller /pricing-Link im Study-Mode.
+    expect(banner.querySelector('a')).toBeNull();
   });
 });

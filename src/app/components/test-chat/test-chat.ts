@@ -68,6 +68,8 @@ export class TestChat implements OnInit {
   }
 
   get blockTitle(): string {
+    // Im Study-Mode kein Abo-Bezug – neutraler Hinweis.
+    if (this.studyMode) return 'Zugang nicht aktiv';
     switch (this.blockReason) {
       case 'trial_expired':
         return 'Testzeitraum abgelaufen';
@@ -79,6 +81,10 @@ export class TestChat implements OnInit {
   }
 
   get blockMessage(): string {
+    // Im Study-Mode kein Abo-/Pricing-Bezug – Teilnehmende an die Studienleitung verweisen.
+    if (this.studyMode) {
+      return 'Der Zugang ist derzeit nicht aktiv. Bitte wende dich an die Studienleitung.';
+    }
     switch (this.blockReason) {
       case 'trial_expired':
         return 'Ihr Testzeitraum ist abgelaufen. Schließen Sie ein Abonnement ab, um den Bot weiter zu nutzen.';
