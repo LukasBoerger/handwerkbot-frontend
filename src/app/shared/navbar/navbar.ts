@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../services/auth.service';
 import { MatDividerModule } from '@angular/material/divider';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +24,9 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class Navbar {
   auth = inject(AuthService);
+  // Studienbetrieb: "Start" und "Kostenlos starten" für Gäste ausblenden (deployment-
+  // weites Flag aus environment, kein HTTP). Der Login-Link bleibt sichtbar.
+  readonly isStudyMode = environment.studyMode;
 
   menuOpen = false;
 
