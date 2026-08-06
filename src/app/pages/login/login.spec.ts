@@ -6,6 +6,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 import { Login } from './login';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 describe('Login', () => {
   let component: Login;
@@ -113,6 +114,38 @@ describe('Login', () => {
       vi.spyOn(router, 'navigate').mockResolvedValue(true);
       component.fillDemo();
       expect(loginSpy).toHaveBeenCalledWith('demo@kommuvo.de', 'demo1234');
+    });
+  });
+
+  describe('Studienbetrieb (environment.studyMode)', () => {
+    // isStudyMode wird im Konstruktor aus dem globalen environment gelesen -> Flag vor
+    // dem Erzeugen der Komponente setzen und danach zurücksetzen (kein Leaken in andere Specs).
+    const originalStudyMode = environment.studyMode;
+
+    afterEach(() => {
+      environment.studyMode = originalStudyMode;
+    });
+
+    function renderWith(studyMode: boolean): HTMLElement {
+      environment.studyMode = studyMode;
+      const freshFixture = TestBed.createComponent(Login);
+      freshFixture.detectChanges();
+      return freshFixture.nativeElement as HTMLElement;
+    }
+
+    it('studyMode=true blendet Register-Block, Demo-Button und "Passwort vergessen" aus', () => {
+      const el = renderWith(true);
+      expect(el.querySelector('[data-cy="btn-demo"]')).toBeNull();
+      expect(el.querySelector('.auth-footer')).toBeNull();
+      expect(el.querySelector('.divider')).toBeNull();
+      expect(el.querySelector('.forgot-link')).toBeNull();
+    });
+
+    it('studyMode=false zeigt Register-Block, Demo-Button und "Passwort vergessen"', () => {
+      const el = renderWith(false);
+      expect(el.querySelector('[data-cy="btn-demo"]')).toBeTruthy();
+      expect(el.querySelector('.auth-footer')).toBeTruthy();
+      expect(el.querySelector('.forgot-link')).toBeTruthy();
     });
   });
 });

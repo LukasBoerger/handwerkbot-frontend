@@ -20,6 +20,8 @@ export class Login {
   hidePassword = true;
   // Demo-Button nur außerhalb der Produktion zeigen (Studienbetrieb: kein Demo-Login).
   readonly isProd = environment.production;
+  // Studienbetrieb: Registrierung, Demo-Login und Passwort-Reset in der UI ausblenden.
+  readonly isStudyMode = environment.studyMode;
 
   private host = inject(ElementRef<HTMLElement>);
 

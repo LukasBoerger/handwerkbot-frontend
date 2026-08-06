@@ -40,7 +40,7 @@ export class SiteLockPage {
 
     if (password === environment.sitePassword) {
       sessionStorage.setItem('site_unlocked', 'true');
-      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
       this.router.navigateByUrl(returnUrl);
     } else {
       this.error = 'Falsches Passwort';

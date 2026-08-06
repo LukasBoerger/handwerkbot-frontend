@@ -3,7 +3,11 @@
     <div class="auth-brand">Kommuvo</div>
     <div class="auth-brand-line"></div>
     <h1 class="auth-title">Willkommen zurück</h1>
-    <p class="auth-subtitle">Melde dich in deinem Konto an</p>
+    @if (isStudyMode) {
+      <p class="auth-subtitle">Melde dich mit den zugesendeten Zugangsdaten an.</p>
+    } @else {
+      <p class="auth-subtitle">Melde dich in deinem Konto an</p>
+    }
 
     @if (error) {
       <div class="error-banner" role="alert">
@@ -58,9 +62,11 @@
         }
       </div>
 
-      <p class="forgot-link">
-        <a routerLink="/forgot-password">Passwort vergessen?</a>
-      </p>
+      @if (!isStudyMode) {
+        <p class="forgot-link">
+          <a routerLink="/forgot-password">Passwort vergessen?</a>
+        </p>
+      }
 
       <button
         class="btn-primary"
@@ -75,7 +81,7 @@
         }
       </button>
 
-      @if (!isProd) {
+      @if (!isProd && !isStudyMode) {
         <div class="demo-hint">
           Oder teste ohne Registrierung:
           <button type="button" data-cy="btn-demo" (click)="fillDemo()">Demo ausprobieren →</button>
@@ -83,9 +89,11 @@
       }
     </form>
 
-    <hr class="divider" aria-hidden="true">
-    <p class="auth-footer">
-      Noch kein Konto? <a routerLink="/register">Jetzt registrieren</a>
-    </p>
+    @if (!isStudyMode) {
+      <hr class="divider" aria-hidden="true">
+      <p class="auth-footer">
+        Noch kein Konto? <a routerLink="/register">Jetzt registrieren</a>
+      </p>
+    }
   </div>
 </div>

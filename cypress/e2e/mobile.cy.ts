@@ -59,19 +59,25 @@ describe('Mobile-Ansicht', () => {
 
   // ── Öffentliche Seiten ───────────────────────────────────────────────────────
 
-  describe('Landing-Seite (/)', () => {
-    beforeEach(() => cy.visit('/'));
+  // Anonymer Aufruf von '/' wird auf die Login-Seite umgeleitet: '' -> redirectTo
+  // 'dashboard' -> authGuard -> '/login'. Es gibt keine Landing-Route mehr an '/'.
+  describe('Einstieg (/) leitet anonym auf /login', () => {
+    beforeEach(() => {
+      cy.clearLocalStorage();
+      cy.visit('/');
+    });
+
+    it('landet auf der Login-Seite', () => {
+      cy.url().should('include', '/login');
+    });
 
     it('lädt ohne horizontalen Überlauf', () => {
       checkNoHorizontalOverflow();
     });
 
-    it('zeigt Hero-Bereich vollständig', () => {
-      cy.get('h1, h2').first().should('be.visible');
-    });
-
-    it('zeigt CTA-Button', () => {
-      cy.get('.btn-hero').should('be.visible');
+    it('zeigt E-Mail- und Passwort-Feld', () => {
+      cy.get('[data-cy="input-email"]').should('be.visible');
+      cy.get('[data-cy="input-password"]').should('be.visible');
     });
   });
 

@@ -1,28 +1,27 @@
 import { Routes } from '@angular/router';
-import { Landing } from './pages/landing/landing';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
 import { siteLockGuard } from './guards/site-lock.guard';
 import { studyModeRedirectGuard } from './guards/study-mode-redirect.guard';
+import { studyInstanceGuard } from './guards/study-instance.guard';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { Impressum } from './pages/impressum/impressum';
 import { Datenschutz } from './pages/datenschutz/datenschutz';
 import { Pricing } from './pages/pricing/pricing';
 import { SiteLockPage } from './pages/site-lock/site-lock';
-import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
   { path: 'site-lock', component: SiteLockPage },
-  { path: '', component: Dashboard, canActivate: [siteLockGuard] },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: Login, canActivate: [siteLockGuard] },
-  { path: 'register', component: Register, canActivate: [siteLockGuard] },
-  { path: 'forgot-password', component: ForgotPassword, canActivate: [siteLockGuard] },
-  { path: 'reset-password', component: ResetPassword, canActivate: [siteLockGuard] },
+  { path: 'register', component: Register, canActivate: [siteLockGuard, studyInstanceGuard] },
+  { path: 'forgot-password', component: ForgotPassword, canActivate: [siteLockGuard, studyInstanceGuard] },
+  { path: 'reset-password', component: ResetPassword, canActivate: [siteLockGuard, studyInstanceGuard] },
   { path: 'impressum', component: Impressum, canActivate: [siteLockGuard] },
   { path: 'datenschutz', component: Datenschutz, canActivate: [siteLockGuard] },
-  { path: 'pricing', component: Pricing, canActivate: [siteLockGuard] },
+  { path: 'pricing', component: Pricing, canActivate: [siteLockGuard, studyInstanceGuard] },
   {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),

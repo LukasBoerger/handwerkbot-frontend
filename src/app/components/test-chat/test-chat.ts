@@ -87,11 +87,11 @@ export class TestChat implements OnInit {
     }
     switch (this.blockReason) {
       case 'trial_expired':
-        return 'Ihr Testzeitraum ist abgelaufen. Schließen Sie ein Abonnement ab, um den Bot weiter zu nutzen.';
+        return 'Dein Testzeitraum ist abgelaufen. Schließe ein Abonnement ab, um den Bot weiter zu nutzen.';
       case 'inactive':
-        return 'Ihr Abonnement ist nicht aktiv (gekündigt oder pausiert). Reaktivieren Sie es, um den Bot weiter zu nutzen.';
+        return 'Dein Abonnement ist nicht aktiv (gekündigt oder pausiert). Reaktiviere es, um den Bot weiter zu nutzen.';
       default:
-        return 'Ihr Zugang ist derzeit nicht aktiv. Bitte schließen Sie ein Abonnement ab, um fortzufahren.';
+        return 'Dein Zugang ist derzeit nicht aktiv. Bitte schließe ein Abonnement ab, um fortzufahren.';
     }
   }
 
