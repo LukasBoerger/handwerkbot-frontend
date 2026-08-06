@@ -8,7 +8,9 @@ Sentry.init({
   dsn: environment.sentryDsn,
   environment: environment.production ? 'production' : 'local',
   tracesSampleRate: 0.2,
-  enabled: environment.production,
+  // Nur aktivieren, wenn ein DSN tatsächlich gesetzt ist. Ohne diese Prüfung meldet
+  // Sentry in Produktion mit leerem/ungültigem DSN einen Startfehler in der Konsole.
+  enabled: environment.production && !!environment.sentryDsn,
 });
 
 bootstrapApplication(App, appConfig)
