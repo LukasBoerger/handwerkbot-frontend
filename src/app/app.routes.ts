@@ -17,8 +17,16 @@ export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: Login, canActivate: [siteLockGuard] },
   { path: 'register', component: Register, canActivate: [siteLockGuard, studyInstanceGuard] },
-  { path: 'forgot-password', component: ForgotPassword, canActivate: [siteLockGuard, studyInstanceGuard] },
-  { path: 'reset-password', component: ResetPassword, canActivate: [siteLockGuard, studyInstanceGuard] },
+  {
+    path: 'forgot-password',
+    component: ForgotPassword,
+    canActivate: [siteLockGuard, studyInstanceGuard],
+  },
+  {
+    path: 'reset-password',
+    component: ResetPassword,
+    canActivate: [siteLockGuard, studyInstanceGuard],
+  },
   { path: 'impressum', component: Impressum, canActivate: [siteLockGuard] },
   { path: 'datenschutz', component: Datenschutz, canActivate: [siteLockGuard] },
   { path: 'pricing', component: Pricing, canActivate: [siteLockGuard, studyInstanceGuard] },

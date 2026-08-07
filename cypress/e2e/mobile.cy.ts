@@ -94,7 +94,9 @@ describe('Mobile-Ansicht', () => {
     });
 
     it('Login-Button ist klickbar', () => {
-      cy.get('button[type="submit"], button').contains(/anmelden|login/i).should('be.visible');
+      cy.get('button[type="submit"], button')
+        .contains(/anmelden|login/i)
+        .should('be.visible');
     });
   });
 
@@ -128,7 +130,9 @@ describe('Mobile-Ansicht', () => {
     });
 
     it('Senden-Button ist sichtbar', () => {
-      cy.get('button[type="submit"], button').contains(/senden|link/i).should('be.visible');
+      cy.get('button[type="submit"], button')
+        .contains(/senden|link/i)
+        .should('be.visible');
     });
   });
 
@@ -257,13 +261,15 @@ describe('Mobile-Ansicht', () => {
     });
 
     it('zeigt ersten Wizard-Schritt', () => {
-      cy.get(
-        '[data-cy="input-setup-business-name"], input, mat-form-field, h1, h2'
-      ).first().should('be.visible');
+      cy.get('[data-cy="input-setup-business-name"], input, mat-form-field, h1, h2')
+        .first()
+        .should('be.visible');
     });
 
     it('Weiter-Button ist sichtbar', () => {
-      cy.get('[data-cy="btn-setup-next-step1"], button').contains(/weiter|next/i).should('be.visible');
+      cy.get('[data-cy="btn-setup-next-step1"], button')
+        .contains(/weiter|next/i)
+        .should('be.visible');
     });
   });
 
@@ -294,10 +300,12 @@ describe('Mobile-Ansicht', () => {
     });
 
     it('Eingabefeld ist sichtbar und nicht außerhalb des Viewports', () => {
-      cy.get('[data-cy="chat-input"]').should('be.visible').then(($el) => {
-        const rect = $el[0].getBoundingClientRect();
-        expect(rect.bottom).to.be.lte(VIEWPORT.height + 1);
-      });
+      cy.get('[data-cy="chat-input"]')
+        .should('be.visible')
+        .then(($el) => {
+          const rect = $el[0].getBoundingClientRect();
+          expect(rect.bottom).to.be.lte(VIEWPORT.height + 1);
+        });
     });
 
     it('Senden-Button ist sichtbar', () => {
