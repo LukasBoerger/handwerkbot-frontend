@@ -15,6 +15,8 @@ interface Message {
 interface SimulateResponse {
   reply: string;
   appointmentSaved?: boolean;
+  // "confirmed" (sofort gebucht) | "pending" (nur angefragt); nur bei appointmentSaved gesetzt.
+  appointmentStatus?: string;
   blocked?: boolean;
   reason?: string;
 }
@@ -129,7 +131,14 @@ export class TestChat implements OnInit {
           }
           this.pushBot(res.reply);
           if (res.appointmentSaved) {
-            this.snackBar.open('✅ Termin wurde gespeichert!', 'OK', { duration: 4000 });
+            // Anfrage-Modus (pending) vs. sofortige Buchung (confirmed): eigener Text,
+            // damit der Toast nicht von einer Buchung spricht, während der Bot die
+            // Nachricht als Anfrage bestätigt.
+            const savedMsg =
+              res.appointmentStatus === 'pending'
+                ? '📩 Terminanfrage wurde übermittelt!'
+                : '✅ Termin wurde gespeichert!';
+            this.snackBar.open(savedMsg, 'OK', { duration: 4000 });
           }
         },
         error: () => {

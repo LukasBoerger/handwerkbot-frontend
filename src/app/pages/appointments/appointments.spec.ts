@@ -92,4 +92,44 @@ describe('AppointmentsPage', () => {
       expect(appointmentSvc.updateStatus).toHaveBeenCalledWith('p1', 'confirmed');
     });
   });
+
+  // Studie: Abschließen führt an pending vorbei (kein Bestätigen, keine E-Mail).
+  describe('Abschließen-Button', () => {
+    function render(status: AppointmentStatus) {
+      component.appointments = [makeApt('a1', status)];
+      component.applyFilter();
+      fixture.detectChanges();
+    }
+
+    it('ist bei Status "confirmed" sichtbar', () => {
+      render('confirmed');
+      expect(fixture.nativeElement.querySelector('.action-btn--complete')).toBeTruthy();
+    });
+
+    it('ist bei Status "pending" nicht sichtbar', () => {
+      render('pending');
+      expect(fixture.nativeElement.querySelector('.action-btn--complete')).toBeNull();
+    });
+  });
+
+  // Interne Test-Chat-Kennung "simulate-…" wird nicht als Rufnummer angezeigt.
+  describe('Kunden-Rufnummer', () => {
+    function renderWithPhone(phone: string) {
+      component.appointments = [{ ...makeApt('p1', 'confirmed'), phoneNumber: phone }];
+      component.applyFilter();
+      fixture.detectChanges();
+    }
+
+    it('blendet die simulate-Kennung aus', () => {
+      renderWithPhone('simulate-11');
+      expect(fixture.nativeElement.querySelector('.customer-phone')).toBeNull();
+    });
+
+    it('zeigt echte Rufnummern', () => {
+      renderWithPhone('+49 170 1234567');
+      const el = fixture.nativeElement.querySelector('.customer-phone');
+      expect(el).toBeTruthy();
+      expect(el.textContent).toContain('+49 170 1234567');
+    });
+  });
 });

@@ -307,6 +307,46 @@ describe('Dashboard', () => {
     });
   });
 
+  // Studie: Abschließen nur bei confirmed (nicht bei pending).
+  describe('Abschließen-Button', () => {
+    function render(status: AppointmentStatus) {
+      component.appointments = [makeApt('a1', status)];
+      component.setFilter('all');
+      fixture.detectChanges();
+    }
+
+    it('ist bei Status "confirmed" sichtbar', () => {
+      render('confirmed');
+      expect(fixture.nativeElement.querySelector('[data-cy="btn-complete-a1"]')).toBeTruthy();
+    });
+
+    it('ist bei Status "pending" nicht sichtbar', () => {
+      render('pending');
+      expect(fixture.nativeElement.querySelector('[data-cy="btn-complete-a1"]')).toBeNull();
+    });
+  });
+
+  // Interne Test-Chat-Kennung "simulate-…" wird nicht als Rufnummer angezeigt.
+  describe('Kunden-Rufnummer', () => {
+    function renderWithPhone(phone: string) {
+      component.appointments = [{ ...makeApt('p1', 'confirmed'), phoneNumber: phone }];
+      component.setFilter('all');
+      fixture.detectChanges();
+    }
+
+    it('blendet die simulate-Kennung aus', () => {
+      renderWithPhone('simulate-11');
+      expect(fixture.nativeElement.querySelector('.customer-phone')).toBeNull();
+    });
+
+    it('zeigt echte Rufnummern', () => {
+      renderWithPhone('+49 170 1234567');
+      const el = fixture.nativeElement.querySelector('.customer-phone');
+      expect(el).toBeTruthy();
+      expect(el.textContent).toContain('+49 170 1234567');
+    });
+  });
+
   describe('loadAppointments', () => {
     it('setzt appointments auf [] und loading auf false bei Fehler', () => {
       appointmentSvc.getMyAppointments.mockReturnValue(throwError(() => new Error('Fehler')));

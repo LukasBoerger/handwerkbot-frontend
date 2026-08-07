@@ -289,6 +289,10 @@
     line-height: 1;
   }
 
+  // Lade-Platzhalter ("–" bzw. "Wird geladen …") gedämpft, damit er nach einem
+  // Reload nicht wie eine echte Kennzahl wirkt.
+  .stat-value--loading { opacity: 0.4; }
+
   .stat-label,
   .stat-trend {
     color: var(--text-muted);

@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestChat } from './test-chat';
 import { AuthService } from '../../services/auth.service';
 
@@ -50,6 +51,7 @@ describe('TestChat', () => {
   function sendAndRespond(body: {
     reply?: string;
     appointmentSaved?: boolean;
+    appointmentStatus?: string;
     blocked?: boolean;
     reason?: string;
   }) {
@@ -121,6 +123,25 @@ describe('TestChat', () => {
 
     const input = fixture.nativeElement.querySelector('[data-cy="chat-input"]');
     expect(input.disabled).toBe(false);
+  });
+
+  it('Toast bei sofortiger Buchung (confirmed) spricht von gespeichertem Termin', () => {
+    init();
+    const openSpy = vi.spyOn(fixture.debugElement.injector.get(MatSnackBar), 'open');
+    sendAndRespond({ reply: 'Gebucht.', appointmentSaved: true, appointmentStatus: 'confirmed' });
+
+    expect(openSpy).toHaveBeenCalledTimes(1);
+    expect(openSpy.mock.calls[0][0]).toContain('gespeichert');
+  });
+
+  it('Toast im Anfrage-Modus (pending) spricht von einer Anfrage, nicht von einer Buchung', () => {
+    init();
+    const openSpy = vi.spyOn(fixture.debugElement.injector.get(MatSnackBar), 'open');
+    sendAndRespond({ reply: 'Anfrage erhalten.', appointmentSaved: true, appointmentStatus: 'pending' });
+
+    expect(openSpy).toHaveBeenCalledTimes(1);
+    expect(openSpy.mock.calls[0][0]).toMatch(/anfrage/i);
+    expect(openSpy.mock.calls[0][0]).not.toContain('gespeichert');
   });
 
   it('zeigt im Study-Mode einen neutralen Block-Hinweis ohne Abo-Bezug und ohne Pricing-Link', () => {

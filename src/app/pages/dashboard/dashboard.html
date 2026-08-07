@@ -58,7 +58,7 @@
     <mat-card class="stat-card stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-value" data-cy="stat-total">{{ totalCount }}</div>
+          <div class="stat-value" data-cy="stat-total" [class.stat-value--loading]="loading">{{ loading ? '–' : totalCount }}</div>
           <div class="stat-label">Termine gesamt</div>
         </div>
       </mat-card-content>
@@ -67,7 +67,7 @@
     <mat-card class="stat-card stat-card--accent stat-card--clickable" (click)="goToAppointments('pending')">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-value" data-cy="stat-pending">{{ pendingCount }}</div>
+          <div class="stat-value" data-cy="stat-pending" [class.stat-value--loading]="loading">{{ loading ? '–' : pendingCount }}</div>
           <div class="stat-label">Ausstehend</div>
         </div>
       </mat-card-content>
@@ -76,7 +76,7 @@
     <mat-card class="stat-card stat-card--clickable" (click)="goToAppointments()">
       <mat-card-content>
         <div class="stat-body">
-          <div class="stat-value" data-cy="stat-week">{{ thisWeekCount }}</div>
+          <div class="stat-value" data-cy="stat-week" [class.stat-value--loading]="loading">{{ loading ? '–' : thisWeekCount }}</div>
           <div class="stat-label">Diese Woche</div>
         </div>
       </mat-card-content>
@@ -200,7 +200,13 @@
           <mat-card-title>Termine nach Leistung</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (donutTotal > 0) {
+          @if (loading) {
+            <!-- Ladezustand statt harter "Keine Daten"-Meldung, solange die Termine
+                 nach einem Reload noch geladen werden. -->
+            <div class="empty-state empty-state--padded">
+              <p class="stat-value--loading">Wird geladen …</p>
+            </div>
+          } @else if (donutTotal > 0) {
             <div class="leistung-list">
               @for (seg of donutSegments; track seg.service) {
                 <div class="leistung-row">
@@ -279,7 +285,9 @@
               <td mat-cell *matCellDef="let a">
                 <div class="customer-cell">
                   <span class="customer-name">{{ a.customerName }}</span>
-                  @if (a.phoneNumber) {
+                  <!-- 'simulate-…' ist eine interne Test-Chat-Kennung, keine echte
+                       Rufnummer -> nur anzeigen, echte Nummern weiterhin sichtbar. -->
+                  @if (a.phoneNumber && !a.phoneNumber.startsWith('simulate-')) {
                     <span class="customer-phone">{{ a.phoneNumber }}</span>
                   }
                   @if (a.customerEmail) {
@@ -327,7 +335,7 @@
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let a">
                 <div class="action-menu">
-                  @if (a.status === 'confirmed' || a.status === 'pending') {
+                  @if (a.status === 'confirmed') {
                     <button class="action-btn action-btn--complete"
                             [attr.data-cy]="'btn-complete-' + a.id"
                             [disabled]="updatingId === a.id"
@@ -337,7 +345,10 @@
                   <!-- Studienphase: Umbuchen-Button entfernt – Revert nach Studie. Status-Badge bleibt.
                        Bestätigen-Button ist für die Studie nur bei 'pending' aktiv (Schritt 5:
                        pending → confirmed, löst die Bestätigungs-E-Mail aus); die frühere
-                       'rescheduled'-Variante bleibt entfernt. -->
+                       'rescheduled'-Variante bleibt entfernt.
+                       Abschließen für die Studie nur bei 'confirmed': ein 'pending'-Termin würde
+                       durch direktes Abschließen den Bestätigen-Schritt und dessen Bestätigungs-
+                       E-Mail überspringen. Revert nach Studie. -->
                   @if (a.status === 'pending') {
                     <button class="action-btn action-btn--restore"
                             [attr.data-cy]="'btn-confirm-' + a.id"
