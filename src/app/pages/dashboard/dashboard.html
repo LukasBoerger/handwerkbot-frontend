@@ -334,8 +334,17 @@
                             (click)="updateStatus(a, 'completed')"
                             title="Als abgeschlossen markieren" aria-label="Abschließen">Abschließen</button>
                   }
-                  <!-- Studienphase: Umbuchen-Button und der nur bei 'rescheduled' sichtbare
-                       Bestätigen-Button entfernt – Revert nach Studie. Status-Badge bleibt. -->
+                  <!-- Studienphase: Umbuchen-Button entfernt – Revert nach Studie. Status-Badge bleibt.
+                       Bestätigen-Button ist für die Studie nur bei 'pending' aktiv (Schritt 5:
+                       pending → confirmed, löst die Bestätigungs-E-Mail aus); die frühere
+                       'rescheduled'-Variante bleibt entfernt. -->
+                  @if (a.status === 'pending') {
+                    <button class="action-btn action-btn--restore"
+                            [attr.data-cy]="'btn-confirm-' + a.id"
+                            [disabled]="updatingId === a.id"
+                            (click)="updateStatus(a, 'confirmed')"
+                            title="Bestätigen" aria-label="Bestätigen">Bestätigen</button>
+                  }
                   @if (a.status !== 'cancelled' && a.status !== 'completed') {
                     <button class="action-btn action-btn--cancel"
                             [attr.data-cy]="'btn-cancel-' + a.id"

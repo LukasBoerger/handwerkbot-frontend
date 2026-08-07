@@ -279,6 +279,34 @@ describe('Dashboard', () => {
     });
   });
 
+  // Studie: Bestätigen-Button (pending → confirmed), Schritt 5 der Probanden-Anleitung.
+  describe('Bestätigen-Button', () => {
+    function render(status: AppointmentStatus) {
+      component.appointments = [makeApt('p1', status)];
+      component.setFilter('all');
+      fixture.detectChanges();
+    }
+
+    it('ist bei Status "pending" sichtbar', () => {
+      render('pending');
+      expect(fixture.nativeElement.querySelector('[data-cy="btn-confirm-p1"]')).toBeTruthy();
+    });
+
+    it('ist bei Status "confirmed" nicht sichtbar', () => {
+      render('confirmed');
+      expect(fixture.nativeElement.querySelector('[data-cy="btn-confirm-p1"]')).toBeNull();
+    });
+
+    it('löst den Statuswechsel auf "confirmed" aus', () => {
+      render('pending');
+      const btn = fixture.nativeElement.querySelector(
+        '[data-cy="btn-confirm-p1"]',
+      ) as HTMLButtonElement;
+      btn.click();
+      expect(appointmentSvc.updateStatus).toHaveBeenCalledWith('p1', 'confirmed');
+    });
+  });
+
   describe('loadAppointments', () => {
     it('setzt appointments auf [] und loading auf false bei Fehler', () => {
       appointmentSvc.getMyAppointments.mockReturnValue(throwError(() => new Error('Fehler')));
