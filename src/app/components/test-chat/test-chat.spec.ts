@@ -137,7 +137,11 @@ describe('TestChat', () => {
   it('Toast im Anfrage-Modus (pending) spricht von einer Anfrage, nicht von einer Buchung', () => {
     init();
     const openSpy = vi.spyOn(fixture.debugElement.injector.get(MatSnackBar), 'open');
-    sendAndRespond({ reply: 'Anfrage erhalten.', appointmentSaved: true, appointmentStatus: 'pending' });
+    sendAndRespond({
+      reply: 'Anfrage erhalten.',
+      appointmentSaved: true,
+      appointmentStatus: 'pending',
+    });
 
     expect(openSpy).toHaveBeenCalledTimes(1);
     expect(openSpy.mock.calls[0][0]).toMatch(/anfrage/i);
