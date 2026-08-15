@@ -262,6 +262,8 @@ export class Settings implements OnInit {
         this.saving = false;
         this.snackBar.open('✅ Einstellungen gespeichert!', 'OK', { duration: 3000 });
         this.cdr.detectChanges();
+        // Nach erfolgreichem Speichern zurück aufs Dashboard
+        this.router.navigate(['/dashboard']);
       },
       error: () => {
         this.saving = false;
